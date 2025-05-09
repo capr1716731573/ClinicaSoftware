@@ -1,1 +1,26 @@
-<p>grafica1 works!</p>
+<div class="row">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <app-graficas tipoGrafico="linea" 
+        leyenda="Leyenda Ejemplo"
+        [labels]="labels"
+        [valores]="valores"
+        label_x="X_Label_component"
+        label_y="Y_Label_component">
+        </app-graficas>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <app-graficas tipoGrafico="donut" 
+        leyenda="Leyenda Ejemplo"
+        label_x="X_Label_component"
+        label_y="Y_Label_component">
+        </app-graficas>
+      </div>
+    </div>
+  </div>
+</div>
