@@ -41,7 +41,7 @@
                               </a>
                               <ul aria-expanded="false" class="collapse">
                                 @for (sub of item.submenu; track sub.titulo) {
-                                  <li><a [routerLink]="sub.url">{{ sub.titulo }}</a></li>
+                                  <li><a [routerLink]="sub.url" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">{{ sub.titulo }}</a></li>
                                 }
                               </ul>
                             </li>
