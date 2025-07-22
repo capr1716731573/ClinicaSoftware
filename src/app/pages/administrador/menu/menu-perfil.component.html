@@ -1,0 +1,264 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Contenedor para ambas tablas en horizontal -->
+        <div class="row">
+          <!-- Tabla 1 -->
+          <div class="col-md-6 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="card-title m-0">Menú - Cabeceras</h4>
+              <button
+                class="btn btn-danger"
+                type="button"
+                (click)="nuevoMenuCabecera()"
+              >
+                Nuevo
+              </button>
+            </div>
+
+            <div class="table-responsive pointer">
+              <table
+                class="table full-color-table full-danger-table hover-table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">DESCRIPCIÓN</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of listMenuPadres; track item.pk_menu) {
+                  <tr>
+                    <td data-label="DESCRIPCIÓN">{{ item.desc_menu }}</td>
+                    <td data-label="ACCIÓN">
+                      <div class="btn-group d-flex justify-content-center">
+                        <button
+                          type="button"
+                          class="btn btn-danger dropdown-toggle"
+                          data-toggle="dropdown"
+                        >
+                          <i class="ti-settings"></i>
+                        </button>
+                        <div class="dropdown-menu pointer">
+                          <a
+                            class="dropdown-item pointer"
+                            data-toggle="modal"
+                            data-target="#menuCabeceraModal"
+                            (click)="editarMenuCabecera(item)"
+                            >Editar</a
+                          >
+                          <a
+                            class="dropdown-item cursor"
+                            (click)="getMenuHijos(item)"
+                            >Cargar Submenú</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tabla 2 -->
+          <div class="col-md-6 p-3" [hidden]="menuCabeceraBody.pk_menu === 0">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="card-title m-0">
+                Submenú ▶▶ {{ menuCabeceraBody.desc_menu }}
+              </h4>
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoMenu()"
+              >
+                Nuevo
+              </button>
+            </div>
+
+            <div class="table-responsive pointer">
+              <table class="table full-color-table full-info-table hover-table">
+                <thead>
+                  <tr>
+                    <th scope="col">DESCRIPCIÓN</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of listMenuHijos; track item.pk_menu) {
+                  <tr>
+                    <td data-label="DESCRIPCIÓN">{{ item.desc_menu }}</td>
+                    <td data-label="ACCIÓN">
+                      <div class="btn-group d-flex justify-content-center">
+                        <button
+                          type="button"
+                          class="btn btn-info dropdown-toggle"
+                          data-toggle="dropdown"
+                        >
+                          <i class="ti-settings"></i>
+                        </button>
+                        <div class="dropdown-menu pointer">
+                          <a
+                            class="dropdown-item"
+                            data-toggle="modal"
+                            data-target="#menuModal"
+                            (click)="editarMenu(item)"
+                            >Editar</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- End row -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Menu Cabecera -->
+<!-- sample modal content -->
+<div
+  id="menuCabeceraModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Menú Cabecera</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarMenuCabecera()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="menuCabeceraBody.desc_menu"
+              (ngModelChange)="
+                menuCabeceraBody.desc_menu = $event.toUpperCase()
+              "
+              name="desc_menu"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+          <div class="form-group">
+            <label>* Icono</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="menuCabeceraBody.icono_menu"
+              (ngModelChange)="
+                menuCabeceraBody.icono_menu = $event.toLowerCase()
+              "
+              name="icono_menu"
+              placeholder="Ingrese nombre del ícono"
+            />
+            <small>Copiar el ícono en Material Design Icons</small>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar('cabecera')"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+
+<!-- Modal Menu Cabecera -->
+<!-- sample modal content -->
+<div
+  id="menuModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Submenú</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarMenuHijos()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="menuBody.desc_menu"
+              name="desc_menu"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+          <div class="form-group">
+            <label>* Ruta</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="menuBody.ruta_menu"
+              (ngModelChange)="
+                menuBody.ruta_menu = $event.toLowerCase()
+              "
+              name="ruta_menu"
+              placeholder="Ingrese path de la ruta"
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar('submenu')"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

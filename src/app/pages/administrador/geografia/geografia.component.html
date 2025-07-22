@@ -1,0 +1,351 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Geografía</h4>
+        <h6 class="card-subtitle">
+          Debe ingresar opciones de Paises-Provincias-Ciudades-Parroquias.
+        </h6>
+
+        <div class="row p-t-20">
+          <div class="col-md-10">
+            <div class="form-group row">
+              <label class="control-label col-md-2">Paises :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="paisesList"
+                  bindLabel="desc_geo"
+                  bindValue="pk_geo"
+                  placeholder="Buscar País..."
+                  [(ngModel)]="idPais"
+                  (change)="getGeografia_Provincias($event)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.desc_geo }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_geo }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-danger dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="ti-world"></i>
+                </button>
+                <div class="dropdown-menu">
+                  
+                  <a
+                    class="dropdown-item pointer"
+                    data-toggle="modal"
+                    (click)="this.desde=0;this.numeracion=1; cargarGeografia('P',0)"
+                    >Cargar Lista</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-t-20">
+          <div class="col-md-10">
+            <div class="form-group row">
+              <label class="control-label col-md-2">Provincias :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="provinciasList"
+                  bindLabel="desc_geo"
+                  bindValue="pk_geo"
+                  placeholder="Buscar Provincia..."
+                  [(ngModel)]="idProvincia"
+                  (change)="getGeografia_Ciudades($event)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.desc_geo }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_geo }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-danger dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  [disabled]="!idPais"
+                >
+                  <i class="ti-world"></i>
+                </button>
+                <div class="dropdown-menu">
+                
+                  <a
+                    class="dropdown-item pointer"
+                    (click)="this.desde=0;this.numeracion=1; cargarGeografia('PR',idPais)"
+                    >Cargar Lista</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-t-20">
+          <div class="col-md-10">
+            <div class="form-group row">
+              <label class="control-label col-md-2">Ciudades :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="ciudadesList"
+                  bindLabel="desc_geo"
+                  bindValue="pk_geo"
+                  placeholder="Buscar Ciudad..."
+                  [(ngModel)]="idCiudad"
+                  (change)="getGeografia_Parroquias($event)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.desc_geo }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_geo }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-danger dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  [disabled]="!idProvincia"
+                >
+                  <i class="ti-world"></i>
+                </button>
+                <div class="dropdown-menu">
+                  
+                  <a
+                    class="dropdown-item pointer"
+                    (click)="this.desde=0;this.numeracion=1; cargarGeografia('CIU',idProvincia)"
+                    >Cargar Lista</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-t-20">
+          <div class="col-md-10">
+            <div class="form-group row">
+              <label class="control-label col-md-2">Parroquias :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="parroquiasList"
+                  bindLabel="desc_geo"
+                  bindValue="pk_geo"
+                  placeholder="Buscar Parroquia..."
+                  [(ngModel)]="idParroquia"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.desc_geo }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_geo }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-danger dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  [disabled]="!idCiudad"
+                >
+                  <i class="ti-world"></i>
+                </button>
+                <div class="dropdown-menu">
+                  
+                  <a
+                    class="dropdown-item pointer"                    
+                    (click)="this.desde=0;this.numeracion=1; cargarGeografia('PARR',idCiudad)"
+                    >Cargar Lista</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="m-t-0 m-b-40" />
+
+        <div class="row">
+            <div class="col-6">
+                <h4>{{tituloTabla}}</h4>
+            </div>
+            <div class="col-6 text-right">
+                <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevogeografia()"
+                [disabled]="geografiaList.length === 0"
+              >
+                Nuevo
+              </button>
+            </div>
+        </div>
+
+        <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of geografiaList; track item.pk_geo) {
+                <tr>
+                  <td data-label="#">{{ item.pk_geo }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.desc_geo }}
+                  </td>
+                  
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="editarGeografia(item)"
+                          >Editar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div
+  id="geografiaModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">{{tituloTabla}}</h4>
+        
+      </div>
+      <div class="modal-body">
+        <pre>{{geografiaBody | json}}</pre>
+        <form class="form" (ngSubmit)="guardarGeografia()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="geografiaBody.desc_geo"
+              (ngModelChange)="
+                geografiaBody.desc_geo = $event.toUpperCase()
+              "
+              name="desc_geo"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+         
+          
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

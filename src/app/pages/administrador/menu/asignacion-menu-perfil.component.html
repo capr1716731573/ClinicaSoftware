@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="box bg-info">
+          <h4 class="text-white"><strong>Información</strong></h4>
+          <h5 class="text-white">
+            Para visualizar los cambios en las asignaciones de Menú surgan efecto debe volver a iniciar sesión.
+          </h5>
+        </div>
+        <!-- Contenedor para ambas tablas en horizontal -->
+        <div class="row">
+          <!-- Perifles -->
+          <div class="col-md-6 p-3">
+            <h4>Filtros Módulo-Perfíl</h4>
+            <br />
+            <div class="form-group row">
+              <label class="control-label col-md-2">Módulos :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="listModulos"
+                  bindLabel="nombre_mod"
+                  bindValue="pk_mod"
+                  placeholder="Buscar Módulo..."
+                  [(ngModel)]="id_modulo"
+                  (change)="getPerfiles($event.pk_mod)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.nombre_mod }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_mod }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-md-2">Perfiles :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="listPerfiles"
+                  bindLabel="nombre_perfil"
+                  bindValue="pk_perfil"
+                  placeholder="Buscar Perfíl..."
+                  [(ngModel)]="id_perfil"
+                  (change)="getMenuPerfilTodos($event.pk_perfil)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.nombre_perfil }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_perfil }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 p-3">
+            <h4>Asignaciones Menú</h4>
+            <br />
+
+            <div
+              id="accordionexample"
+              class="accordion"
+              role="tablist"
+              aria-multiselectable="true"
+            >
+              @for (item of listMenuPerfilTodos; track item.pk_menu) {
+              <div class="card">
+                <div
+                  class="card-header"
+                  role="tab"
+                  [id]="'heading' + item.pk_menu"
+                >
+                  <h5 class="mb-0">
+                    <a
+                      data-toggle="collapse"
+                      [attr.data-parent]="'#accordionexample'"
+                      [attr.href]="'#collapse' + item.pk_menu"
+                      aria-expanded="false"
+                      [attr.aria-controls]="'collapse' + item.pk_menu"
+                    >
+                      {{ item.desc_menu }}
+                    </a>
+                  </h5>
+                </div>
+
+                <div
+                  [id]="'collapse' + item.pk_menu"
+                  class="collapse"
+                  role="tabpanel"
+                  [attr.aria-labelledby]="'heading' + item.pk_menu"
+                >
+                  <div class="card-body">
+                    @if (item.submenu?.length > 0) {
+
+                    <div class="input-group">
+                      <ul class="icheck-list">
+                        @for (sub of item.submenu; track sub.pk_menu) {
+                        <li>
+                          <input
+                            type="checkbox"
+                            class="check"
+                            [id]="'checkbox-' + sub.pk_menu"
+                            [(ngModel)]="sub.estado_menuperfil"
+                            name="estado_{{ sub.pk_menu }}"
+                            (ngModelChange)="guardarMenuPerfil(sub)"
+                          />
+                          <label [for]="'checkbox-' + sub.pk_menu">{{
+                            sub.desc_menu
+                          }}</label>
+                        </li>
+                        }
+                      </ul>
+                    </div>
+
+                    } @else {
+                    <p>No hay submenús disponibles.</p>
+                    }
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

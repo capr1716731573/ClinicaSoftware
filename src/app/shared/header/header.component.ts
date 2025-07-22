@@ -1,12 +1,27 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-header',
   imports: [RouterModule],
   templateUrl: './header.component.html',
-  styles: ``
+  styles: ``,
 })
 export class HeaderComponent {
+  @Output() toggleSidebarEvent = new EventEmitter<void>();
 
+
+  private router = inject(Router);
+  private _loginService = inject(LoginService);
+
+  constructor() {}
+
+  logoutComponent() {
+    this._loginService.logout();
+    this.router.navigateByUrl('/login');
+  }
+   toggleSidebar() {
+    this.toggleSidebarEvent.emit();
+  }
 }

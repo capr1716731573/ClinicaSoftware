@@ -16,9 +16,12 @@ declare function customInitFuntionsJs();
 })
 export class ContenedorComponent implements OnInit { 
   public _settingsService = inject(SettingsService);
-  
+  isSidebarCollapsed = false;
   ngOnInit()  {
     customInitFuntionsJs();
   }
-
+  
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
 }

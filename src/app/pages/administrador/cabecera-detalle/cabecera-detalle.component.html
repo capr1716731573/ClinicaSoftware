@@ -1,0 +1,218 @@
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Detalle</h4>
+        <h6 class="card-subtitle">
+          Debe ingresar registro de detalle acorde a la cabecera seleccionada.
+        </h6>
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group has-success">
+                <label class="control-label">Cabecera</label>
+                <!-- <select class="form-control custom-select">
+                  <option value="">Male</option>
+                  <option value="">Female</option>
+                </select> -->
+                <ng-select
+                  [items]="cabeceraList"
+                  [typeahead]="typeahead"
+                  bindLabel="descripcion_catcab"
+                  bindValue="pk_catcab"
+                  placeholder="Busca cabecera..."
+                  [(ngModel)]="idcabeceraSelect"
+                  (search)="onSearchCabecera($event)"
+                  [loading]="isLoading"
+                  (change)="seleccionCabecera($event)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.descripcion_catcab }}</b
+                      ><br />
+                      <small
+                        >ID: {{ item.pk_catcab }} | Código:
+                        {{ item.codigo_catcab }}</small
+                      >
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqCabeceraDetalle"
+              (ngModelChange)="bsqCabeceraDetalle = $event.toUpperCase()"
+              (keyup)="buscarCabeceraDetalle()"
+              [disabled]="!cabeceraSelect.pk_catcab"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoCabeceraDetalle()"
+                [disabled]="!cabeceraSelect.pk_catcab"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of cabeceraDetalleList; track item.pk_catdetalle) {
+                <tr>
+                  <td data-label="#">{{ item.pk_catdetalle }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.desc_catdetalle }}
+                  </td>
+                  <td data-label="ESTADO">
+                    {{ item.estado_catdetalle ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a
+                          class="dropdown-item pointer"
+                          data-toggle="modal"
+                          data-target="#cabeceraDetalleModal"
+                          (click)="editarCabeceraDetalle(item.pk_catdetalle)"
+                          >Editar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="cabeceraDetalleModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Detalle</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarCabeceraDetalle()">
+          <h4><b>Tipo: </b> {{ cabeceraSelect.descripcion_catcab }}</h4>
+          <h4><b>Código: </b> {{ cabeceraSelect.codigo_catcab }}</h4>
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="cabeceraDetalleBody.desc_catdetalle"
+              (ngModelChange)="
+                cabeceraDetalleBody.desc_catdetalle = $event.toUpperCase()
+              "
+              name="descripcion_catcab"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Estado</label>
+            <div class="switch">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="cabeceraDetalleBody.estado_catdetalle"
+                  name="estado_catdetalle"
+                />
+                <span class="lever switch-col-red"></span>
+              </label>
+            </div>
+          </div>
+          
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

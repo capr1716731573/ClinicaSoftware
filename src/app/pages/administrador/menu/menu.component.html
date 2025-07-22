@@ -1,0 +1,72 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body p-b-0">
+      <h4 class="card-title">Opciones Módulo-Perfíl-Menú</h4>
+      <h6 class="card-subtitle">
+        Gestiona modulos-perfiles y opciones de menú asignados
+      </h6>
+    </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs customtab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          data-toggle="tab"
+          href="#modulo"
+          role="tab"
+          (click)="tabSeleccionado('modulo')"
+          ><span class="hidden-sm-up"><i class="ti-home"></i></span>
+          <span class="hidden-xs-down">Módulo</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#perfil"
+          role="tab"
+          (click)="tabSeleccionado('perfil')"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Perfíl</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#menu"
+          role="tab"
+          (click)="tabSeleccionado('menu')"
+          ><span class="hidden-sm-up"><i class="ti-email"></i></span>
+          <span class="hidden-xs-down">Menú</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#asignaciones"
+          role="tab"
+          (click)="tabSeleccionado('asignaciones')"
+          ><span class="hidden-sm-up"><i class="ti-email"></i></span>
+          <span class="hidden-xs-down">Menú-Perfíl</span></a
+        >
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="modulo" role="tabpanel">
+        <app-modulo></app-modulo>
+      </div>
+      <div class="tab-pane" id="perfil" role="tabpanel">
+        <app-perfiles></app-perfiles>
+      </div>
+      <div class="tab-pane" id="menu" role="tabpanel">
+        <app-menu-perfil></app-menu-perfil>
+      </div>
+      <div class="tab-pane" id="asignaciones" role="tabpanel">
+        <app-asignacion-menu-perfil></app-asignacion-menu-perfil>
+      </div>
+    </div>
+  </div>
+</div>

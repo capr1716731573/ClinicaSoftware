@@ -1,0 +1,198 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- <h4 class="card-title">Formulario Maestro</h4>
+        <h6 class="card-subtitle">
+          Debe ingresar los codigos de las tablas de cabecera.
+        </h6> -->
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqModulo"
+              (ngModelChange)="bsqModulo = $event.toUpperCase()"
+              (keyup)="buscarModulo()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoModulo()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">RUTA</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listModulos; track item.pk_mod) {
+                <tr>
+                  <td data-label="#">{{ item.pk_mod }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.nombre_mod }}
+                  </td>
+                  <td data-label="RUTA">{{ item.ruta_mod }}</td>
+                  <td data-label="ESTADO">
+                    {{ item.estado_mod ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          data-toggle="modal"
+                          data-target="#moduloModal"
+                          (click)="editarModulo(item.pk_mod)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarModulo(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="moduloModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Módulo</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarModulo()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="moduloBody.nombre_mod"
+              (ngModelChange)="
+                moduloBody.nombre_mod = $event.toUpperCase()
+              "
+              name="nombre_mod"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+           <div class="form-group">
+            <label>Ruta</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="moduloBody.ruta_mod"
+              (ngModelChange)="
+                moduloBody.ruta_mod = $event.toLowerCase()
+              "
+              name="ruta_mod"
+              placeholder="Ingrese Ruta"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Estado</label>
+            <div class="switch">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="moduloBody.estado_mod"
+                  name="estado_mod"
+                />
+                <span class="lever switch-col-red"></span>
+              </label>
+            </div>
+          </div>
+          
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

@@ -1,26 +1,34 @@
 <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
-            <div class="scroll-sidebar">
-                <!-- Sidebar navigation-->
-                <nav class="sidebar-nav">
-                    <ul id="sidebarnav">
-                        <li class="user-profile">
-                            <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><img src="./assets/images/users/profile.png" alt="user" /><span class="hide-menu">Steave Jobs </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li><a href="javascript:void()">My Profile </a></li>
-                                <li><a href="javascript:void()">My Balance</a></li>
-                                <li><a href="javascript:void()">Inbox</a></li>
-                                <li><a routerLink="/settings">Account Setting</a></li>
-                                <li><a routerLink="/login">Logout</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-devider"></li>
-                        <li class="nav-small-cap">PERSONAL</li>
-                        
-                        <!-- <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+<!-- Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->
+<aside class="left-sidebar" [class.mini-sidebar]="collapsed">
+  <!-- Sidebar scroll-->
+  <div class="scroll-sidebar">
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        <li class="user-profile">
+          <a
+            class="has-arrow waves-effect waves-dark"
+            href="#"
+            aria-expanded="false"
+            ><img src="./assets/images/users/profile.png" alt="user" /><span
+              class="hide-menu"
+              >Steave Jobs
+            </span></a
+          >
+          <ul aria-expanded="false" class="collapse">
+            <li><a href="javascript:void()">My Profile </a></li>
+            <li><a href="javascript:void()">My Balance</a></li>
+            <li><a href="javascript:void()">Inbox</a></li>
+            <li><a routerLink="/settings">Account Setting</a></li>
+            <li><a (click)="logoutComponent()">Logout</a></li>
+          </ul>
+        </li>
+        <li class="nav-devider"></li>
+        <li class="nav-small-cap">PERSONAL</li>
+
+        <!-- <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
                             <i class="mdi mdi-gauge"></i>
                             <span class="hide-menu">Dashboard <span class="label label-rouded label-themecolor pull-right">4</span></span></a>
                             <ul aria-expanded="false" class="collapse">
@@ -30,29 +38,59 @@
                                 <li><a href="index4.html">Modern</a></li>
                             </ul>
                         </li> -->
-                        @for (item of menuItems; track item.titulo) {
-                            <li>
-                              <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-                                <i [class]="item.icono"></i>
-                                <span class="hide-menu">
-                                  {{ item.titulo }}
-                                  <span class="label label-rounded label-themecolor pull-right">{{ item.submenu.length }}</span>
-                                </span>
-                              </a>
-                              <ul aria-expanded="false" class="collapse">
-                                @for (sub of item.submenu; track sub.titulo) {
-                                  <li><a [routerLink]="sub.url" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">{{ sub.titulo }}</a></li>
-                                }
-                              </ul>
-                            </li>
-                          }
-                       
-                    </ul>
-                </nav>
-                <!-- End Sidebar navigation -->
-            </div>
-            <!-- End Sidebar scroll-->
-        </aside>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
+        <!-- AQUI EL CODIGO -->
+
+        @for (item of menuItems; track item.desc_menu) { @if
+        (item.submenu?.length > 0) {
+        <li>
+          <a
+            role="button"
+            tabindex="0"
+            class="has-arrow waves-effect waves-dark"
+            (click)="item.expanded = !item.expanded"
+            [attr.aria-expanded]="item.expanded"
+          >
+            <i
+              [class]="
+                item.icono_menu?.trim() ? item.icono_menu : 'mdi mdi-gauge'
+              "
+            ></i>
+            <span class="hide-menu">
+              {{ item.desc_menu }}
+              <span class="label label-rounded label-themecolor pull-right">
+                {{ item.submenu?.length ?? 0 }}
+              </span>
+            </span>
+          </a>
+
+          <ul
+            [class.collapse]="!item.expanded"
+            [class.show]="item.expanded"
+            aria-expanded="false"
+          >
+            @for (sub of item.submenu; track sub.desc_menu) {
+            <li>
+              <a
+                [routerLink]="sub.ruta_menu"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+              >
+                {{ sub.desc_menu }}
+              </a>
+            </li>
+            }
+          </ul>
+        </li>
+        } 
+      }
+
+        <!-- FIN DEL CODIGO -->
+      </ul>
+    </nav>
+    <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>
+<!-- ============================================================== -->
+<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->

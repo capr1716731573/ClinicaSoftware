@@ -1,0 +1,167 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group row">
+          <label class="control-label col-md-2">Módulos :</label>
+          <div class="col-md-8">
+            <ng-select
+              [items]="listModulos"
+              bindLabel="nombre_mod"
+              bindValue="pk_mod"
+              placeholder="Buscar Módulo..."
+              [(ngModel)]="idModulo"
+              (change)="getPerfiles($event.pk_mod)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <b>{{ item.nombre_mod }}</b
+                  ><br />
+                  <small>ID: {{ item.pk_mod }} </small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <span class="input-group-btn">
+            <button class="btn btn-info" type="button" (click)="nuevoPerfil()">
+              Nuevo
+            </button>
+          </span>
+        </div>
+
+        <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listPerfiles; track item.pk_perfil) {
+                <tr>
+                  <td data-label="#">{{ item.pk_perfil }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.nombre_perfil }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          data-toggle="modal"
+                          data-target="#perfilModal"
+                          (click)="editarPerfil(item.pk_perfil)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarPerfil(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="perfilModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Módulo</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarPerfil()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="perfilBody.nombre_perfil"
+              (ngModelChange)="
+                perfilBody.nombre_perfil = $event.toUpperCase()
+              "
+              name="nombre_perfil"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

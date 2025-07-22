@@ -11,22 +11,46 @@
                         <h3 class="box-title m-b-20">Ingreso al Sistema</h3>
                         <div class="form-group ">
                             <div class="col-xs-12">
-                                <input class="form-control" type="text" required="" placeholder="Username"> </div>
+                                <input class="form-control" type="text" required="" placeholder="Username" 
+                                [(ngModel)]="username" name="username"> </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">
-                                <input class="form-control" type="password" required="" placeholder="Password"> </div>
+                                <input class="form-control" type="password" required="" placeholder="Password"
+                                [(ngModel)]="password" name="password"> </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="checkbox checkbox-info pull-left p-t-0">
-                                    <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue">
-                                    <label for="checkbox-signup"> Remember me </label>
-                                </div> <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
+                        <div class="form-group">
+                            <label>Módulo</label>
+                            <select
+                                class="custom-select col-12"
+                                [(ngModel)]="modulo"
+                                (ngModelChange)="seleccionarModulo()"
+                                name="modulo"
+                                >
+                                <option value="0" disabled selected>Seleccione...</option>
+
+                                @for (mod of listModulos; track mod.pk_mod) {
+                                    <option [value]="mod.pk_mod">{{ mod.nombre_mod }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Perfiles</label>
+                            <select
+                                class="custom-select col-12"
+                                [(ngModel)]="perfil"
+                                name="perfil"
+                                >
+                                <option value="0" disabled selected>Seleccione...</option>
+
+                                @for (perfil of listPerfil; track perfil.pk_perfil) {
+                                    <option [value]="perfil.pk_perfil">{{ perfil.nombre_perfil }}</option>
+                                }
+                            </select>
                         </div>
                         <div class="form-group text-center">
                             <div class="col-xs-12 p-b-20">
-                                <button class="btn btn-block btn-lg btn-info btn-rounded" type="submit">Ingresar</button>
+                                <button class="btn btn-block btn-lg btn-info btn-rounded" type="submit" [disabled]="!username || !password || modulo === 0 || perfil===0">Ingresar</button>
                             </div>
                         </div>
                         <div class="row">

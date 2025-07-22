@@ -1,0 +1,175 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Maestro</h4>
+        <h6 class="card-subtitle">
+          Debe ingresar los codigos de las tablas de cabecera.
+        </h6>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqCabecera"
+              (ngModelChange)="
+                bsqCabecera = $event.toUpperCase()
+              "
+              (keyup)="buscarCabecera()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoCabecera()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">CÓDIGO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of cabeceraList; track item.pk_catcab) {
+                <tr>
+                  <td data-label="#">{{ item.pk_catcab }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.descripcion_catcab }}
+                  </td>
+                  <td data-label="CÓDIGO">{{ item.codigo_catcab }}</td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          data-toggle="modal"
+                          data-target="#cabeceraModal"
+                          (click)="editarCabecera(item.pk_catcab)"
+                          >Editar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="cabeceraModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Cabecera</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarCabecera()">
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="cabeceraBody.descripcion_catcab"
+              (ngModelChange)="
+                cabeceraBody.descripcion_catcab = $event.toUpperCase()
+              "
+              name="descripcion_catcab"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Código</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="cabeceraBody.codigo_catcab"
+              name="codigo_catcab"
+              placeholder="Ingrese código"
+              (ngModelChange)="
+                cabeceraBody.codigo_catcab = $event.toUpperCase()
+              "
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+          <pre>{{ cabeceraBody | json }}</pre>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
