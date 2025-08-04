@@ -1,0 +1,121 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row p-t-20">
+          <!-- Perifles -->
+          <div class="col-md-6 p-3">
+            <h4>Filtros</h4>
+            <br />
+
+            <div class="form-group row">
+              <label class="control-label col-md-2">Módulos :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="modulosList"
+                  bindLabel="nombre_mod"
+                  bindValue="pk_mod"
+                  placeholder="Buscar Módulo..."
+                  [(ngModel)]="id_modulo"
+                  (change)="getPerfiles($event.pk_mod)"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.nombre_mod }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_mod }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-md-2">Perfiles :</label>
+              <div class="col-md-8">
+                <ng-select
+                  [items]="perfilesList"
+                  bindLabel="nombre_perfil"
+                  bindValue="pk_perfil"
+                  placeholder="Buscar Perfíl..."
+                  [(ngModel)]="id_perfil"
+                  [clearable]="false"
+                  [typeToSearchText]="'Empieza a escribir...'"
+                >
+                  <!-- Template de cómo se muestra cada opción -->
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <b>{{ item.nombre_perfil }}</b
+                      ><br />
+                      <small>ID: {{ item.pk_perfil }} </small>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-md-2" >
+                <button
+                  type="button"
+                  class="btn btn-success btn-circle"
+                  (click)="agregarPerfil()"
+                  title="Agregar Perfíl"
+                  [disabled]="!id_perfil"
+                >
+                  <i class="fa fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 p-3">
+            <h4>Perfiles del Usuario</h4>
+            <br />
+            <div class="table-responsive pointer">
+              <table
+                class="table full-color-table full-success-table hover-table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">PERFÍL</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+                <tbody>
+                  @for (sub of perfilesUsuarioList; track sub.pk_usuarioperfil)
+                  {
+                  <tr>
+                    <td data-label="DISCAPACIDAD">
+                      {{ sub.nombre_perfil }}
+                    </td>
+
+                    <td data-label="ACCIÓN">
+                      <div class="btn-group d-flex justify-content-center">
+                        <button
+                          type="button"
+                          class="btn btn-success dropdown-toggle"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i class="ti-settings"></i>
+                        </button>
+                        <div class="dropdown-menu pointer">
+                          <a class="dropdown-item" (click)="eliminarPerfil(sub)"
+                            >Eliminar</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+              <br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

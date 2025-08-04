@@ -21,6 +21,7 @@
     "@mdi/font": "^7.4.47",
     "@ng-select/ng-select": "^14.9.0",
     "chart.js": "^4.4.9",
+    "flatpickr": "^4.6.13",
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",

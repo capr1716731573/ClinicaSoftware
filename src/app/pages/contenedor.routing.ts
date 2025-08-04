@@ -12,6 +12,8 @@ import { CabeceraComponent } from './administrador/cabecera/cabecera.component';
 import { CabeceraDetalleComponent } from './administrador/cabecera-detalle/cabecera-detalle.component';
 import { GeografiaComponent } from './administrador/geografia/geografia.component';
 import { MenuComponent } from './administrador/menu/menu.component';
+import { UsuariosComponent } from './administrador/usuario/usuarios.component';
+import { UsuarioComponent } from './administrador/usuario/usuario.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -29,6 +31,8 @@ export const pagesChildRoutes: Routes = [
             { path: 'detalle', canActivate: [JwtGuard],component: CabeceraDetalleComponent ,data:{titulo: 'Detalle'}},
             { path: 'geografia', canActivate: [JwtGuard],component: GeografiaComponent ,data:{titulo: 'Geografía'}},
             { path: 'menu-perfil', canActivate: [JwtGuard],component: MenuComponent ,data:{titulo: 'Opciones'}},
+            { path: 'usuarios', canActivate: [JwtGuard],component: UsuariosComponent ,data:{titulo: 'Usuarios'}},
+            { path: 'usuario/:id', canActivate: [JwtGuard],component: UsuarioComponent ,data:{titulo: 'Usuario'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

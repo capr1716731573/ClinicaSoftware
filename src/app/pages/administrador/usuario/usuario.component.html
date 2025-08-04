@@ -1,0 +1,123 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body p-b-0">
+      <h4 class="card-title">Opciones Módulo-Perfíl-Menú</h4>
+      <h6 class="card-subtitle">
+        Gestiona módulos-perfiles y opciones de menú asignados
+      </h6>
+    </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs customtab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#persona" role="tab" (click)="tabActivo = 'persona'"
+          ><span class="hidden-sm-up"><i class="ti-home"></i></span>
+          <span class="hidden-xs-down">Datos Persona</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#usuario" role="tab" (click)="tabActivo = 'usuario'"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Usuario</span></a
+        >
+      </li>
+      <li class="nav-item" [hidden]="usuarioBody.pk_usuario === 0">
+        <a class="nav-link" data-toggle="tab" href="#perfil" role="tab" (click)="tabActivo = 'perfil'"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Perfiles</span></a
+        >
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="persona" role="tabpanel">
+        <app-persona></app-persona>
+      </div>
+      <div class="tab-pane" id="usuario" role="tabpanel">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row p-t-20">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Login *</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="usuarioBody.login_usuario"
+                        
+                        name="login_usuario"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Activo</label>
+                      <div class="switch">
+                        <label>
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="usuarioBody.estado_usuario"
+                            name="estado_usuario"
+                          />
+                          <span class="lever switch-col-red"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Super-Usuario</label>
+                      <div class="switch">
+                        <label>
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="usuarioBody.super_usuario"
+                            name="super_usuario"
+                          />
+                          <span class="lever switch-col-red"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="perfil" role="tabpanel">
+        <app-usuario-perfil></app-usuario-perfil>
+      </div>
+    </div>
+
+    <div *ngIf="tabActivo !== 'perfil'" class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row p-t-20">
+              <div class="col-12 d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  class="btn btn-success waves-effect"                  
+                  (click)="guardarUsuarioPersona()"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger waves-effect"
+                  (click)="cerrarUsuario()"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

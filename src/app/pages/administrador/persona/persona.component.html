@@ -1,0 +1,596 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Apellido Paterno *</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.apellidopat_persona"
+                (ngModelChange)="
+                  personaBody.apellidopat_persona = $event.toUpperCase()
+                "
+                name="apellidopat_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Apellido Materno</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.apellidomat_persona"
+                (ngModelChange)="
+                  personaBody.apellidomat_persona = $event.toUpperCase()
+                "
+                name="apellidomat_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Primer Nombre *</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.nombre_primario_persona"
+                (ngModelChange)="
+                  personaBody.nombre_primario_persona = $event.toUpperCase()
+                "
+                name="nombre_primario_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Segundo Nombre</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.nombre_secundario_persona"
+                (ngModelChange)="
+                  personaBody.nombre_secundario_persona = $event.toUpperCase()
+                "
+                name="nombre_secundario_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Tipo Identificación *</label>
+              <ng-select
+                [items]="tipoIdentificacionList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_tipoidentificacion"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Número Identificación *</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.numidentificacion_persona"
+                (ngModelChange)="
+                  personaBody.numidentificacion_persona = $event.toUpperCase()
+                "
+                name="numidentificacion_persona"
+                placeholder="Ingrese"
+                (blur)="verificarCedula()"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Género *</label>
+              <ng-select
+                [items]="sexoList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_sexo"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Fecha de Nacimiento *</label>
+              <input
+                type="date"
+                id="fecnac_persona"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.fecnac_persona"
+                name="fecnac_persona"
+                placeholder="Seleccione"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Correo</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.correo_persona"
+                (ngModelChange)="
+                  personaBody.correo_persona = $event.toLowerCase()
+                "
+                name="correo_persona"
+                placeholder="example@example.com"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Teléfono</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.telefono_persona"
+                (ngModelChange)="
+                  personaBody.telefono_persona = $event.toLowerCase()
+                "
+                name="correo_persona"
+                placeholder="xxx-xxxxx"
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Estado Civil</label>
+              <ng-select
+                [items]="estadocivilList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_estadocivil"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Celular</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.celular_persona"
+                (ngModelChange)="
+                  personaBody.celular_persona = $event.toLowerCase()
+                "
+                name="correo_persona"
+                placeholder="example@example.com"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Nivel Académico</label>
+              <ng-select
+                [items]="nivelacademicoList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_nivelacademico"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Estado Académico</label>
+              <ng-select
+                [items]="estadoeducacionList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_estadoeducacion"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Ocupación</label>
+              <ng-select
+                [items]="ocupacionList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_ocupacion"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Profesión</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.detalle_profesion_persona"
+                (ngModelChange)="
+                  personaBody.detalle_profesion_persona = $event.toLowerCase()
+                "
+                name="detalle_profesion_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">País *</label>
+              <ng-select
+                [items]="paisList"
+                bindLabel="desc_geo"
+                bindValue="pk_geo"
+                placeholder="Buscar..."
+                [(ngModel)]="id_pais"
+                [clearable]="false"
+                (change)="getGeografiaProvincias()"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_geo }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_geo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Provincia</label>
+              <ng-select
+                [items]="provinciaList"
+                bindLabel="desc_geo"
+                bindValue="pk_geo"
+                placeholder="Buscar..."
+                [(ngModel)]="id_provincia"
+                (change)="getGeografiaCiudades()"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_geo }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_geo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Ciudad</label>
+              <ng-select
+                [items]="ciudadList"
+                bindLabel="desc_geo"
+                bindValue="pk_geo"
+                placeholder="Buscar..."
+                (change)="getGeografiaParroquias()"
+                [(ngModel)]="id_ciudad"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_geo }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_geo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Parroquia</label>
+              <ng-select
+                [items]="parroquiaList"
+                bindLabel="desc_geo"
+                bindValue="pk_geo"
+                placeholder="Buscar..."
+                [(ngModel)]="id_parroquia"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_geo }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_geo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Tipo de Sangre</label>
+              <ng-select
+                [items]="tiposangreList"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="id_tiposangre"
+                [clearable]="false"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Tiene Discapacidad</label>
+              <div class="switch">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="personaBody.discapacidad_persona"
+                    (change)="cambioDiscapacidad()"
+                    name="discapacidad_persona"
+                  />
+                  <span class="lever switch-col-red"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">Barrio-Dirección</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="personaBody.barrio_persona"
+                (ngModelChange)="
+                  personaBody.barrio_persona = $event.toUpperCase()
+                "
+                name="barrio_persona"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row p-t-20" *ngIf="personaBody.discapacidad_persona">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h4>Lista Discapacidades</h4>
+              </div>
+              <div class="col-6 text-right">
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  data-toggle="modal"
+                  data-target="#discapacidadesModal"
+                  (click)="prepararNuevaDiscapacidad()"
+                >
+                  Nuevo
+                </button>
+              </div>
+            </div>
+            <div class="table-responsive pointer">
+              <table
+                class="table full-color-table full-success-table hover-table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">DISCAPACIDAD</th>
+                    <th scope="col">%</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+                <tbody>
+                  @for (sub of personaBody.lista_discapacidades; track
+                  sub.discapacidad) {
+                  <tr>
+                    <td data-label="DISCAPACIDAD">
+                      {{ sub.discapacidad }}
+                    </td>
+                    <td data-label="%">
+                      {{ sub.porcentaje }}
+                    </td>
+
+                    <td data-label="ACCIÓN">
+                      <div class="btn-group d-flex justify-content-center">
+                        <button
+                          type="button"
+                          class="btn btn-success dropdown-toggle"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i class="ti-settings"></i>
+                        </button>
+                        <div class="dropdown-menu pointer">
+                          <a
+                            class="dropdown-item"
+                            (click)="eliminarDiscapacidad(sub)"
+                            >Eliminar</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+              <br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- Discapacidades -->
+<div
+  id="discapacidadesModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Discapacidad</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiscapacidad()">
+          <div class="form-group">
+            <label>* Discapacidad</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="nuevaDiscapacidad.discapacidad"
+              name="discapacidad"
+              (ngModelChange)="
+                nuevaDiscapacidad.discapacidad = $event.toUpperCase()
+              "
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Porcentaje</label>
+            <input
+              type="number"
+              class="form-control form-control-line"
+              [(ngModel)]="nuevaDiscapacidad.porcentaje"
+              name="porcentaje"
+              placeholder="%"
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiscapacidad()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+<!-- <pre>{{ personaBody | json }}</pre>
+ -->

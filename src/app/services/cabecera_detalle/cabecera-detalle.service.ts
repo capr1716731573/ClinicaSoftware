@@ -117,6 +117,27 @@ export class CabeceraDetalleService {
     );
   }
 
+    /*********** SECCION DETALLE ********************** */
+  getAllCabecerasDetalle2(codigo_cab: string, estado: boolean) {
+    const url = `${this._baseUrl}/catalogo/det/${codigo_cab}/${estado}`;
+
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta en el Service.(getAllCabecerasDetalle2) - Cabecera Detalle2',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
   getCabeceraDetalleId(id: number) {
     const url = `${this._baseUrl}/catalogo/detalle/id/${id}`;
 
