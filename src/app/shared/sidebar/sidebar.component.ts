@@ -4,7 +4,6 @@ import { SidebarService } from '../../services/sidebar.service';
 import { LoginService } from '../../services/login.service';
 
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-sidebar',
   imports: [RouterModule],

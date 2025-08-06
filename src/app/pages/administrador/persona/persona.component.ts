@@ -539,10 +539,7 @@ export class PersonaComponent implements AfterViewInit {
                   .navigateByUrl('/', { skipLocationChange: true })
                   .then(() => {
                     this.setOpcionPersona('U');
-                    this._routerService.navigate([
-                      '/usuario',
-                      resp.rows.pk_usuario,
-                    ]);
+                    this._routerService.navigate(['/usuario', resp.rows.pk_usuario, ]);
                   });
 
                 return; //Paro la ejecucion del resto del codigo
