@@ -33,9 +33,21 @@ export class LoginComponent {
       next: (resp) => {
         if (resp) {
           if (resp.status === 'ok') {
-            console.log(resp);
-            let token=resp.token;
-            let usuario=resp.usuario;
+            //console.log(resp);
+
+            //Valido que el usuario tenga estado true para ingresar
+            if (resp.usuario.estado_usuario === false) {
+              Swal.fire({
+                title: 'No Activo',
+                text: `El usuario no se encuentra activo, refierase al administrador del sistema para la activación`,
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+              });
+              return;
+            }
+
+            let token = resp.token;
+            let usuario = resp.usuario;
 
             //Consulto el perfil y el modulo seleccionado con el usuario
             this._loginService
@@ -46,7 +58,7 @@ export class LoginComponent {
               )
               .subscribe({
                 next: (resp) => {
-                  console.log(resp)
+                  //console.log(resp);
                   if (resp) {
                     if (resp.rows.verificar_usuario_perfil.status === 'ok') {
                       //Verifico que exista el usuario con ese perfil y ese modulo

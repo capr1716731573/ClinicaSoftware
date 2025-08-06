@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, inject } from '@angular/core';
-import { of, switchMap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { CabeceraDetalleService } from '../../../services/cabecera_detalle/cabecera-detalle.service';
 import { GeografiaService } from '../../../services/geografia/geografia.service';
 import { Persona } from './persona.interface';
@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { PersonaService } from '../../../services/persona/persona.service';
 import { Router } from '@angular/router';
+import { LoaderBookComponent } from '../../../componentes_reutilizables/loader-book/loader-book.component';
 declare var toastr: any;
 declare var $: any;
 
@@ -62,15 +63,44 @@ export class PersonaComponent implements AfterViewInit {
   componentePadre: string = null;
   opcionPersona: string = null;
 
+  loading: boolean = false;
+
   constructor() {
     this.inicializacionPersonaBody();
     this.inicializacionPersonaFunciones();
   }
   ngAfterViewInit(): void {
+    //Inicializo el formato para los campos fecha
     flatpickr('#fecnac_persona', {
       dateFormat: 'Y-m-d',
+      allowInput: false,
     });
   }
+
+  /*  inicializacionPersonaFunciones(): void {
+    this.loading = false;
+
+    forkJoin([
+      this.getDetalle$('OCU'),
+      this.getDetalle$('TIP_IDE'),
+      this.getDetalle$('GEN'),
+      this.getDetalle$('NIV_ACA'),
+      this.getDetalle$('EST_CIV'),
+      this.getDetalle$('TIP_SAN'),
+      this.getDetalle$('EST_NIV_EDU'),
+      this.cargarGeografiaEncadenada$(),
+    ]).subscribe({
+      next: () => {
+        this.loading = true;
+        console.log('✅ Datos cargados completamente');
+      },
+      error: (err) => {
+        this.loading = true; // o false, según lo que prefieras
+        console.error('❌ Error al cargar datos:', err);
+      },
+    });
+  }
+ */
   //Aqui cargo los fk de persona
   inicializacionPersonaBody() {
     this.personaBody = {
@@ -163,6 +193,139 @@ export class PersonaComponent implements AfterViewInit {
 
   getOpcionPersona() {
     return this.opcionPersona;
+  }
+
+  /* getDetalle$(codigo: string): Observable<any> {
+    return this._detalleService.getAllCabecerasDetalle2(codigo, true).pipe(
+      tap((resp) => {
+        if (resp.status === 'ok') {
+          switch (codigo) {
+            case 'OCU':
+              this.ocupacionList = resp.rows;
+              this.id_ocupacion = this.personaBody.fk_ocupacion ?? null;
+              break;
+            case 'TIP_IDE':
+              this.tipoIdentificacionList = resp.rows;
+              this.id_tipoidentificacion =
+                this.personaBody.fk_tipoidentificacion ?? null;
+              break;
+            case 'GEN':
+              this.sexoList = resp.rows;
+              this.id_sexo = this.personaBody.fk_sexo ?? null;
+              break;
+            case 'NIV_ACA':
+              this.nivelacademicoList = resp.rows;
+              this.id_nivelacademico = this.personaBody.fk_nivelacademico ?? null;
+              break;
+            case 'EST_CIV':
+              this.estadocivilList = resp.rows;
+              this.id_estadocivil = this.personaBody.fk_estadocivil ?? null;
+              break;
+            case 'TIP_SAN':
+              this.tiposangreList = resp.rows;
+              this.id_tiposangre = this.personaBody.fk_tipo_sangre ?? null;
+              break;
+            case 'EST_NIV_EDU':
+              this.estadoeducacionList = resp.rows;
+              this.id_estadoeducacion =
+                this.personaBody.fk_estado_educacion ?? null;
+              break;
+          }
+        }
+      }),
+      catchError((err) => {
+        Swal.fire('¡Error!', `Lista - ${codigo} - ${err.message}`, 'error');
+        return of(null);
+      })
+    );
+  } */
+
+  cargarGeografiaEncadenada$(): Observable<any> {
+    return this._geografiaService.getAllGeografia(null, 'P', 0).pipe(
+      switchMap((respPaises: any) => {
+        if (respPaises.status === 'ok') {
+          this.paisList = respPaises.rows;
+          if (this.personaBody.fk_pais) {
+            this.id_pais = this.personaBody.fk_pais;
+            return this._geografiaService.getAllGeografia(
+              null,
+              'PR',
+              this.id_pais
+            );
+          }
+        }
+        return of(null);
+      }),
+      switchMap((respProvincias: any) => {
+        if (respProvincias?.status === 'ok') {
+          this.provinciaList = respProvincias.rows;
+          if (this.personaBody.fk_provincia) {
+            this.id_provincia = this.personaBody.fk_provincia;
+            return this._geografiaService.getAllGeografia(
+              null,
+              'CIU',
+              this.id_provincia
+            );
+          }
+        }
+        return of(null);
+      }),
+      switchMap((respCiudades: any) => {
+        if (respCiudades?.status === 'ok') {
+          this.ciudadList = respCiudades.rows;
+          if (this.personaBody.fk_canton) {
+            this.id_ciudad = this.personaBody.fk_canton;
+            return this._geografiaService.getAllGeografia(
+              null,
+              'PARR',
+              this.id_ciudad
+            );
+          }
+        }
+        return of(null);
+      }),
+      tap((respParroquias: any) => {
+        if (respParroquias?.status === 'ok') {
+          this.parroquiaList = respParroquias.rows;
+          if (this.personaBody.fk_parroquia) {
+            this.id_parroquia = this.personaBody.fk_parroquia;
+          }
+        }
+      }),
+      catchError((err) => {
+        Swal.fire(
+          '¡Error!',
+          `Error al cargar jerarquía geográfica: ${err.message}`,
+          'error'
+        );
+        return of(null);
+      })
+    );
+  }
+
+  clearNgSelect(codigo: string) {
+    if (codigo === 'OCU') {
+        this.personaBody.fk_ocupacion=null;
+        this.id_ocupacion = this.personaBody.fk_ocupacion;
+    } else if (codigo === 'TIP_IDE') {
+        this.personaBody.fk_tipoidentificacion=null;
+        this.id_tipoidentificacion = this.personaBody.fk_tipoidentificacion;
+    } else if (codigo === 'GEN') {
+        this.personaBody.fk_sexo=null;
+        this.id_sexo = this.personaBody.fk_sexo;
+    } else if (codigo === 'NIV_ACA') {
+        this.personaBody.fk_nivelacademico=null;
+        this.id_nivelacademico = this.personaBody.fk_nivelacademico;
+    } else if (codigo === 'EST_CIV') {
+        this.personaBody.fk_estadocivil=null;
+        this.id_estadocivil = this.personaBody.fk_estadocivil;
+    } else if (codigo === 'TIP_SAN') {
+        this.personaBody.fk_tipo_sangre=null;
+        this.id_tiposangre = this.personaBody.fk_tipo_sangre;
+    } else if (codigo === 'EST_NIV_EDU') {
+        this.personaBody.fk_estado_educacion=null;
+        this.id_estadoeducacion = this.personaBody.fk_estado_educacion;
+    }
   }
 
   getDetalle(codigo: string) {
@@ -303,6 +466,16 @@ export class PersonaComponent implements AfterViewInit {
   }
 
   getGeografiaProvincias() {
+    this.provinciaList = [];
+    this.id_provincia = null;
+    this.personaBody.fk_provincia = null;
+    this.ciudadList = [];
+    this.id_ciudad = null;
+    this.personaBody.fk_canton = null;
+    this.parroquiaList = [];
+    this.id_parroquia = null;
+    this.personaBody.fk_parroquia = null;
+
     if (this.id_pais != null && this.id_pais) {
       this._geografiaService
         .getAllGeografia(null, 'PR', this.id_pais)
@@ -327,10 +500,26 @@ export class PersonaComponent implements AfterViewInit {
             });
           },
         });
+    } else {
+      this.provinciaList = [];
+      this.id_provincia = null;
+      this.personaBody.fk_provincia = null;
+      this.ciudadList = [];
+      this.id_ciudad = null;
+      this.personaBody.fk_canton = null;
+      this.parroquiaList = [];
+      this.id_parroquia = null;
+      this.personaBody.fk_parroquia = null;
     }
   }
 
   getGeografiaCiudades() {
+    this.ciudadList = [];
+    this.id_ciudad = null;
+    this.personaBody.fk_canton = null;
+    this.parroquiaList = [];
+    this.id_parroquia = null;
+    this.personaBody.fk_parroquia = null;
     if (this.id_provincia != null && this.id_provincia) {
       this._geografiaService
         .getAllGeografia(null, 'CIU', this.id_provincia)
@@ -359,6 +548,9 @@ export class PersonaComponent implements AfterViewInit {
   }
 
   getGeografiaParroquias() {
+    this.parroquiaList = [];
+    this.id_parroquia = null;
+    this.personaBody.fk_parroquia = null;
     if (this.id_ciudad != null && this.id_ciudad) {
       this._geografiaService
         .getAllGeografia(null, 'PARR', this.id_ciudad)
@@ -515,6 +707,7 @@ export class PersonaComponent implements AfterViewInit {
   verificarCedula() {
     const cedula = this.personaBody.numidentificacion_persona;
     //verifico que el tipo de identificacion sea cedula donde el id en la base es 1
+    if (cedula == '' || cedula == null || cedula == undefined) return;
     if (
       !this._personaService.validarCedulaEcuador(cedula) &&
       this.id_tipoidentificacion === 1
@@ -539,7 +732,10 @@ export class PersonaComponent implements AfterViewInit {
                   .navigateByUrl('/', { skipLocationChange: true })
                   .then(() => {
                     this.setOpcionPersona('U');
-                    this._routerService.navigate(['/usuario', resp.rows.pk_usuario, ]);
+                    this._routerService.navigate([
+                      '/usuario',
+                      resp.rows.pk_usuario,
+                    ]);
                   });
 
                 return; //Paro la ejecucion del resto del codigo
@@ -556,7 +752,7 @@ export class PersonaComponent implements AfterViewInit {
             Swal.fire({
               title: '¡Error!',
               icon: 'error',
-              text: `Persona - ${err.message}`,
+              text: `Persona33 - ${err.message}`,
               confirmButtonText: 'Aceptar',
             });
           },

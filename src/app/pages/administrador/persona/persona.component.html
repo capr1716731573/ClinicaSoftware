@@ -1,3 +1,4 @@
+
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -74,7 +75,8 @@
                 bindValue="pk_catdetalle"
                 placeholder="Buscar..."
                 [(ngModel)]="id_tipoidentificacion"
-                [clearable]="false"
+                [clearable]="true"
+                (clear)="clearNgSelect('TIP_IDE')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -113,7 +115,8 @@
                 bindValue="pk_catdetalle"
                 placeholder="Buscar..."
                 [(ngModel)]="id_sexo"
-                [clearable]="false"
+                [clearable]="true"
+                (clear)="clearNgSelect('GEN')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -181,7 +184,8 @@
                 bindValue="pk_catdetalle"
                 placeholder="Buscar..."
                 [(ngModel)]="id_estadocivil"
-                [clearable]="false"
+                [clearable]="true"
+                (clear)="clearNgSelect('EST_CIV')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -221,7 +225,8 @@
                 bindValue="pk_catdetalle"
                 placeholder="Buscar..."
                 [(ngModel)]="id_nivelacademico"
-                [clearable]="false"
+                [clearable]="true"
+                (clear)="clearNgSelect('NIV_EDU')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -245,6 +250,7 @@
                 placeholder="Buscar..."
                 [(ngModel)]="id_estadoeducacion"
                 [clearable]="false"
+                (clear)="clearNgSelect('EST_NIV_EDU')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -268,6 +274,7 @@
                 placeholder="Buscar..."
                 [(ngModel)]="id_ocupacion"
                 [clearable]="false"
+                (clear)="clearNgSelect('OCU')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -307,7 +314,7 @@
                 bindValue="pk_geo"
                 placeholder="Buscar..."
                 [(ngModel)]="id_pais"
-                [clearable]="false"
+                [clearable]="true"
                 (change)="getGeografiaProvincias()"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
@@ -332,7 +339,7 @@
                 placeholder="Buscar..."
                 [(ngModel)]="id_provincia"
                 (change)="getGeografiaCiudades()"
-                [clearable]="false"
+                [clearable]="true"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -356,7 +363,7 @@
                 placeholder="Buscar..."
                 (change)="getGeografiaParroquias()"
                 [(ngModel)]="id_ciudad"
-                [clearable]="false"
+                [clearable]="true"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -405,6 +412,7 @@
                 placeholder="Buscar..."
                 [(ngModel)]="id_tiposangre"
                 [clearable]="false"
+                (clear)="clearNgSelect('TIP_SAN')"
                 [typeToSearchText]="'Empieza a escribir...'"
               >
                 <!-- Template de cómo se muestra cada opción -->
@@ -524,6 +532,7 @@
   </div>
 </div>
 
+
 <!-- Modal -->
 <!-- Discapacidades -->
 <div
@@ -592,5 +601,4 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- Fin Modal -->
-<!-- <pre>{{ personaBody | json }}</pre>
- -->
+<pre>{{ personaBody | json }}</pre>
