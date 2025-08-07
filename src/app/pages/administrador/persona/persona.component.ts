@@ -10,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { PersonaService } from '../../../services/persona/persona.service';
 import { Router } from '@angular/router';
-import { LoaderBookComponent } from '../../../componentes_reutilizables/loader-book/loader-book.component';
 import { DatepickerComponent } from '../../../componentes_reutilizables/datepicker/datepicker.component';
 declare var toastr: any;
 declare var $: any;
