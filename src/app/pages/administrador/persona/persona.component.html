@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -133,14 +132,20 @@
           <div class="col-md-3">
             <div class="form-group">
               <label class="control-label">Fecha de Nacimiento *</label>
-              <input
+              <app-datepicker
+                [(ngModel)]="personaBody.fecnac_persona"
+                label="Fecha de Nacimiento"
+                placeholder="yyyy-mm-dd"
+                id="fecnac_persona"
+              ></app-datepicker>
+              <!-- <input
                 type="date"
                 id="fecnac_persona"
                 class="form-control form-control-line"
                 [(ngModel)]="personaBody.fecnac_persona"
                 name="fecnac_persona"
-                placeholder="Seleccione"
-              />
+                placeholder="yyyy-mm-dd"
+              /> -->
             </div>
           </div>
         </div>
@@ -532,7 +537,6 @@
   </div>
 </div>
 
-
 <!-- Modal -->
 <!-- Discapacidades -->
 <div
@@ -601,4 +605,5 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- Fin Modal -->
-<!-- <pre>{{ personaBody | json }}</pre> -->
+<!-- <pre>{{ personaBody | json }}</pre>
+ -->
