@@ -1,0 +1,210 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- <h4 class="card-title">Formulario Maestro</h4>
+        <h6 class="card-subtitle">
+          Debe ingresar los codigos de las tablas de cabecera.
+        </h6> -->
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqInstitucion"
+              (ngModelChange)="bsqInstitucion = $event.toUpperCase()"
+              (keyup)="buscarInstitucion()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoInstitucion()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">CÓDIGO</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ABREVIACIÓN</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of listInstituciones; track item.ins_id_pk) {
+                <tr>
+                  <td data-label="#">{{ item.ins_id_pk }}</td>
+                  <td data-label="CÓDIGO">
+                    {{ item.ins_codigo }}
+                  </td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.ins_descripcion }}
+                  </td>
+                  <td data-label="ESTADO">
+                    {{ item.ins_visible ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ABREVIACIÓN">{{ item.ins_abreviacion }}</td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          data-toggle="modal"
+                          data-target="#institucionModal"
+                          (click)="editarInstitucion(item.ins_id_pk)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarInstitucion(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="institucionModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro institución</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarInstitucion()">
+          <div class="form-group">
+            <div class="form-group">
+            <label>* Código</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="institucionBody.ins_codigo"
+              name="ins_codigo"
+              placeholder="Ingrese Código"
+            />
+          </div>
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="institucionBody.ins_descripcion"
+              (ngModelChange)="
+                institucionBody.ins_descripcion = $event.toUpperCase()
+              "
+              name="ins_descripcion"
+              placeholder="Ingrese descripción"
+            />
+          </div>
+
+           <div class="form-group">
+            <label>Abreviación</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="institucionBody.ins_abreviacion"
+              
+              name="ins_abreviacion"
+              placeholder="Ingrese Abreviación"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Visible</label>
+            <div class="switch">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="institucionBody.ins_visible"
+                  name="institucionBody"
+                />
+                <span class="lever switch-col-red"></span>
+              </label>
+            </div>
+          </div>
+          
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+

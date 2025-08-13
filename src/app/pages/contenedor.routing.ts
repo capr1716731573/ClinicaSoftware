@@ -14,6 +14,7 @@ import { GeografiaComponent } from './administrador/geografia/geografia.componen
 import { MenuComponent } from './administrador/menu/menu.component';
 import { UsuariosComponent } from './administrador/usuario/usuarios.component';
 import { UsuarioComponent } from './administrador/usuario/usuario.component';
+import { InstitucionesComponent } from './administrador/institucion-salud/instituciones.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -33,6 +34,7 @@ export const pagesChildRoutes: Routes = [
             { path: 'menu-perfil', canActivate: [JwtGuard],component: MenuComponent ,data:{titulo: 'Opciones'}},
             { path: 'usuarios', canActivate: [JwtGuard],component: UsuariosComponent ,data:{titulo: 'Usuarios'}},
             { path: 'usuario/:id', canActivate: [JwtGuard],component: UsuarioComponent ,data:{titulo: 'Usuario'}},
+            { path: 'instituciones', canActivate: [JwtGuard],component: InstitucionesComponent ,data:{titulo: 'Instituciones-Casas Salud'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },
