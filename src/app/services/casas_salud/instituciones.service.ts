@@ -15,7 +15,12 @@ export class InstitucionService {
   constructor() {}
 
   getAllInstitucion(desde: number) {
-    const url = `${this._baseUrl}/institucion/?desde=${desde}`;
+    let url;
+    if (desde === null){
+      url = `${this._baseUrl}/institucion`;
+    }else{
+      url = `${this._baseUrl}/institucion/?desde=${desde}`;
+    }
 
     return this._http.get(url).pipe(
       map((resp: any) => {

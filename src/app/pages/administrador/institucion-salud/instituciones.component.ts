@@ -19,7 +19,7 @@ export class InstitucionesComponent {
     if (tab === 'institucion' && this.institucionComponent) {
       this.institucionComponent.getInstitucion();
     } else if (tab === 'casas_salud' && this.casaSaludComponent) {
-      //this.perfilComponent.inicializacion();
+      this.casaSaludComponent.inicializacion();
     }
   }
 }

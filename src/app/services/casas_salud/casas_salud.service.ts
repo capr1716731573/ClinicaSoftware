@@ -34,8 +34,8 @@ export class CasasSaludService {
     );
   }
 
-  getAllCasaSaludId(opcion: number, id: number) {
-    const url = `${this._baseUrl}/casalud/id/${opcion}/${id}`;
+  getAllCasaSaludId( id: number) {
+    const url = `${this._baseUrl}/casalud/id/${id}`;
 
     return this._http.get(url).pipe(
       map((resp: any) => {

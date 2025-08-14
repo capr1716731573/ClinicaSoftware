@@ -1,1 +1,303 @@
-<p>casa-salud works!</p>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Casas de Salud</h4>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqCasaSalud"
+              (ngModelChange)="bsqCasaSalud = $event.toUpperCase()"
+              (keyup)="buscarCasaSalud()"
+              name="bsqCasaSalud"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoCasasSalud()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">NOMBRE</th>
+                  <th scope="col">INSTITUCIÓN (PERTENECE)</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">PRINCIPAL</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listCasasSalud; track item.casalud_id_pk) {
+                <tr>
+                  <td data-label="#">{{ item.casalud_id_pk }}</td>
+                  <td data-label="NOMBRE">
+                    {{ item.casalud_descripcion }}
+                  </td>
+                  <td data-label="INSTITUCIÓN">
+                    {{ item.ins_descripcion }}
+                  </td>
+                  <td data-label="ESTADO">
+                    {{ item.casalud_visible ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="PRINCIPAL">
+                    {{ item.casalud_principal ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          (click)="editarCasaSalud(item.casalud_id_pk)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarCasaSalud(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="casaSaludModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Casa de Salud</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarCasaSalud()">
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <!-- campo -->
+              <label class="control-label">Institución *</label>
+              <ng-select
+                [items]="listInstitucion"
+                bindLabel="ins_descripcion"
+                bindValue="ins_id_pk"
+                placeholder="Buscar..."
+                [(ngModel)]="idInstitucion"
+                name="idInstitucion"
+                [clearable]="true"
+                (clear)="idInstitucion = null; casaSaludBody.ins_id_fk = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.ins_descripcion }}</b
+                    ><br />
+                    <small>ID: {{ item.ins_codigo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-md-6 form-group">
+              <!-- campo -->
+              <label class="control-label">Ciudad *</label>
+              <ng-select
+                [items]="listGeografia"
+                bindLabel="desc_geo"
+                bindValue="pk_geo"
+                placeholder="Buscar..."
+                [(ngModel)]="idGeografia"
+                name="idGeografia"
+                [clearable]="true"
+                (clear)="idGeografia = null; casaSaludBody.fk_geo = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_geo }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_geo }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label>* Código</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="casaSaludBody.casalud_codigo"
+                (ngModelChange)="
+                  casaSaludBody.casalud_codigo = $event.toUpperCase()
+                "
+                name="casalud_codigo"
+                placeholder="Ingrese Código"
+              />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>* Descripción</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="casaSaludBody.casalud_descripcion"
+                (ngModelChange)="
+                  casaSaludBody.casalud_descripcion = $event.toUpperCase()
+                "
+                name="casalud_descripcion"
+                placeholder="Ingrese Descripción"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Dirección</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="casaSaludBody.casalud_direccion"
+                (ngModelChange)="
+                  casaSaludBody.casalud_direccion = $event.toUpperCase()
+                "
+                name="casalud_direccion"
+                placeholder="Ingrese Dirección"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 form-group">
+              <label>* Estado</label>
+              <div class="switch">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="casaSaludBody.casalud_visible"
+                    name="casalud_visible"
+                  />
+                  <span class="lever switch-col-red"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3 form-group">
+              <label>* Principal</label>
+              <div class="switch">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="casaSaludBody.casalud_principal"
+                    name="casalud_principal"
+                  />
+                  <span class="lever switch-col-red"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3 form-group">
+              <label>Celular</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="casaSaludBody.casalud_telefonocelular"
+                name="casalud_telefonocelular"
+                placeholder="XXXXXXXXX"
+              />
+            </div>
+            <div class="col-md-3 form-group">
+              <label>Convencional</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="casaSaludBody.casalud_telefonoconvencional"
+                name="casalud_telefonoconvencional"
+                placeholder="XXXXXXXXX"
+              />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+          <pre>{{casaSaludBody | json}}</pre>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+   
+</div>
+<!-- Fin Modal -->
