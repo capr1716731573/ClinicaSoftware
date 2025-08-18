@@ -5,4 +5,8 @@ export interface Usuario {
   password_usuario: string;
   estado_usuario: boolean;          // NOT NULL con DEFAULT true
   super_usuario: boolean;           // NOT NULL con DEFAULT false
+  doctor_usuario: boolean;
+  registrodoctor_usuario: string;
+  pathsello_usuario: string;
+  pathfirma_usuario: string;
 }

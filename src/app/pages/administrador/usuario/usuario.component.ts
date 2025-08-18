@@ -45,6 +45,12 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   tabActivo: string = 'persona';
   idNum: number = 0;
 
+  //Imagenes a subir
+  public imgFirma: File;
+  public imgSello: File;
+  public imgFirmaTemp: any = null;
+  public imgSelloTemp: any = null;
+
   constructor() {}
 
   ngOnInit(): void {
@@ -83,6 +89,10 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
       password_usuario: '',
       estado_usuario: true,
       super_usuario: false,
+      doctor_usuario: false,
+      registrodoctor_usuario: '',
+      pathsello_usuario: '',
+      pathfirma_usuario: '',
     };
   }
 
@@ -226,5 +236,146 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
         this._routerService2.navigate(['/usuarios']);
       }
     });
+  }
+
+  //Seccion de gestiones y carga de imagenes de firma y sello
+  cambiarImagenFirma(file?: File) {
+    this.imgFirma = file;
+    //cambiar la imagen
+    if (!file) {
+      return (this.imgFirmaTemp = null);
+    }
+
+    // ✅ Validar tipo MIME permitido
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Solo se permiten imágenes JPG, JPEG, PNG o WebP.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+      this.imgFirmaTemp = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      this.imgFirmaTemp = reader.result;
+    };
+  }
+
+  subirImagenFirma() {
+    Swal.fire({
+      title: 'Confirmación',
+      text: `Desea subir la imagen asiganada como firma del usuario ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._usuarioService
+          .actualizarFirmaSello(this.imgFirma, 'f', this.usuarioBody)
+          .then((img) => {
+            this.usuarioBody = img;
+            this.opcion = 'U';
+            toastr.success(
+              'Éxito!',
+              'Firma actualizada correctamente'
+            );
+          });
+      }
+    });
+  }
+
+  cambiarImagenSello(file?: File) {
+    this.imgSello = file;
+    //cambiar la imagen
+    if (!file) {
+      return (this.imgSelloTemp = null);
+    }
+
+    // ✅ Validar tipo MIME permitido
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Solo se permiten imágenes JPG, JPEG, PNG o WebP.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+      this.imgSelloTemp = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      this.imgSelloTemp = reader.result;
+    };
+  }
+
+  subirImagenSello() {
+    Swal.fire({
+      title: 'Confirmación',
+      text: `Desea subir la imagen asiganada como sello del usuario ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._usuarioService
+          .actualizarFirmaSello(this.imgSello, 's', this.usuarioBody)
+          .then((img) => {
+            this.usuarioBody = img;
+            this.opcion = 'U';
+            toastr.success(
+              'Éxito!',
+              'Sello actualizada correctamente'
+            );
+          });
+      }
+    });
+  }
+
+  verImagenFirmaSello(tipo: string): string {
+    const noImage = './assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
+
+    if (tipo === 'f') {
+      if (
+        !this.usuarioBody.pathfirma_usuario ||
+        this.usuarioBody.pathfirma_usuario === null ||
+        this.usuarioBody.pathfirma_usuario === undefined ||
+        this.usuarioBody.pathfirma_usuario === ''
+      ) {
+        return noImage;
+      } else {
+        return this._usuarioService.verFirmaSello(
+          'f',
+          this.usuarioBody.pathfirma_usuario
+        );
+      }
+    } else if (tipo === 's') {
+      if (
+        !this.usuarioBody.pathsello_usuario ||
+        this.usuarioBody.pathsello_usuario === null ||
+        this.usuarioBody.pathsello_usuario === undefined ||
+        this.usuarioBody.pathsello_usuario === ''
+      ) {
+        return noImage;
+      } else {
+        return this._usuarioService.verFirmaSello(
+          's',
+          this.usuarioBody.pathsello_usuario
+        );
+      }
+    } else {
+      return noImage;
+    }
   }
 }

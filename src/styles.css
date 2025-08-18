@@ -81,3 +81,10 @@ table th {
 
 
 }
+
+.img-avatar {
+  width: 300px;      /* Ancho fijo */
+  height:200px;     /* Alto fijo */
+  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  border-radius: 4px; /* opcional, esquinas suaves */
+}
