@@ -93,6 +93,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
       registrodoctor_usuario: '',
       pathsello_usuario: '',
       pathfirma_usuario: '',
+      senecyt_usuario:''
     };
   }
 

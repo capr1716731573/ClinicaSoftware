@@ -9,4 +9,5 @@ export interface Usuario {
   registrodoctor_usuario: string;
   pathsello_usuario: string;
   pathfirma_usuario: string;
+  senecyt_usuario:string;
 }

@@ -173,8 +173,8 @@ export class CasaSaludComponent {
       casalud_telefonocelular: '', // varchar(15) NULL
       casalud_visible: true, // bool NOT NULL DEFAULT true
     };
-    this.idInstitucion=null;
-    this.idGeografia=null;
+    this.idInstitucion = null;
+    this.idGeografia = null;
     // ✅ Abre el modal con jQuery Bootstrap
     $('#casaSaludModal').modal('show');
   }
@@ -191,28 +191,29 @@ export class CasaSaludComponent {
     this.getCasasSalud();
   }
 
-editarCasaSalud(id_casa: number) {
-  this.opcion = 'U';
+  editarCasaSalud(id_casa: number) {
+    this.opcion = 'U';
 
-  this._casaSaludService.getAllCasaSaludId(id_casa).subscribe({
-    next: (resp) => {
-      const row = Array.isArray(resp.rows) ? resp.rows[0] : resp.rows;
+    this._casaSaludService.getAllCasaSaludId(id_casa).subscribe({
+      next: (resp) => {
+        const row = Array.isArray(resp.rows) ? resp.rows[0] : resp.rows;
 
-      this.casaSaludBody = row;
+        this.casaSaludBody = row;
 
-      // 🔢 fuerza a number (o null)
-      this.idInstitucion = row?.ins_id_fk != null ? Number(row.ins_id_fk) : null;
-      this.idGeografia   = row?.fk_geo     != null ? Number(row.fk_geo)     : null;
+        // 🔢 fuerza a number (o null)
+        this.idInstitucion =
+          row?.ins_id_fk != null ? Number(row.ins_id_fk) : null;
+        this.idGeografia = row?.fk_geo != null ? Number(row.fk_geo) : null;
 
-      /* // 👇 si las listas YA están cargadas, con esto basta
+        /* // 👇 si las listas YA están cargadas, con esto basta
       this.cdr.detectChanges();*/
-      $('#casaSaludModal').modal('show'); 
-    },
-    error: (err) => {
-      toastr.error('Error', `${err} - Datos no cargados del id ${id_casa}`);
-    },
-  });
-}
+        $('#casaSaludModal').modal('show');
+      },
+      error: (err) => {
+        toastr.error('Error', `${err} - Datos no cargados del id ${id_casa}`);
+      },
+    });
+  }
 
   eliminarCasaSalud(casa: any) {
     Swal.fire({

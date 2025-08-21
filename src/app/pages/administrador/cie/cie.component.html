@@ -1,0 +1,276 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Cie</h4>
+        <h6 class="card-subtitle">
+          Gestión de Diagnósticos cargados en el aplicativo.
+        </h6>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqCie"
+              (ngModelChange)="bsqCie = $event.toUpperCase()"
+              (keyup)="buscarCie()"
+            />
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-info dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Nuevo
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" (click)="nuevoCie('p')">Cie - Padre</a>
+                <a class="dropdown-item" (click)="nuevoCie('h')">Cie - Hijo</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">AÑO</th>
+                  <th scope="col">PADRE</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of cieList; track item.pk_cie) {
+                <tr>
+                  <td data-label="#">{{ item.pk_cie }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.cie_completo }}
+                  </td>
+                  <td data-label="AÑO">{{ item.anio_cie }}</td>
+                  <td data-label="PADRE">
+                    <span
+                      [ngStyle]="{
+                        color:
+                          !item.cie_padre_nombre ||
+                          item.cie_padre_nombre.trim() === ''
+                            ? 'red'
+                            : 'inherit',
+                        'font-style':
+                          !item.cie_padre_nombre ||
+                          item.cie_padre_nombre.trim() === ''
+                            ? 'italic'
+                            : 'normal'
+                      }"
+                    >
+                      {{
+                        item.cie_padre_nombre &&
+                        item.cie_padre_nombre.trim() !== ""
+                          ? item.cie_padre_nombre
+                          : "PADRE"
+                      }}
+                    </span>
+                  </td>
+
+                  <td data-label="ESTADO">
+                    {{ item.estado_cie ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          (click)="editarCie(item.pk_cie)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarCie(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="cieModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Cie</h4>        
+      </div>
+      <div class="modal-body">
+       <!--  <pre>{{cieBody | json}}</pre>
+        <pre>Validar Guardar es :{{validarGuardar()}}</pre> -->
+        <form class="form" (ngSubmit)="guardarCie()">
+          @if(cieBody.padre_cie != 0){
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label class="control-label">Padre Cie *</label>
+              <ng-select
+                [items]="listPadres"
+                bindLabel="desc_cie"
+                bindValue="pk_cie"
+                placeholder="Buscar..."
+                [(ngModel)]="cieBody.padre_cie"
+                name="padre_cie"
+                [clearable]="true"
+                (clear)="cieBody.padre_cie = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_cie }}</b
+                    ><br />
+                    <small>ID: {{ item.codigo_cie }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          }
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>* Descripción</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="cieBody.desc_cie"
+                (ngModelChange)="cieBody.desc_cie = $event.toUpperCase()"
+                name="desc_cie"
+                placeholder="Ingrese descripción"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 form-group">
+              <label>* Código</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="cieBody.codigo_cie"
+                (ngModelChange)="cieBody.codigo_cie = $event.toUpperCase()"
+                name="codigo_cie"
+                placeholder="Ingrese Código"
+              />
+            </div>
+            <div class="col-md-3 form-group">
+              <label>* Año</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="cieBody.anio_cie"
+                (ngModelChange)="cieBody.anio_cie = $event.toUpperCase()"
+                name="anio_cie"
+                placeholder="Ingrese Año"
+              />
+            </div>
+            <div class="col-md-3 form-group">
+              <label>Versión</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="cieBody.version_cie"
+                (ngModelChange)="cieBody.version_cie = $event.toUpperCase()"
+                name="version_cie"
+                placeholder="Ingrese Versión"
+              />
+            </div>
+            <div class="col-md-3 form-group">
+              <label>* Estado</label>
+              <div class="switch">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="cieBody.estado_cie"
+                    name="estado_cie"
+                  />
+                  <span class="lever switch-col-red"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

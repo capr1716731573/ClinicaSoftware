@@ -65,7 +65,7 @@
               <div class="card-body">
                 <!-- <pre>{{ usuarioBody | json }}</pre> -->
                 <div class="row p-t-20">
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <div class="form-group">
                       <label class="control-label">Login *</label>
                       <input
@@ -131,7 +131,7 @@
                     </div>
                   </div>
                   @if (usuarioBody.doctor_usuario) {
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <div class="form-group">
                       <label class="control-label">N. Registro</label>
                       <input
@@ -139,6 +139,18 @@
                         class="form-control form-control-line"
                         [(ngModel)]="usuarioBody.registrodoctor_usuario"
                         name="registrodoctor_usuario"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="control-label">N. Senecyt</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="usuarioBody.senecyt_usuario"
+                        name="senecyt_usuario"
                         placeholder="Ingrese"
                       />
                     </div>
