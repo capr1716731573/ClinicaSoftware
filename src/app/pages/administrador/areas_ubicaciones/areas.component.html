@@ -1,0 +1,216 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card bg-primary">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/assets-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h6 class="text-white m-t-10 m-b-0">
+                        Casa de Salud (Principal)
+                      </h6>
+                      <h2 class="m-t-0 text-white">
+                        {{ casaSaludBody.casalud_descripcion }}
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqArea"
+              (ngModelChange)="bsqArea = $event.toUpperCase()"
+              (keyup)="buscarArea()"
+              [disabled]="!casaSaludBody.casalud_id_pk"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoArea()"
+                [disabled]="!casaSaludBody.casalud_id_pk"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listAreas; track item.areas_id_pk) {
+                <tr>
+                  <td data-label="#">{{ item.areas_id_pk }}</td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.area_descripcion }}
+                  </td>
+                  <td data-label="ESTADO">
+                    {{ item.area_habilitada ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="editarArea(item.areas_id_pk)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarArea(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="areasModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Área</h4>
+      </div>
+      <div class="modal-body">
+        
+        <form class="form" (ngSubmit)="guardarArea()">
+          <div class="form-group">
+            <label>* Nombre</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="areaBody.area_descripcion"
+              (ngModelChange)="
+                areaBody.area_descripcion = $event?.toUpperCase()
+              "
+              name="area_descripcion"
+              placeholder="Ingrese Nombre"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Habilitado</label>
+            <div class="switch">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="areaBody.area_habilitada"
+                  name="area_habilitada"
+                />
+                <span class="lever switch-col-red"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Observación</label>
+            <textarea
+              class="form-control form-control-line"
+              [(ngModel)]="areaBody.area_observacion"
+              (ngModelChange)="
+                areaBody.area_observacion = $event?.toUpperCase()
+              "
+              name="area_observacion"
+              placeholder="Ingrese observación"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

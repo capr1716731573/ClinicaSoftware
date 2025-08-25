@@ -16,6 +16,8 @@ import { UsuariosComponent } from './administrador/usuario/usuarios.component';
 import { UsuarioComponent } from './administrador/usuario/usuario.component';
 import { InstitucionesComponent } from './administrador/institucion-salud/instituciones.component';
 import { CieComponent } from './administrador/cie/cie.component';
+import { EspecialidadMedicoComponent } from './administrador/especialidad_medico/especialidad-medico.component';
+import { UbicacionesComponent } from './administrador/areas_ubicaciones/ubicaciones.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -37,6 +39,8 @@ export const pagesChildRoutes: Routes = [
             { path: 'usuario/:id', canActivate: [JwtGuard],component: UsuarioComponent ,data:{titulo: 'Usuario'}},
             { path: 'instituciones', canActivate: [JwtGuard],component: InstitucionesComponent ,data:{titulo: 'Instituciones-Casas Salud'}},
             { path: 'cie', canActivate: [JwtGuard],component: CieComponent ,data:{titulo: 'Cie Diagnósticos'}},
+            { path: 'especialidades_medicos', canActivate: [JwtGuard],component: EspecialidadMedicoComponent ,data:{titulo: 'Especialidades - Médicos'}},
+            { path: 'ubicaciones', canActivate: [JwtGuard],component: UbicacionesComponent ,data:{titulo: 'Ubicaciones'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

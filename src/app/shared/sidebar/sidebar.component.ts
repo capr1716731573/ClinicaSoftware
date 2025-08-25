@@ -33,7 +33,6 @@ export class SidebarComponent {
       next: (resp) => {
         //console.info(JSON.stringify(resp));
         this.menuItems = resp.menu;
-        console.log(this.menuItems);
       },
       error: (err) => {
         // manejo de error

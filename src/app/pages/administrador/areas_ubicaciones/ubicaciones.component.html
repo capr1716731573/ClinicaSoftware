@@ -1,0 +1,58 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body p-b-0">
+      <h4 class="card-title">Gestión de Ubicaciones</h4>
+      <h6 class="card-subtitle">
+        Gestiona las Áreas, Tipos de Ubicaciones, Ubicaciones donde estará el paciente
+      </h6>
+    </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs customtab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          data-toggle="tab"
+          href="#areas"
+          role="tab"
+          (click)="tabSeleccionado('areas')"
+          ><span class="hidden-sm-up"><i class="ti-home"></i></span>
+          <span class="hidden-xs-down">Áreas</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#tipo_ubicacion"
+          role="tab"
+          (click)="tabSeleccionado('tipo_ubicacion')"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Tipo de Ubicación</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#ubicacion"
+          role="tab"
+          (click)="tabSeleccionado('ubicacion')"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Ubicación-Camas</span></a
+        >
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="areas" role="tabpanel">
+        <app-areas></app-areas>
+      </div>
+      <div class="tab-pane" id="tipo_ubicacion" role="tabpanel">
+        <app-tipo-ubicacion></app-tipo-ubicacion>
+      </div>
+      <div class="tab-pane" id="ubicacion" role="tabpanel">
+        <app-ubicacion></app-ubicacion>
+      </div>
+    </div>
+  </div>
+</div>

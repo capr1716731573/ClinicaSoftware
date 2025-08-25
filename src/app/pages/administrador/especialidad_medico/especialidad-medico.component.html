@@ -1,0 +1,225 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Especialidades-Médicos</h4>
+
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqEspecialidadMedico"
+              (ngModelChange)="bsqEspecialidadMedico = $event.toUpperCase()"
+              (keyup)="buscarEspecialidadMedico()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoEspecialidadMedico()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">MÉDICO</th>
+                  <th scope="col">ESPECIALIDAD/SUBESPECIALIDAD</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of listEspecialidadesMedicos; track item.pk_espemed)
+                {
+                <tr>
+                  <td data-label="#">{{ item.pk_espemed }}</td>
+
+                  <td data-label="MÉDICO">
+                    {{ item.apellidopat_persona }}
+                    {{ item.apellidomat_persona }}
+                    {{ item.nombre_primario_persona }}
+                    {{ item.nombre_secundario_persona }}
+                  </td>
+
+                  <td data-label="ESPECIALIDAD">{{ item.desc_catdetalle }} ({{item.tipo_espemed}})</td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          (click)="editarEspecialidadMedico(item.pk_espemed)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarEspecialidadMedico(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retoceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="especialidadMedicoModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registro Especialidad Médico
+        </h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ especialidadMedicoBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarEspecialidadMedico()">
+          <div class="form-group">
+            <label>Especialidad</label>
+            @if(opcion === 'U'){
+            <br><small>La Especialidad/SubEspecialidad no puede ser cambiada</small><br>
+            }
+            <ng-select
+              [items]="listEspecialidades"
+              bindLabel="desc_catdetalle"
+              bindValue="pk_catdetalle"
+              placeholder="Buscar..."
+              [(ngModel)]="especialidadMedicoBody.fk_catdetalle"
+              name="fk_catdetalle"
+              [clearable]="true"
+              (clear)="especialidadMedicoBody.fk_catdetalle = null"
+              [typeToSearchText]="'Empieza a escribir...'"
+              [disabled]="opcion === 'U'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <b>{{ item.desc_catdetalle }}</b
+                  ><br />
+                  <small>ID: {{ item.pk_catdetalle }} </small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Médico</label>
+            <ng-select
+              [items]="listMedicos"
+              bindLabel="nombres_completos"
+              bindValue="pk_usuario"
+              placeholder="Buscar..."
+              [(ngModel)]="especialidadMedicoBody.fk_usuario"
+              name="fk_usuario"
+              [clearable]="true"
+              (clear)="especialidadMedicoBody.fk_usuario = null"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <b>{{ item.nombres_completos || "Sin nombre" }}</b
+                  ><br />
+                  <small
+                    >Identificación:
+                    {{ item.numidentificacion_persona || "—" }}</small
+                  >
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label for="tipoEspemed">Tipo</label>
+
+            <select
+              id="tipoEspemed"
+              class="custom-select col-12"
+              [(ngModel)]="especialidadMedicoBody.tipo_espemed"
+              name="tipo_espemed"
+            >
+              <option [ngValue]="null" disabled>
+                Seleccione una opción...
+              </option>
+              <option value="E">ESPECIALIDAD</option>
+              <option value="S">SUBESPECIALIDAD</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

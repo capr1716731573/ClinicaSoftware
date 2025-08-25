@@ -33,6 +33,26 @@ export class UsuarioService {
       })
     );
   }
+  
+  getAllUsuarioMedicos() {
+    const url = `${this._baseUrl}/usuario/medicos`;
+
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta en el Service. - getAllUsuarioMedicos',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
 
   getAllUsuarioId(id: number) {
     const url = `${this._baseUrl}/usuario/id/${id}`;
@@ -163,8 +183,8 @@ export class UsuarioService {
     // Validaciones mínimas
     if (!archivo) throw new Error('No se proporcionó archivo');
     let tipoimg;
-    if(tipo === 'f') tipoimg='firma';
-    else if(tipo === 's') tipoimg='sello';
+    if (tipo === 'f') tipoimg = 'firma';
+    else if (tipo === 's') tipoimg = 'sello';
     if (!tipoimg) throw new Error(`Tipo inválido: ${tipo}`);
 
     // Construcción de URL
@@ -185,36 +205,34 @@ export class UsuarioService {
         body: formData,
         // credentials: 'include', // <- si necesitas cookies/sesión
       });
-      
-      const data_resp= await resp.json();
 
-      if(data_resp.status ==="ok"){
+      const data_resp = await resp.json();
+
+      if (data_resp.status === 'ok') {
         return data_resp.data;
-      }else{
+      } else {
         return false;
       }
-     
     } catch (error) {
       console.error('actualizarFirmaSello error:', error);
       throw error; // o `return false;` si prefieres silenciar
     }
   }
 
-  verFirmaSello(tipo: 'f' | 's', rutaImg:string){
-    //valida que la ruta venga activa 
-    if(!rutaImg || rutaImg === undefined || rutaImg ==='') return '';
+  verFirmaSello(tipo: 'f' | 's', rutaImg: string) {
+    //valida que la ruta venga activa
+    if (!rutaImg || rutaImg === undefined || rutaImg === '') return '';
 
-    //Preparo que ruta elijo si firma o sello 
-    
+    //Preparo que ruta elijo si firma o sello
+
     // Construcción de URL
     let url = `${this._baseUrl}/usuario/ver`;
-    if(tipo === 'f'){
-      url=`${url}/firma?pathfirma=${rutaImg}`
-    }else if(tipo === 's'){
-      url=`${url}/sello?pathsello=${rutaImg}`
+    if (tipo === 'f') {
+      url = `${url}/firma?pathfirma=${rutaImg}`;
+    } else if (tipo === 's') {
+      url = `${url}/sello?pathsello=${rutaImg}`;
     }
 
     return url;
-
   }
 }
