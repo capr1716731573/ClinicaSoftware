@@ -16,7 +16,7 @@ export class AreasService {
 
   getAllAreas(desde: number, estado: boolean, casaSalud: number) {
     let url = `${this._baseUrl}/areas/todos/${estado}/${casaSalud}/?desde=${desde}`;
-    console.log(url)
+    
     return this._http.get(url).pipe(
       map((resp: any) => {
         return resp;
@@ -36,7 +36,6 @@ export class AreasService {
 
   getAllAreasId(id: number) {
     const url = `${this._baseUrl}/areas/id/${id}`;
-    console.log(url);
     return this._http.get(url).pipe(
       map((resp: any) => {
         return resp;

@@ -6,6 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { AreasService } from '../../../services/ubicaciones_camas/areas.service';
 import { CasasSaludService } from '../../../services/casas_salud/casas_salud.service';
+import { LoginService } from '../../../services/login.service';
 
 declare var toastr: any;
 declare var $: any;
@@ -18,6 +19,7 @@ export interface Area {
   area_descripcion: string; // text NOT NULL
   area_habilitada: boolean; // bool NOT NULL
   area_observacion: string | null; // text NULL
+  pk_usuario:number//Aqui como guarda auditoria de fecha_creacion y fecha_modificacion toca colocar
 }
 
 @Component({
@@ -29,16 +31,18 @@ export interface Area {
 export class AreasComponent {
   private _areaService = inject(AreasService);
   private _casaSaludService = inject(CasasSaludService);
+  private _loginService = inject(LoginService);
   listAreas: any[] = [];
   casaSaludBody: any = {};
   areaBody: Area = {
     areas_id_pk: 0, // serial4 NOT NULL (PK)
     casalud_id_fk: null, // int4 NOT NULL (FK -> casas_salud.casalud_id_pk)
-    fecha_creacion_area: {}, // json NOT NULL
-    fecha_modificacion_area: {}, // json NULL
+    fecha_creacion_area: null, // json NOT NULL
+    fecha_modificacion_area: null, // json NULL
     area_descripcion: '', // text NOT NULL
     area_habilitada: true, // bool NOT NULL
     area_observacion: '', // text NULL
+    pk_usuario:0
   };
   bsqArea: string = '';
   opcion: string = 'I';
@@ -156,6 +160,7 @@ export class AreasComponent {
       area_descripcion: '', // text NOT NULL
       area_habilitada: true, // bool NOT NULL
       area_observacion: '', // text NULL
+      pk_usuario:0
     };
     if (this.casaSaludBody.casalud_id_pk) {
       // ✅ Abre el modal con jQuery Bootstrap
@@ -203,6 +208,8 @@ export class AreasComponent {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        //Asingo el pk usuario para auditoria
+        area.pk_usuario =this._loginService.getUserLocalStorage().pk_usuario;
         this._areaService.guardarAreas(area, 'D').subscribe({
           next: (resp) => {
             if (resp.status && resp.status === 'ok') {
@@ -229,6 +236,9 @@ export class AreasComponent {
   }
 
   guardarArea() {
+    //Asingo el pk usuario para auditoria
+    this.areaBody.pk_usuario=this._loginService.getUserLocalStorage().pk_usuario;
+
     this._areaService.guardarAreas(this.areaBody, this.opcion).subscribe({
       next: (resp) => {
         this.opcion = `U`;

@@ -1,1 +1,227 @@
-<p>tipo-ubicacion works!</p>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group row">
+          <label class="control-label col-md-2">Tipos Ubicaciones :</label>
+          <div class="col-md-8">
+            <select
+              id="tipo"
+              class="custom-select col-12"
+              [(ngModel)]="tipo"
+              (ngModelChange)="onTipoChange(tipo)"
+              name="tipo"
+            >
+              <option [ngValue]="null">
+                Todos..
+              </option>
+              <option value="T">TORRE</option>
+              <option value="P">PISO</option>
+              <option value="S">SALA</option>
+              <option value="H">HABITACIÓN</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqTipoUbicacion"
+              (ngModelChange)="bsqTipoUbicacion = $event.toUpperCase()"
+              (keyup)="buscarTipoUbicacion()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoTipoUbicacion()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">TIPO</th>
+                  <th scope="col">DESCRIPCIÓN</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listTipoUbicacion; track item.pk_tipoubi) {
+                <tr>
+                  <td data-label="#">{{ item.pk_tipoubi }}</td>
+                  <td data-label="TIPO">
+                    {{
+                      item.tipo_tipoubi === "T"
+                        ? "TORRE"
+                        : item.tipo_tipoubi === "P"
+                        ? "PISO"
+                        : item.tipo_tipoubi === "S"
+                        ? "SALA"
+                        : item.tipo_tipoubi === "H"
+                        ? "HABITACION"
+                        : ""
+                    }}
+                  </td>
+                  <td data-label="DESCRIPCIÓN">
+                    {{ item.desc_tipoubi }}
+                  </td>
+                  <td data-label="ESTADO">
+                    {{ item.habilitado_tipoubi ? "✔️" : "❌" }}
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="editarTipoUbicacion(item.pk_tipoubi)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarTipoUbicacion(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="tipoUbicacionModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registro Tipo de Ubicación
+        </h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{tipoUbicacionBody | json}}</pre> -->
+        <form class="form" (ngSubmit)="guardarTipoUbicacion()">
+          <div class="form-group">
+            <label for="tipo">Tipo</label>
+
+            <select
+              id="tipo"
+              class="custom-select col-12"
+              [(ngModel)]="tipoUbicacionBody.tipo_tipoubi"
+              name="tipo_tipoubi"
+            >
+              <option [ngValue]="null" disabled>
+                Seleccione una opción...
+              </option>
+              <option value="T">TORRE</option>
+              <option value="P">PISO</option>
+              <option value="S">SALA</option>
+              <option value="H">HABITACIÓN</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>* Descripción</label>
+            <input
+              type="text"
+              class="form-control form-control-line"
+              [(ngModel)]="tipoUbicacionBody.desc_tipoubi"
+              (ngModelChange)="
+                tipoUbicacionBody.desc_tipoubi = $event?.toUpperCase()
+              "
+              name="desc_tipoubi"
+              placeholder="Ingrese Descripción"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>* Habilitado</label>
+            <div class="switch">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="tipoUbicacionBody.habilitado_tipoubi"
+                  name="habilitado_tipoubi"
+                />
+                <span class="lever switch-col-red"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

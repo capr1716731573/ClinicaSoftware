@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root',
 })
-export class AreasService {
+export class UbicacionService {
   private readonly _http = inject(HttpClient);
   private _baseUrl = environment.apiUrl;
 

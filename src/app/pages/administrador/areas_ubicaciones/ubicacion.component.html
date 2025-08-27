@@ -1,1 +1,401 @@
-<p>ubicacion works!</p>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="col-lg-12">
+          <div class="form-group row">
+            <label class="control-label col-md-2">Estado:</label>
+            <div class="col-md-8">
+              <select
+                id="idEstado"
+                class="custom-select col-12"
+                [(ngModel)]="idEstado"
+                (ngModelChange)="onEstadoAreaChange()"
+                name="idEstado"
+              >
+                <option [ngValue]="null">Todos..</option>
+                <option value="O">OCUPADA</option>
+                <option value="D">DESOCUPADA</option>
+                <option value="H">AVERIADA</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group row">
+            <label class="control-label col-md-2">Áreas:</label>
+            <div class="col-md-8">
+              <ng-select
+                [items]="listArea"
+                bindLabel="area_descripcion"
+                bindValue="areas_id_pk"
+                placeholder="Buscar Áreas..."
+                [(ngModel)]="idArea"
+                (change)="onEstadoAreaChange()"
+                [clearable]="true"
+                (clear)="idArea = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.area_descripcion }}</b
+                    ><br />
+                    <small>ID: {{ item.areas_id_pk }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqUbicacion"
+              (ngModelChange)="bsqUbicacion = $event.toUpperCase()"
+              (keyup)="buscarUbicacion()"
+            />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-info"
+                type="button"
+                (click)="nuevoUbicacion()"
+              >
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">ÁREA</th>
+                  <th scope="col">TORRE</th>
+                  <th scope="col">PISO</th>
+                  <th scope="col">SALA</th>
+                  <th scope="col">HABITACIÓN</th>
+                  <th scope="col">UBICACIÓN</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of listUbicaciones; track item.pk_ubi) {
+                <tr>
+                  <td data-label="#">{{ item.pk_ubi }}</td>
+                  <td data-label="ÁREA">{{ item.area }}</td>
+                  <td data-label="TORRE">{{ item.torre }}</td>
+                  <td data-label="PISO">{{ item.piso }}</td>
+                  <td data-label="SALA">{{ item.sala }}</td>
+                  <td data-label="HABITACIÓN">{{ item.habitacion }}</td>
+                  <td data-label="UBICACIÓN">
+                    {{ item.descripcion_ubicacion }}
+                  </td>
+
+                  <td data-label="ESTADO">
+                    @if (item.estado_ubicacion === 'O') {
+                    <h4><span class="badge badge-danger">OCUPADO</span></h4>
+                    } @else if (item.estado_ubicacion === 'D') {
+                    <h4><span class="badge badge-success">DESOCUPADO</span></h4>
+                    } @else if (item.estado_ubicacion === 'H') {
+                    <h4><span class="badge badge-warning">AVERIADO</span></h4>
+                    }
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="editarUbicacion(item.pk_ubi)"
+                          >Editar</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          (click)="eliminarUbicacion(item)"
+                          >Eliminar</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button type="button" class="btn btn-info" (click)="avanzar()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="ubicacionModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registro Ubicación (Camas)
+        </h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ ubicacionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarUbicacion()">
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <label class="control-label">Área *</label>
+              <ng-select
+                [items]="listArea"
+                bindLabel="area_descripcion"
+                bindValue="areas_id_pk"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.areas_id_fk"
+                name="areas_id_pk"
+                [clearable]="true"
+                (clear)="ubicacionBody.areas_id_fk = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.area_descripcion }}</b
+                    ><br />
+                    <small>ID: {{ item.areas_id_pk }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-md-4 form-group">
+              <label class="control-label">Clase (Tipo) *</label>
+              <ng-select
+                [items]="listClase"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.clase_ubicacion"
+                name="pk_catdetalle"
+                [clearable]="true"
+                (clear)="ubicacionBody.clase_ubicacion = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_catdetalle }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-md-4 form-group">
+              <label class="control-label">Torre *</label>
+              <ng-select
+                [items]="listTorre"
+                bindLabel="desc_tipoubi"
+                bindValue="pk_tipoubi"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.fk_torre"
+                name="fk_torre"
+                [clearable]="true"
+                (clear)="ubicacionBody.fk_torre = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_tipoubi }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_tipoubi }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <label class="control-label">Piso *</label>
+              <ng-select
+                [items]="listPiso"
+                bindLabel="desc_tipoubi"
+                bindValue="pk_tipoubi"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.fk_piso"
+                name="fk_piso"
+                [clearable]="true"
+                (clear)="ubicacionBody.fk_piso = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_tipoubi }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_tipoubi }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+
+            <div class="col-md-4 form-group">
+              <label class="control-label">Sala *</label>
+              <ng-select
+                [items]="listSala"
+                bindLabel="desc_tipoubi"
+                bindValue="pk_tipoubi"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.fk_sala"
+                name="fk_sala"
+                [clearable]="true"
+                (clear)="ubicacionBody.fk_sala = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_tipoubi }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_tipoubi }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+
+            <div class="col-md-4 form-group">
+              <label class="control-label">Habitación *</label>
+              <ng-select
+                [items]="listHabitacion"
+                bindLabel="desc_tipoubi"
+                bindValue="pk_tipoubi"
+                placeholder="Buscar..."
+                [(ngModel)]="ubicacionBody.fk_habitacion"
+                name="fk_habitacion"
+                [clearable]="true"
+                (clear)="ubicacionBody.fk_habitacion = null"
+                [typeToSearchText]="'Buscar'"
+              >
+                <!-- Template de cómo se muestra cada opción -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_tipoubi }}</b
+                    ><br />
+                    <small>ID: {{ item.pk_tipoubi }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8 form-group">
+              <label>* Descripción</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="ubicacionBody.descripcion_ubicacion"
+                (ngModelChange)="
+                  ubicacionBody.descripcion_ubicacion = $event?.toUpperCase()
+                "
+                name="descripcion_ubicacion"
+                placeholder="Ingrese"
+              />
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="estado">Estado</label>
+              <select
+                id="estado"
+                class="custom-select col-12"
+                [(ngModel)]="ubicacionBody.estado_ubicacion"
+                name="estado_ubicacion"
+              >
+                <option [ngValue]="null" disabled>
+                  Seleccione una opción...
+                </option>
+                <option value="O">OCUPADA</option>
+                <option value="D">DESOCUPADA</option>
+                <option value="H">AVERIADA</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Observación</label>
+              <textarea
+                class="form-control form-control-line"
+                [(ngModel)]="ubicacionBody.observacion_ubicacion"
+                (ngModelChange)="
+                  ubicacionBody.observacion_ubicacion = $event?.toUpperCase()
+                "
+                name="observacion_ubicacion"
+                placeholder="Ingrese observación"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

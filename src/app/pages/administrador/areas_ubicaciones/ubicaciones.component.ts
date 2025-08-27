@@ -22,9 +22,9 @@ export class UbicacionesComponent {
     if (tab === 'areas' && this.areasComponent) {
       this.areasComponent.inicializacion();
     } else if (tab === 'tipo_ubicacion' && this.tipoUbicacionComponent) {
-      //this.casaSaludComponent.inicializacion();
+      this.tipoUbicacionComponent.inicializacion();
     }else if (tab === 'ubicacion' && this.ubicacionComponent) {
-      //this.casaSaludComponent.inicializacion();
+      this.ubicacionComponent.inicializar();
     }
   }
 }
