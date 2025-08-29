@@ -114,6 +114,26 @@ export class PersonaService {
     );
   }
 
+    getVerificarHistoriaClinica_Persona(identificacion:string){
+     const url = `${this._baseUrl}/persona/histopersona/${identificacion}`;
+
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta en el Service.(ID) - Persona Historia Clínica',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
   validarCedulaEcuador(cedula: string): boolean {
     if (!/^\d{10}$/.test(cedula)) return false; // Debe tener exactamente 10 dígitos
 

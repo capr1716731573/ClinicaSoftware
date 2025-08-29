@@ -18,6 +18,8 @@ import { InstitucionesComponent } from './administrador/institucion-salud/instit
 import { CieComponent } from './administrador/cie/cie.component';
 import { EspecialidadMedicoComponent } from './administrador/especialidad_medico/especialidad-medico.component';
 import { UbicacionesComponent } from './administrador/areas_ubicaciones/ubicaciones.component';
+import { HistoriasComponent } from './componentes_medicos/historia_clinica/historias.component';
+import { HistoriaClinicaComponent } from './componentes_medicos/historia_clinica/historia-clinica.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -41,6 +43,10 @@ export const pagesChildRoutes: Routes = [
             { path: 'cie', canActivate: [JwtGuard],component: CieComponent ,data:{titulo: 'Cie Diagnósticos'}},
             { path: 'especialidades_medicos', canActivate: [JwtGuard],component: EspecialidadMedicoComponent ,data:{titulo: 'Especialidades - Médicos'}},
             { path: 'ubicaciones', canActivate: [JwtGuard],component: UbicacionesComponent ,data:{titulo: 'Ubicaciones'}},
+
+            // Componentes Medicos
+            { path: 'hcu', canActivate: [JwtGuard],component: HistoriasComponent ,data:{titulo: 'Historias Clínicas'}},
+            { path: 'hcu/:id', canActivate: [JwtGuard],component: HistoriaClinicaComponent ,data:{titulo: 'Historia Clínica'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

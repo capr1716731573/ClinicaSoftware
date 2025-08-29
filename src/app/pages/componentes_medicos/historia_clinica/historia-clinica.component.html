@@ -1,0 +1,497 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body p-b-0">
+      <h4 class="card-title">Historia Clínica</h4>
+      <h6 class="card-subtitle">Gestiona la Historia Clínica de un paciente</h6>
+    </div>
+    <!-- @if(loading){
+    <app-loader-book textoLoader="Cargando ....."></app-loader-book>
+    } @else{ -->
+    <!-- Nav tabs -->
+    <app-loader-book [hidden]="!loading" textoLoader="Cargando ....."></app-loader-book>
+    
+    <div [hidden]="loading">
+    <ul class="nav nav-tabs customtab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          data-toggle="tab"
+          href="#persona"
+          role="tab"
+          (click)="tabActivo = 'persona'"
+          ><span class="hidden-sm-up"><i class="ti-home"></i></span>
+          <span class="hidden-xs-down">Datos Persona</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="tab"
+          href="#historia"
+          role="tab"
+          (click)="tabActivo = 'historia'"
+          ><span class="hidden-sm-up"><i class="ti-user"></i></span>
+          <span class="hidden-xs-down">Historia</span></a
+        >
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="persona" role="tabpanel">
+        <app-persona></app-persona>
+      </div>
+      <div class="tab-pane" id="historia" role="tabpanel">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <!-- <pre>{{ usuarioBody | json }}</pre> -->
+                <div class="row p-t-20">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Lugar Nacimiento <span style="color: red">(*)</span></label>
+                      <ng-select
+                        [items]="lugarNacimientoList"
+                        bindLabel="desc_geo"
+                        bindValue="pk_geo"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_lugarnacimiento"
+                        [clearable]="true"
+                        (clear)="historiaClinicaBody.fk_lugarnacimiento = null"
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_geo }}</b
+                            ><br />
+                            <small>ID: {{ item.desc_geo }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Nacionalidad <span style="color: red">(*)</span></label>
+                      <ng-select
+                        [items]="nacionalidadList"
+                        bindLabel="desc_catdetalle"
+                        bindValue="pk_catdetalle"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_nacionalidad"
+                        [clearable]="true"
+                        (clear)="historiaClinicaBody.fk_nacionalidad = null"
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_catdetalle }}</b
+                            ><br />
+                            <small>ID: {{ item.pk_catdetalle }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label><span style="color: red">(*)</span> Grupo Prioritario</label>
+                      <div class="switch">
+                        <label>
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="historiaClinicaBody.grupopri_hcu"
+                            (ngModelChange)="
+                              !$event
+                                ? (historiaClinicaBody.fk_grupo_prioritario =
+                                    null)
+                                : null
+                            "
+                            name="grupopri_hcu"
+                          />
+                          <span class="lever switch-col-red"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    @if(historiaClinicaBody.grupopri_hcu){
+                    <div class="form-group">
+                      <label class="control-label"
+                        >Nombre Grupo Prioritario</label
+                      >
+                      <ng-select
+                        [items]="grupoPrioritarioList"
+                        bindLabel="desc_catdetalle"
+                        bindValue="pk_catdetalle"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_grupo_prioritario"
+                        [clearable]="true"
+                        (clear)="
+                          historiaClinicaBody.fk_grupo_prioritario = null
+                        "
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_catdetalle }}</b
+                            ><br />
+                            <small>ID: {{ item.pk_catdetalle }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="row p-t-20">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Num. Archivo</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.numarchivo_hcu"
+                        name="numarchivo_hcu"
+                        placeholder="xxxxxxxxxx"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Autenticación Étnica</label>
+                      <ng-select
+                        [items]="autenticacionEtnicaList"
+                        bindLabel="desc_catdetalle"
+                        bindValue="pk_catdetalle"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_autent_etnica"
+                        [clearable]="true"
+                        (clear)="historiaClinicaBody.fk_autent_etnica = null"
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_catdetalle }}</b
+                            ><br />
+                            <small>ID: {{ item.pk_catdetalle }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Nacionalidad Étnica</label>
+                      <ng-select
+                        [items]="nacionalidadEtnicaList"
+                        bindLabel="desc_catdetalle"
+                        bindValue="pk_catdetalle"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_nacionalidad_etnica"
+                        [clearable]="true"
+                        (clear)="
+                          historiaClinicaBody.fk_nacionalidad_etnica = null
+                        "
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_catdetalle }}</b
+                            ><br />
+                            <small>ID: {{ item.pk_catdetalle }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="control-label">Pueblos Indígenas</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.pueblos_indigenas_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.pueblos_indigenas_hcu =
+                            $event.toUpperCase()
+                        "
+                        name="pueblos_indigenas_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row p-t-20">
+                  <div class="col-md-3">
+                    <label class="control-label">Tipo de Empresa</label>
+                    <ng-select
+                      [items]="tipoEmpresaList"
+                      bindLabel="desc_catdetalle"
+                      bindValue="pk_catdetalle"
+                      placeholder="Buscar..."
+                      [(ngModel)]="historiaClinicaBody.fk_tipo_empresa"
+                      [clearable]="true"
+                      (clear)="historiaClinicaBody.fk_tipo_empresa = null"
+                      [typeToSearchText]="'Empieza a escribir...'"
+                    >
+                      <!-- Template de cómo se muestra cada opción -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <div>
+                          <b>{{ item.desc_catdetalle }}</b
+                          ><br />
+                          <small>ID: {{ item.pk_catdetalle }} </small>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="control-label"
+                      >Tipo Seguro (Principal) <span style="color: red">(*)</span></label
+                    >
+                    <ng-select
+                      [items]="tipoSeguroList"
+                      bindLabel="desc_catdetalle"
+                      bindValue="pk_catdetalle"
+                      placeholder="Buscar..."
+                      [(ngModel)]="historiaClinicaBody.fk_tiposeg_principal"
+                      [clearable]="true"
+                      (clear)="historiaClinicaBody.fk_tiposeg_principal = null"
+                      [typeToSearchText]="'Empieza a escribir...'"
+                    >
+                      <!-- Template de cómo se muestra cada opción -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <div>
+                          <b>{{ item.desc_catdetalle }}</b
+                          ><br />
+                          <small>ID: {{ item.pk_catdetalle }} </small>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="control-label"
+                      >Tipo Seguro (Secundario)</label
+                    >
+                    <ng-select
+                      [items]="tipoSeguroList"
+                      bindLabel="desc_catdetalle"
+                      bindValue="pk_catdetalle"
+                      placeholder="Buscar..."
+                      [(ngModel)]="historiaClinicaBody.fk_tiposeg_secundario"
+                      [clearable]="true"
+                      (clear)="historiaClinicaBody.fk_tiposeg_secundario = null"
+                      [typeToSearchText]="'Empieza a escribir...'"
+                    >
+                      <!-- Template de cómo se muestra cada opción -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <div>
+                          <b>{{ item.desc_catdetalle }}</b
+                          ><br />
+                          <small>ID: {{ item.pk_catdetalle }} </small>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="control-label">Tipo Bono</label>
+                    <ng-select
+                      [items]="tipoBonoList"
+                      bindLabel="desc_catdetalle"
+                      bindValue="pk_catdetalle"
+                      placeholder="Buscar..."
+                      [(ngModel)]="historiaClinicaBody.fk_tipobono"
+                      [clearable]="true"
+                      (clear)="historiaClinicaBody.fk_tipobono = null"
+                      [typeToSearchText]="'Empieza a escribir...'"
+                    >
+                      <!-- Template de cómo se muestra cada opción -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <div>
+                          <b>{{ item.desc_catdetalle }}</b
+                          ><br />
+                          <small>ID: {{ item.pk_catdetalle }} </small>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="row p-t-20">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Dirección-Calle 1</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.calle_1_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.calle_1_hcu = $event.toUpperCase()
+                        "
+                        name="calle_1_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Dirección-Calle 2</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.calle_2_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.calle_2_hcu = $event.toUpperCase()
+                        "
+                        name="calle_2_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Referencia</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.referencia_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.referencia_hcu =
+                            $event.toUpperCase()
+                        "
+                        name="referencia_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row p-t-20">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Parentesco</label>
+                      <ng-select
+                        [items]="parentescoList"
+                        bindLabel="desc_catdetalle"
+                        bindValue="pk_catdetalle"
+                        placeholder="Buscar..."
+                        [(ngModel)]="historiaClinicaBody.fk_parentesco"
+                        [clearable]="true"
+                        (clear)="historiaClinicaBody.fk_parentesco = null"
+                        [typeToSearchText]="'Empieza a escribir...'"
+                      >
+                        <!-- Template de cómo se muestra cada opción -->
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <b>{{ item.desc_catdetalle }}</b
+                            ><br />
+                            <small>ID: {{ item.pk_catdetalle }} </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label class="control-label">Nombre Pariente</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.nombre_parentesco_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.nombre_parentesco_hcu =
+                            $event.toUpperCase()
+                        "
+                        name="nombre_parentesco_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row p-t-20">
+                  <div class="col-md-6">
+                     <div class="form-group">
+                      <label class="control-label">Dirección Pariente</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.direccion_parentesco_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.direccion_parentesco_hcu =
+                            $event.toUpperCase()
+                        "
+                        name="direccion_parentesco_hcu"
+                        placeholder="Ingrese"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group">
+                      <label class="control-label">Teléfono Pariente</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        [(ngModel)]="historiaClinicaBody.telefono_parentesco_hcu"
+                        (ngModelChange)="
+                          historiaClinicaBody.telefono_parentesco_hcu =
+                            $event.toUpperCase()
+                        "
+                        name="telefono_parentesco_hcu"
+                        placeholder="xxxxxxxxx"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row p-t-20">
+              <div class="col-12 d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  class="btn btn-success waves-effect"
+                  (click)="guardarHistoriaPersona()"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger waves-effect"
+                  (click)="cerrarHistoriaClinica()"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- } -->
+  </div></div>
+</div>

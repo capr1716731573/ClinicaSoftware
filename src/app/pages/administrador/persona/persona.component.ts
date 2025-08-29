@@ -16,7 +16,7 @@ declare var $: any;
 
 @Component({
   selector: 'app-persona',
-  imports: [CommonModule, FormsModule, NgSelectComponent,DatepickerComponent ],
+  imports: [CommonModule, FormsModule, NgSelectComponent ],
   templateUrl: './persona.component.html',
   styles: ``,
 })
@@ -74,6 +74,7 @@ export class PersonaComponent implements AfterViewInit {
     flatpickr('#fecnac_persona', {
       dateFormat: 'Y-m-d',
       allowInput: false,
+      altInput:false
     });
   }
 
@@ -753,6 +754,41 @@ export class PersonaComponent implements AfterViewInit {
               title: '¡Error!',
               icon: 'error',
               text: `Persona33 - ${err.message}`,
+              confirmButtonText: 'Aceptar',
+            });
+          },
+        });
+      }else if (this.getComponentePadre() === 'historia'){
+        this._personaService.getVerificarHistoriaClinica_Persona(cedula).subscribe({
+          next: (resp) => {
+            if (resp.status === 'ok') {
+              if (resp.rows.pk_hcu != 0) {
+                //Aqui redireccionar a la pagina cargando el usuario
+                this._routerService
+                  .navigateByUrl('/', { skipLocationChange: true })
+                  .then(() => {
+                    this.setOpcionPersona('U');
+                    this._routerService.navigate([
+                      '/hcu',
+                      resp.rows.pk_hcu,
+                    ]);
+                  });
+
+                return; //Paro la ejecucion del resto del codigo
+              }
+
+              //Procedo a cargar persona en caso de existir
+              if (resp.rows.pk_persona != 0) {
+                this.getPersonaId(resp.rows.pk_persona);
+              }
+            }
+          },
+          error: (err) => {
+            // manejo de error
+            Swal.fire({
+              title: '¡Error!',
+              icon: 'error',
+              text: `Persona Historia - ${err.message}`,
               confirmButtonText: 'Aceptar',
             });
           },

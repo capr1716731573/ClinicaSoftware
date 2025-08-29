@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common'
 })
 export class DatepickerComponent
 {
-   @Input() placeholder: string = 'yyyy-mm-dd';
+  @Input() placeholder: string = 'yyyy-mm-dd';
   @Input() label: string = 'Fecha';
   @Input() id: string = 'datepicker';
 

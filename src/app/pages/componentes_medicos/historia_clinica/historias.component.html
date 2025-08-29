@@ -1,25 +1,25 @@
-<!-- <pre>{{ usuariosList | json }}</pre> -->
+<!-- <pre>{{ historiaclinicaList | json }}</pre> -->
 <div class="row">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulario Usuario</h4>
-        <h6 class="card-subtitle">Lista de usuarios en el aplicativo.</h6>
+        <h4 class="card-title">Formulario Historia Clínica</h4>
+        <h6 class="card-subtitle">Lista de Historias Clínicas.</h6>
         <div class="col-lg-12">
           <div class="input-group">
             <input
               type="text"
               class="form-control"
               placeholder="Búsqueda..."
-              [(ngModel)]="bsqUsuario"
-              (ngModelChange)="bsqUsuario = $event.toUpperCase()"
-              (keyup)="buscarUsuario()"
+              [(ngModel)]="bsqHistoriaClinica"
+              (ngModelChange)="bsqHistoriaClinica = $event.toUpperCase()"
+              (keyup)="buscarHistoriaClinica()"
             />
             <span class="input-group-btn">
               <button
                 class="btn btn-info"
                 type="button"
-                (click)="nuevoUsuario()"
+                (click)="nuevoHistoriaClinica()"
               >
                 Nuevo
               </button>
@@ -35,15 +35,14 @@
                   <th scope="col">#IDENTIFICACIÓN</th>
                   <th scope="col">NOMBRES</th>
                   <th scope="col">APELLIDOS</th>
-                  <th scope="col">USUARIO</th>
-                  <th scope="col">ESTADO</th>
-                  <th scope="col">SUPER-USUARIO</th>
+                  <th scope="col">SEXO</th>
+                  <th scope="col">EDAD</th>
                   <th scope="col">ACCIÓN</th>
                 </tr>
               </thead>
               <tbody></tbody>
               <tbody>
-                @for (item of usuariosList; track item.pk_usuario) {
+                @for (item of historiaclinicaList; track item.pk_hcu) {
                 <tr>
                   <td data-label="#IDENTIFICACIÓN">
                     {{ item.numidentificacion_persona }}
@@ -56,15 +55,13 @@
                     {{ item.apellidopat_persona }}
                     {{ item.apellidomat_persona }}
                   </td>
-                  <td data-label="USUARIO">
-                    {{ item.login_usuario }}
+                  <td data-label="SEXO">
+                    {{ item.sexo }}
                   </td>
-                  <td data-label="ESTADO">
-                    {{ item.estado_usuario ? "✔️" : "❌" }}
+                  <td data-label="EDAD">
+                    {{ item.edad.valor }} {{ item.edad.tipo }}
                   </td>
-                  <td data-label="SUPER-USUARIO">
-                    {{ item.super_usuario ? "✔️" : "❌" }}
-                  </td>
+                  
 
                   <td data-label="ACCIÓN">
                     <div class="btn-group d-flex justify-content-center">
@@ -80,16 +77,10 @@
                       <div class="dropdown-menu pointer">
                         <a
                           class="dropdown-item"
-                          (click)="editarUsuario(item.pk_usuario)"
+                          (click)="editarHistoriaClinica(item.pk_hcu)"
                           >Editar</a
                         >
-                        <a
-                          class="dropdown-item"
-                          (click)="cargarUsuario(item)"
-                          data-toggle="modal"
-                          data-target="#passwordModal"
-                          >Cambiar Contraseña</a
-                        >
+                       
                       </div>
                     </div>
                   </td>
@@ -123,64 +114,3 @@
   </div>
 </div>
 
-<div
-  id="passwordModal"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="myModalLabel"
-  aria-hidden="true"
-  data-backdrop="static"
-  data-keyboard="false"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Registro Nueva Password</h4>
-      </div>
-      <div class="modal-body">
-        <form class="form" (ngSubmit)="guardarPasswordUsuario()">
-          <div class="form-group">
-            <label>* Password</label>
-            <input
-              type="password"
-              class="form-control form-control-line"
-              [(ngModel)]="usuario.password1"
-              name="password1"
-              placeholder="Ingrese"
-            />
-          </div>
-          <div class="form-group">
-            <label>* Confirmar Password</label>
-            <input
-              type="password"
-              class="form-control form-control-line"
-              [(ngModel)]="usuario.password2"
-              name="password2"
-              placeholder="Ingrese"
-            />
-          </div>
-
-          <div class="modal-footer">
-            <button
-              type="submit"
-              class="btn btn-success waves-effect"
-              [disabled]="!validarActualizarPassword()"
-            >
-              Guardar
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger waves-effect"
-              data-dismiss="modal"
-            >
-              Cerrar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
