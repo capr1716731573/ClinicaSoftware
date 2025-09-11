@@ -196,7 +196,7 @@ export class CieComponent {
   }
 
   buscarCie() {
-    if (this.bsqCie.length >= 4) {
+    if (this.bsqCie.length >= 3) {
       this.getAllCieBusqueda(this.bsqCie);
       // tu lógica aquí
     } else if (this.bsqCie.length === 0) {

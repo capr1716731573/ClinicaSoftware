@@ -15,7 +15,13 @@ export class UbicacionService {
   constructor() {}
 
   getAllUbicacion(desde: number, estado: string, area: number) {
-    let url = `${this._baseUrl}/ubicacion/todos/${estado}/${area}/?desde=${desde}`;
+   let url;
+    if(desde != null){
+      url = `${this._baseUrl}/ubicacion/todos/${estado}/${area}/?desde=${desde}`;
+    }else{
+      url = `${this._baseUrl}/ubicacion/todos/${estado}/${area}`;
+    }
+    
 
     return this._http.get(url).pipe(
       map((resp: any) => {

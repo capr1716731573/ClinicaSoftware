@@ -20,6 +20,7 @@ import { EspecialidadMedicoComponent } from './administrador/especialidad_medico
 import { UbicacionesComponent } from './administrador/areas_ubicaciones/ubicaciones.component';
 import { HistoriasComponent } from './componentes_medicos/historia_clinica/historias.component';
 import { HistoriaClinicaComponent } from './componentes_medicos/historia_clinica/historia-clinica.component';
+import { CensoareasComponent } from './componentes_medicos/ciclo_hospitalizacion/censoareas.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -47,6 +48,7 @@ export const pagesChildRoutes: Routes = [
             // Componentes Medicos
             { path: 'hcu', canActivate: [JwtGuard],component: HistoriasComponent ,data:{titulo: 'Historias Clínicas'}},
             { path: 'hcu/:id', canActivate: [JwtGuard],component: HistoriaClinicaComponent ,data:{titulo: 'Historia Clínica'}},
+            { path: 'censo', canActivate: [JwtGuard],component: CensoareasComponent ,data:{titulo: 'Hospitalizaciones (Censo)'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

@@ -1,0 +1,850 @@
+<!-- {{ area | json }} -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Censo Actual</h4>
+        <h6 class="card-subtitle">
+          Lista de pacientes hospitalizados por área
+        </h6>
+
+        <!-- <div class="col-lg-12"> -->
+        <div class="form-group row">
+          <label class="control-label col-md-2">Áreas:</label>
+          <div class="col-md-8">
+            <ng-select
+              [items]="listArea"
+              bindLabel="area_descripcion"
+              placeholder="Seleccionar Áreas..."
+              [(ngModel)]="idArea"
+              (change)="onAreaChange($event)"
+              [clearable]="true"
+              (clear)="idArea = null; area = null"
+              [typeToSearchText]="'Seleccionar'"
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <b>{{ item.area_descripcion }}</b
+                  ><br />
+                  <small>ID: {{ item.areas_id_pk }} </small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <br />
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Búsqueda..."
+            [(ngModel)]="bsqCenso"
+            (ngModelChange)="bsqCenso = $event.toUpperCase()"
+            [disabled]="!area"
+          />
+          <span class="input-group-btn">
+            <button
+              class="btn btn-info"
+              type="button"
+              (click)="nuevoIngreso()"
+              [disabled]="!area"
+            >
+              Nuevo Ingreso
+            </button>
+          </span>
+        </div>
+        <br />
+        <div class="table-responsive pointer">
+          <table class="table full-color-table full-info-table hover-table">
+            <thead>
+              <tr>
+                <th scope="col">TORRE</th>
+                <th scope="col">PISO</th>
+                <th scope="col">HABITACIÓN</th>
+                <th scope="col">CAMA</th>
+                <th scope="col">IDENTIFICACIÓN</th>
+                <th scope="col">NOMBRES</th>
+                <th scope="col">EDAD</th>
+                <th scope="col">ACCIÓN</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tbody>
+              @for ( item of listCenso | filterBy: bsqCenso : { keys:
+              ['numidentificacion_persona','apellidopat_persona','apellidomat_persona','nombres_persona']
+              }; track item.pk_ciclohosp ) {
+              <tr>
+                <td data-label="TORRE">{{ item.torre }}</td>
+                <td data-label="PISO">{{ item.piso }}</td>
+                <td data-label="HABITACIÓN">{{ item.habitacion }}</td>
+                <td data-label="CAMA">{{ item.ubicacion }}</td>
+                <td data-label="  IDENTIFICACIÓN">
+                  {{ item.numidentificacion_persona }}
+                </td>
+                <td data-label="NOMBRES">
+                  {{ item.apellidopat_persona }} {{ item.apellidomat_persona }}
+                  {{ item.nombres_persona }}
+                </td>
+                <td data-label="EDAD">
+                  {{ item.edad?.valor }} {{ item.edad?.tipo }}
+                </td>
+
+                <td data-label="ACCIÓN">
+                  <div class="btn-group d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-success dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="ti-settings"></i>
+                    </button>
+                    <div class="dropdown-menu pointer">
+                      <a class="dropdown-item" (click)="cambioCama(item)"
+                        >Cambiar Cama</a
+                      >
+                      <a
+                        class="dropdown-item"
+                        (click)="transferenciaServicio(item)"
+                        >Transferencia</a
+                      >
+
+                      <a class="dropdown-item" (click)="alta(item)">Egreso</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- </div> -->
+</div>
+
+<!-- Modal de ingreso a pacientes -->
+<div
+  id="ingresoPacienteModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Ingreso Paciente Hospitalización: ({{ area?.area_descripcion }})
+        </h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ ubicacionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarCensoIngreso()">
+          <div class="row">
+            <div class="col-md-5 form-group">
+              <label>* Identificación</label>
+
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control form-control-line"
+                  [(ngModel)]="identificacion"
+                  name="identificacion"
+                  placeholder="Ingrese Identificación"
+                  (keyup.enter)="consultarHcu(identificacion)"
+                />
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="consultarHcu(identificacion)"
+                    [disabled]="!identificacion || identificacion.trim() === ''"
+                  >
+                    <i class="fa fa-search"></i>
+                    <!-- Icono de lupa -->
+                  </button>
+                </div>
+              </div>
+            </div>
+            @if(hcu && !hcu.ingreso){
+            <div class="col-md-7 form-group">
+              <div class="card bg-info">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0"><b>Paciente</b></h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        {{ hcu.numidentificacion_persona }} -
+                        {{ hcu.apellidopat_persona }}
+                        {{ hcu.apellidomat_persona }}
+                        {{ hcu.nombre_primario_persona }}
+                        {{ hcu.nombre_secundario_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        {{ hcu.edad.valor }} {{ hcu.edad.tipo }} /
+                        {{ hcu.sexo }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            } @else if(hcu && hcu.ingreso){
+            <div class="col-md-7 form-group">
+              <div class="card bg-danger">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Paciente ya se encuentra hospitalizado:</b>
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Nombres:</b> {{ hcu.apellidopat_persona }}
+                        {{ hcu.apellidomat_persona }}
+                        {{ hcu.nombre_primario_persona }}
+                        {{ hcu.nombre_secundario_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Identificación:</b>
+                        {{ hcu.numidentificacion_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Fecha/Hora Ingreso:</b>
+                        {{ hcu.ingreso.fecha_ciclohosp }} /
+                        {{ hcu.ingreso.hora_ciclohosp }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Área:</b> {{ hcu.ingreso.area }} - <b>Torre: </b>
+                        {{ hcu.ingreso.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Piso:</b> {{ hcu.ingreso.piso }} - <b>Sala:</b>
+                        {{ hcu.ingreso.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Habitación: </b> {{ hcu.ingreso.habitacion }} -
+                        <b>Cama:</b> {{ hcu.ingreso.cama }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            } @else if(!hcu || hcu=={}){
+            <div class="col-md-7 form-group">
+              <div class="card bg-warning">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Ingrese el paciente</b>
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        Nota: Debe verificar primero que el paciente tenga la
+                        <b>Historia Clínica</b> creada !
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="form-group row">
+            <label class="control-label col-md-2">Camas:</label>
+            <div class="col-md-8">
+              <ng-select
+                [items]="listCamas"
+                bindLabel="descripcion_ubicacion"
+                placeholder="Seleccionar."
+                [(ngModel)]="idCama"
+                name="idCama"
+                (change)="cama = $event"
+                [clearable]="true"
+                (clear)="cama = null; idCama = null"
+                [typeToSearchText]="'Seleccionar'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small
+                      ><b>CAMA:</b> {{ item?.descripcion_ubicacion }}
+                    </small>
+                    <br /><small><b>- ÁREA:</b> {{ item?.area }} </small>
+                    <br /><small><b>- TORRE:</b> {{ item?.torre }} </small>
+                    <br /><small><b>- PISO:</b> {{ item?.piso }} </small>
+                    <br /><small><b>- SALA:</b> {{ item?.sala }} </small>
+                    <br /><small><b>- HAB:</b> {{ item?.habitacion }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          @if(cama){
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-success">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/expense-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Cama Seleccionada:</b>
+                        {{ cama?.descripcion_ubicacion }}
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- ÁREA:</b> {{ cama?.area }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- TORRE:</b> {{ cama?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- PISO:</b> {{ cama?.piso }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- SALA:</b> {{ cama?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- HAB:</b> {{ cama?.habitacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <pre>{{ ingresoBody | json }}</pre>
+            <pre>{{ hcu | json }}</pre> -->
+          </div>
+          }
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarIngreso()"
+            >
+              Ingresar Paciente
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cambio de cama  -->
+
+<div
+  id="cambioCamaModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Cambio de Cama: ({{ area?.area_descripcion }})
+        </h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ ubicacionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarCambioCama()">
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-danger">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Datos del paciente hospitalizado:</b>
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Nombres:</b> {{ hcu?.apellidopat_persona }}
+                        {{ hcu?.apellidomat_persona }}
+                        {{ hcu?.nombres_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Identificación:</b>
+                        {{ hcu?.numidentificacion_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Fecha/Hora Ingreso:</b>
+                        {{ hcu?.fecha_ciclohosp }} /
+                        {{ hcu?.hora_ciclohosp }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Área:</b> {{ hcu?.area }} - <b>Torre: </b>
+                        {{ hcu?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Piso:</b> {{ hcu?.piso }} - <b>Sala:</b>
+                        {{ hcu?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Habitación: </b> {{ hcu?.habitacion }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Cama:</b> {{ hcu?.ubicacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="control-label col-md-2">Camas:</label>
+            <div class="col-md-8">
+              <ng-select
+                [items]="listCamas"
+                bindLabel="descripcion_ubicacion"
+                placeholder="Seleccionar."
+                [(ngModel)]="idCama"
+                name="idCama"
+                (change)="cama = $event"
+                [clearable]="true"
+                (clear)="cama = null; idCama = null"
+                [typeToSearchText]="'Seleccionar'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small
+                      ><b>CAMA:</b> {{ item?.descripcion_ubicacion }}
+                    </small>
+                    <br /><small><b>- ÁREA:</b> {{ item?.area }} </small>
+                    <br /><small><b>- TORRE:</b> {{ item?.torre }} </small>
+                    <br /><small><b>- PISO:</b> {{ item?.piso }} </small>
+                    <br /><small><b>- SALA:</b> {{ item?.sala }} </small>
+                    <br /><small><b>- HAB:</b> {{ item?.habitacion }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          @if(cama){
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-success">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/expense-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Cama Seleccionada:</b>
+                        {{ cama?.descripcion_ubicacion }}
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- ÁREA:</b> {{ cama?.area }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- TORRE:</b> {{ cama?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- PISO:</b> {{ cama?.piso }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- SALA:</b> {{ cama?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- HAB:</b> {{ cama?.habitacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <pre>{{ ingresoBody | json }}</pre>
+            <pre>{{ hcu | json }}</pre> -->
+          </div>
+          }
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarCambioCama()"
+            >
+              Cambiar Cama
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tranferencia Servicio -->
+<div
+  id="transferenciaModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Transferencia de Servicio</h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ ubicacionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarTransferencia()">
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-danger">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Datos del paciente hospitalizado:</b>
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Nombres:</b> {{ hcu?.apellidopat_persona }}
+                        {{ hcu?.apellidomat_persona }}
+                        {{ hcu?.nombres_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Identificación:</b>
+                        {{ hcu?.numidentificacion_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Fecha/Hora Ingreso:</b>
+                        {{ hcu?.fecha_ciclohosp }} /
+                        {{ hcu?.hora_ciclohosp }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Área:</b> {{ hcu?.area }} - <b>Torre: </b>
+                        {{ hcu?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Piso:</b> {{ hcu?.piso }} - <b>Sala:</b>
+                        {{ hcu?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Habitación: </b> {{ hcu?.habitacion }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Cama:</b> {{ hcu?.ubicacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="control-label col-md-2">Áreas:</label>
+            <div class="col-md-8">
+              <ng-select
+                [items]="listAreaTransferencia"
+                bindLabel="area_descripcion"
+                placeholder="Seleccionar Áreas..."
+                [(ngModel)]="idAreaTransferencia"
+                (change)="onAreaTransferenciaChange($event)"
+                name="idAreaTransferencia"
+                [clearable]="true"
+                (clear)="idAreaTransferencia = null; areaTransferencia = null"
+                [typeToSearchText]="'Seleccionar'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.area_descripcion }}</b
+                    ><br />
+                    <small>ID: {{ item.areas_id_pk }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="control-label col-md-2">Camas:</label>
+            <div class="col-md-8">
+              <ng-select
+                [items]="listCamas"
+                bindLabel="descripcion_ubicacion"
+                placeholder="Seleccionar."
+                [(ngModel)]="idCama"
+                name="idCama"
+                (change)="cama = $event"
+                [clearable]="true"
+                (clear)="cama = null; idCama = null"
+                [typeToSearchText]="'Seleccionar'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small
+                      ><b>CAMA:</b> {{ item?.descripcion_ubicacion }}
+                    </small>
+                    <br /><small><b>- ÁREA:</b> {{ item?.area }} </small>
+                    <br /><small><b>- TORRE:</b> {{ item?.torre }} </small>
+                    <br /><small><b>- PISO:</b> {{ item?.piso }} </small>
+                    <br /><small><b>- SALA:</b> {{ item?.sala }} </small>
+                    <br /><small><b>- HAB:</b> {{ item?.habitacion }} </small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          @if(cama){
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-success">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/expense-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Cama Seleccionada:</b>
+                        {{ cama?.descripcion_ubicacion }}
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- ÁREA:</b> {{ cama?.area }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- TORRE:</b> {{ cama?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- PISO:</b> {{ cama?.piso }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- SALA:</b> {{ cama?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>- HAB:</b> {{ cama?.habitacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <pre>{{ ingresoBody | json }}</pre>
+            <pre>{{ hcu | json }}</pre> -->
+          </div>
+          }
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarTransferencia()"
+            >
+              Transferir
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Egreso de Servicio -->
+<div
+  id="egresoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Dar de Alta (Egreso)</h4>
+      </div>
+      <div class="modal-body">
+        <!-- <pre>{{ ubicacionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarEgreso()">
+          <div class="form-group row">
+            <div class="col-md-12 form-group">
+              <div class="card bg-danger">
+                <div class="card-body">
+                  <div class="d-flex no-block">
+                    <div class="m-r-20 align-self-center">
+                      <img
+                        src="../assets/images/icon/staff-w.png"
+                        alt="Income"
+                      />
+                    </div>
+                    <div class="align-self-center">
+                      <h5 class="text-white m-t-10 m-b-0">
+                        <b>Datos del paciente hospitalizado:</b>
+                      </h5>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Nombres:</b> {{ hcu?.apellidopat_persona }}
+                        {{ hcu?.apellidomat_persona }}
+                        {{ hcu?.nombres_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Identificación:</b>
+                        {{ hcu?.numidentificacion_persona }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Fecha/Hora Ingreso:</b>
+                        {{ hcu?.fecha_ciclohosp }} /
+                        {{ hcu?.hora_ciclohosp }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Área:</b> {{ hcu?.area }} - <b>Torre: </b>
+                        {{ hcu?.torre }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Piso:</b> {{ hcu?.piso }} - <b>Sala:</b>
+                        {{ hcu?.sala }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Habitación: </b> {{ hcu?.habitacion }}
+                      </h6>
+                      <h6 class="text-white m-t-10 m-b-0">
+                        <b>Cama:</b> {{ hcu?.ubicacion }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-4 form-group">
+              <div class="form-group">
+                <label>* Alta por Defunción</label>
+                <div class="switch">
+                  <label>
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="altaDefuncion"
+                      name="altaDefuncion"
+                      (ngModelChange)="
+                        this.egresoBody.defuncion_48_ciclohosp = 0
+                      "
+                    />
+                    <span class="lever switch-col-red"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            @if(altaDefuncion){
+            <div class="col-md-8 form-group">
+              <div class="form-group">
+                <label for="tipo">48 Horas</label>
+
+                <select
+                  id="tipo"
+                  class="custom-select col-12"
+                  [(ngModel)]="this.egresoBody.defuncion_48_ciclohosp"
+                  name="defuncion_48_ciclohosp"
+                >
+                  <option [ngValue]="0" disabled>Seleccione...</option>
+                  <option value="1">Mayor a 48 h</option>
+                  <option value="2">Menor a 48 h</option>
+                </select>
+              </div>
+            </div>
+
+            }
+          </div>
+          <!-- <pre>{{ egresoBody | json }}</pre> -->
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarEgreso()"
+            >
+              Dar Alta
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
