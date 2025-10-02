@@ -85,6 +85,21 @@ export class LoginService {
     return localStorage.getItem('_perfil');
   }
 
+  getSuperUsuario(): any {
+    const userStr = localStorage.getItem('_user');
+    if (!userStr) {
+      return null; // No existe el item en localStorage
+    }
+
+    try {
+      const user = JSON.parse(userStr);
+      return user?.super_usuario ?? null; // Retorna super_usuario o null
+    } catch (e) {
+      console.error('Error al parsear _user de localStorage:', e);
+      return null;
+    }
+  }
+
   logout() {
     console.log('Borrado Cache');
     localStorage.removeItem('_token');

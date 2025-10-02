@@ -1,0 +1,3035 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-5 form-group">
+            <label>* Identificación</label>
+
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="identificacion"
+                name="identificacion"
+                placeholder="Ingrese Identificación"
+                (keyup.enter)="consultarHcu(identificacion)"
+                [disabled]="opcion === 'U'"
+              />
+            </div>
+            <br />
+            @if(emergenciaBody._a.pk_emerg != 0){
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <button
+                  type="button"
+                  class="btn btn-info waves-effect"
+                  (click)="imprimirForm008()"
+                >
+                  Impresión
+                </button>
+              </div>
+
+              <div class="col-md-6 text-left">
+                @if(!emergenciaBody._a.estado_emerg){
+                <button
+                  type="button"
+                  class="btn btn-success waves-effect"
+                  (click)="cerrarFormulario008()"
+                >
+                  Cerrar Formulario
+                </button>
+                }@else {
+                    <h3><span class="badge badge-danger">CERRADA</span></h3>
+                }
+              </div>
+            </div>
+
+            }
+          </div>
+          <div class="col-md-7 form-group">
+            @if(emergenciaBody._a.fk_hcu){
+            <div class="card bg-danger">
+              <div class="card-body">
+                <div class="d-flex no-block">
+                  <div class="m-r-20 align-self-center">
+                    <img src="../assets/images/icon/staff-w.png" alt="Income" />
+                  </div>
+                  <div class="align-self-center">
+                    <h5 class="text-white m-t-10 m-b-0">
+                      <b>Paciente Seleccionado:</b>
+                    </h5>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Nombres:</b> {{ hcu?.apellidopat_persona }}
+                      {{ hcu?.apellidomat_persona }}
+                      {{ hcu?.nombre_primario_persona }}
+                      {{ hcu?.nombre_secundario_persona }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Identificación:</b>{{ hcu?.numidentificacion_persona }}
+                    </h6>
+
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Sexo:</b>
+                      {{ hcu?.sexo }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Edad:</b>
+                      {{ hcu?.edad.valor }} {{ hcu?.edad.tipo }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0"></h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }@else{
+            <h3>Paciente no seleccionado</h3>
+            }
+          </div>
+        </div>
+        <!--  <div class="card-body"> -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="home-tab"
+              data-toggle="tab"
+              href="#seccionb"
+              role="tab"
+              aria-controls="seccionb"
+              aria-expanded="true"
+              ><span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="profile-tab"
+              data-toggle="tab"
+              href="#seccionc"
+              role="tab"
+              aria-controls="seccionc"
+              ><span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span></a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item"
+                id="dropdown1-tab"
+                href="#dropdown1"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown1"
+                >D</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown2-tab"
+                href="#dropdown2"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown2"
+                >E</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown3-tab"
+                href="#dropdown3"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown3"
+                >F</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown4-tab"
+                href="#dropdown4"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown4"
+                >G</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown5-tab"
+                href="#dropdown5"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown5"
+                >H</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown6-tab"
+                href="#dropdown6"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown6"
+                >I</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown7-tab"
+                href="#dropdown7"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown7"
+                >J</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown8-tab"
+                href="#dropdown8"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown8"
+                >K</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown9-tab"
+                href="#dropdown9"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown9"
+                >L-M</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown10-tab"
+                href="#dropdown10"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown10"
+                >N</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown11-tab"
+                href="#dropdown11"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown11"
+                >O</a
+              >
+            </div>
+          </li>
+        </ul>
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- Aqui empiezan los tabs -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <form class="form" (ngSubmit)="guardar008()">
+          <div class="tab-content tabcontent-border p-20" id="myTabContent">
+            <!-- Panel B -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show active"
+              id="seccionb"
+              aria-labelledby="seccionb-tab"
+            >
+              <h5>B. REGISTRO DE ADMISIÓN</h5>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Forma de Llegada</label>
+                  <div class="demo-radio-button">
+                    <!-- Ambulatorio -->
+                    <input
+                      type="radio"
+                      id="radio_ambulatorio"
+                      name="formaLlegada"
+                      [checked]="emergenciaBody._b.forma_llegada.ambulatorio"
+                      (change)="
+                        emergenciaBody._b.forma_llegada = {
+                          ambulatorio: true,
+                          ambulancia: false,
+                          otro_trans: false
+                        }
+                      "
+                    />
+                    <label for="radio_ambulatorio">Ambulatorio</label>
+
+                    <!-- Ambulancia -->
+                    <input
+                      type="radio"
+                      id="radio_ambulancia"
+                      name="formaLlegada"
+                      [checked]="emergenciaBody._b.forma_llegada.ambulancia"
+                      (change)="
+                        emergenciaBody._b.forma_llegada = {
+                          ambulatorio: false,
+                          ambulancia: true,
+                          otro_trans: false
+                        }
+                      "
+                    />
+                    <label for="radio_ambulancia">Ambulancia</label>
+
+                    <!-- Otro Transporte -->
+                    <input
+                      type="radio"
+                      id="radio_otro"
+                      name="formaLlegada"
+                      [checked]="emergenciaBody._b.forma_llegada.otro_trans"
+                      (change)="
+                        emergenciaBody._b.forma_llegada = {
+                          ambulatorio: false,
+                          ambulancia: false,
+                          otro_trans: true
+                        }
+                      "
+                    />
+                    <label for="radio_otro">Otro transporte</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Fuente de Información</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._b.fuente"
+                    (ngModelChange)="
+                      emergenciaBody._b.fuente = $event.toUpperCase()
+                    "
+                    name="fuente"
+                    placeholder="Ingrese"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Institución o persona que entrega al paciente</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._b.institucion_entrega"
+                    name="institucion_entrega"
+                    (ngModelChange)="
+                      emergenciaBody._b.institucion_entrega =
+                        $event.toUpperCase()
+                    "
+                    placeholder="Ingrese"
+                  />
+                </div>
+                <div class="col-md-6 form-group">
+                  <label>N. Teléfono</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._b.telefono_inst"
+                    name="telefono_inst"
+                    placeholder="Ingrese"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel C -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              id="seccionc"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>C. INICIO DE ATENCIÓN</h5>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Fecha</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="emergenciaBody._c.fecha"
+                    name="fecha_c"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Hora</label>
+                  <input
+                    class="form-control"
+                    type="time"
+                    [(ngModel)]="emergenciaBody._c.hora"
+                    name="hora_c"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Condición de Llegada</label>
+                  <div class="demo-radio-button">
+                    <!-- estable -->
+                    <input
+                      type="radio"
+                      id="radio_estable"
+                      name="condicion_llegada"
+                      [checked]="emergenciaBody._c.condicion_llegada.estable"
+                      (change)="
+                        emergenciaBody._c.condicion_llegada = {
+                          estable: true,
+                          inestable: false,
+                          fallecido: false
+                        }
+                      "
+                    />
+                    <label for="radio_estable">Estable</label>
+
+                    <!-- inestable -->
+                    <input
+                      type="radio"
+                      id="radio_inestable"
+                      name="condicion_llegada"
+                      [checked]="emergenciaBody._c.condicion_llegada.inestable"
+                      (change)="
+                        emergenciaBody._c.condicion_llegada = {
+                          estable: false,
+                          inestable: true,
+                          fallecido: false
+                        }
+                      "
+                    />
+                    <label for="radio_inestable">Inestable</label>
+
+                    <!-- Otro fallecido -->
+                    <input
+                      type="radio"
+                      id="radio_fallecido"
+                      name="condicion_llegada"
+                      [checked]="emergenciaBody._c.condicion_llegada.fallecido"
+                      (change)="
+                        emergenciaBody._c.condicion_llegada = {
+                          estable: false,
+                          inestable: false,
+                          fallecido: true
+                        }
+                      "
+                    />
+                    <label for="radio_fallecido">Fallecido</label>
+                  </div>
+                </div>
+                <div class="col-md-6 form-group">
+                  <label>Motivo de Atención</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._c.motivo_atencion"
+                    (ngModelChange)="
+                      emergenciaBody._c.motivo_atencion = $event.toUpperCase()
+                    "
+                    name="motivo_atencion"
+                    placeholder="Ingrese"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel D -->
+            <div
+              class="tab-pane fade"
+              id="dropdown1"
+              role="tabpanel"
+              aria-labelledby="dropdown1-tab"
+            >
+              <h5>D. ACCIDENTE, VIOLENCIA, INTOXICACIÓN</h5>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Fecha</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="emergenciaBody._d.fecha"
+                    name="fecha_d"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Hora</label>
+                  <input
+                    class="form-control"
+                    type="time"
+                    [(ngModel)]="emergenciaBody._d.hora"
+                    name="hora_d"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label>Lugar del Evento</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._d.lugar"
+                    (ngModelChange)="
+                      emergenciaBody._d.lugar = $event.toUpperCase()
+                    "
+                    name="lugar"
+                    placeholder="Ingrese"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label>Dirección del Evento</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._d.direccion"
+                    (ngModelChange)="
+                      emergenciaBody._d.direccion = $event.toUpperCase()
+                    "
+                    name="direccion"
+                    placeholder="Ingrese"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label>Custodia Policial</label>
+                  <select
+                    class="form-control"
+                    [(ngModel)]="emergenciaBody._d.custodia_policial"
+                    name="custodia_policial"
+                  >
+                    <option [ngValue]="'NO'">NO</option>
+                    <option [ngValue]="'SI'">SI</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Fila 1 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_accidente_transito"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.accidente_transito"
+                      name="accidente_transito"
+                    />
+                    <label for="d_accidente_transito"
+                      >Accidente de tránsito</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_caida"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.caida"
+                      name="caida"
+                    />
+                    <label for="d_caida">Caída</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_quemadura"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.quemadura"
+                      name="quemadura"
+                    />
+                    <label for="d_quemadura">Quemadura</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_mordedura"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.mordedura"
+                      name="mordedura"
+                    />
+                    <label for="d_mordedura">Mordedura</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_ahogamiento"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.ahogamiento"
+                      name="ahogamiento"
+                    />
+                    <label for="d_ahogamiento">Ahogamiento</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_asfixia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.asfixia"
+                      name="asfixia"
+                    />
+                    <label for="d_asfixia">Asfixia</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_cuerpo_extrano"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.cuerpo_extrano"
+                      name="cuerpo_extrano"
+                    />
+                    <label for="d_cuerpo_extrano">Cuerpo extraño</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_aplastamiento"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.aplastamiento"
+                      name="aplastamiento"
+                    />
+                    <label for="d_aplastamiento">Aplastamiento</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_otro_accidente"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.otro_accidente"
+                      name="otro_accidente"
+                    />
+                    <label for="d_otro_accidente">Otro accidente</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_arma_fuego"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_arma_fuego"
+                      name="violencia_arma_fuego"
+                    />
+                    <label for="d_violencia_arma_fuego"
+                      >Violencia arma de fuego</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 3 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_arma_punzante"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_arma_punzante"
+                      name="violencia_arma_punzante"
+                    />
+                    <label for="d_violencia_arma_punzante"
+                      >Violencia arma punzante</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_rina"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_rina"
+                      name="violencia_rina"
+                    />
+                    <label for="d_violencia_rina">Riña</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_familiar"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_familiar"
+                      name="violencia_familiar"
+                    />
+                    <label for="d_violencia_familiar">Violencia familiar</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_fisica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_fisica"
+                      name="violencia_fisica"
+                    />
+                    <label for="d_violencia_fisica">Violencia física</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_psicologica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_psicologica"
+                      name="violencia_psicologica"
+                    />
+                    <label for="d_violencia_psicologica"
+                      >Violencia psicológica</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 4 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_violencia_sexual"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.violencia_sexual"
+                      name="violencia_sexual"
+                    />
+                    <label for="d_violencia_sexual">Violencia sexual</label>
+                  </div>
+                </div>
+
+                <!-- NOTIFICACIÓN -->
+                <div class="col-md-2 d-flex align-items-center">
+                  <label for="notificacion" class="mr-2 mb-0"
+                    ><b>Notificación:</b></label
+                  >
+                  <select
+                    id="notificacion"
+                    class="form-control"
+                    style="max-width: 150px"
+                    [(ngModel)]="emergenciaBody._d.notificacion"
+                    name="notificacion"
+                  >
+                    <option [ngValue]="'NO'">NO</option>
+                    <option [ngValue]="'SI'">SI</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_intox_alcoholica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.intox_alcoholica"
+                      name="intox_alcoholica"
+                    />
+                    <label for="d_intox_alcoholica">Intox. alcohólica</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_intox_alimentaria"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.intox_alimentaria"
+                      name="intox_alimentaria"
+                    />
+                    <label for="d_intox_alimentaria">Intox. alimentaria</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_intox_drogas"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.intox_drogas"
+                      name="intox_drogas"
+                    />
+                    <label for="d_intox_drogas">Intox. drogas</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 5 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_intox_gases"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.intox_gases"
+                      name="intox_gases"
+                    />
+                    <label for="d_intox_gases">Intox. gases</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_intox_otra"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.intox_otra"
+                      name="intox_otra"
+                    />
+                    <label for="d_intox_otra">Intox. otra</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_picadura"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.picadura"
+                      name="picadura"
+                    />
+                    <label for="d_picadura">Picadura</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_envenenamiento"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.envenenamiento"
+                      name="envenenamiento"
+                    />
+                    <label for="d_envenenamiento">Envenenamiento</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_anafilaxia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.anafilaxia"
+                      name="anafilaxia"
+                    />
+                    <label for="d_anafilaxia">Anafilaxia</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 6 -->
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="d_aliento_alcohol"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._d.aliento_alcohol"
+                      name="aliento_alcohol"
+                    />
+                    <label for="d_aliento_alcohol">Aliento alcohólico</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila final -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="observacion_d"
+                      ><b>Observación / Orientación</b></label
+                    >
+                    <textarea
+                      id="observacion_d"
+                      class="form-control"
+                      rows="3"
+                      [(ngModel)]="emergenciaBody._d.observacion_d"
+                      name="observacion_d"
+                      (ngModelChange)="
+                        emergenciaBody._d.observacion_d = $event.toUpperCase()
+                      "
+                      placeholder="Ingrese observaciones u orientación..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel E -->
+            <div
+              class="tab-pane fade"
+              id="dropdown2"
+              role="tabpanel"
+              aria-labelledby="dropdown2-tab"
+            >
+              <h5>E. ANTECEDENTES PATOLÓGICOS PERSONALES Y FAMILIARES</h5>
+
+              <!-- ===== Sección E: Antecedentes ===== -->
+
+              <!-- Fila: NO APLICA -->
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_no_aplica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.no_aplica"
+                      name="e_no_aplica"
+                      (ngModelChange)="noAplicaE($event)"
+                    />
+                    <label for="e_no_aplica">No Aplica</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 1: 5 ítems -->
+              <div class="row mb-2">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_alergicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.alergicos"
+                      name="e_alergicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_alergicos">1. Alérgicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_clinicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.clinicos"
+                      name="e_clinicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_clinicos">2. Clínicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_ginecologicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.ginecologicos"
+                      name="e_ginecologicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_ginecologicos">3. Ginecológicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_traumatologicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.traumatologicos"
+                      name="e_traumatologicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_traumatologicos">4. Traumatológicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_pediatricos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.pediatricos"
+                      name="e_pediatricos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_pediatricos">5. Pediátricos</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2: 5 ítems -->
+              <div class="row mb-2">
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_quirurgicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.quirurgicos"
+                      name="e_quirurgicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_quirurgicos">6. Quirúrgicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_farmacologicos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.farmacologicos"
+                      name="e_farmacologicos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_farmacologicos">7. Farmacológicos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_habitos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.habitos"
+                      name="e_habitos"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_habitos">8. Hábitos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_familiares"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.familiares"
+                      name="e_familiares"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_familiares">9. Familiares</label>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="e_otros"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._e.otros"
+                      name="e_otros"
+                      [disabled]="emergenciaBody._e.no_aplica"
+                    />
+                    <label for="e_otros">10. Otros</label>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <label for="e_observacion"><b>Observaciones</b></label>
+                    <textarea
+                      id="e_observacion"
+                      class="form-control"
+                      rows="3"
+                      [(ngModel)]="emergenciaBody._e.observacion_e"
+                      name="e_observacion"
+                      placeholder="Ingrese observaciones..."
+                      (ngModelChange)="
+                        emergenciaBody._e.observacion_e = $event.toUpperCase()
+                      "
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel F -->
+            <div
+              class="tab-pane fade"
+              id="dropdown3"
+              role="tabpanel"
+              aria-labelledby="dropdown3-tab"
+            >
+              <h5>F. ENFERMEDAD O PROBLEMA ACTUAL</h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="f_observacion"
+                      class="form-control"
+                      rows="5"
+                      [(ngModel)]="emergenciaBody._f.observacion_f"
+                      name="f_observacion"
+                      placeholder="Ingrese observaciones..."
+                      (ngModelChange)="
+                        emergenciaBody._f.observacion_f = $event.toUpperCase()
+                      "
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel G -->
+            <div
+              class="tab-pane fade"
+              id="dropdown4"
+              role="tabpanel"
+              aria-labelledby="dropdown4-tab"
+            >
+              <h5>G. CONSTANTES VITALES Y ANTROPOMETRÍA</h5>
+              <!-- ===================== SECCIÓN _g: CONSTANTES VITALES ===================== -->
+
+              <!-- FILA 1: switch global -->
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>¿Sin Constantes Vitales?</label>
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="chk_sc_vitales"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._g.sin_constantes_vitales"
+                      name="sin_constantes_vitales"
+                      (ngModelChange)="
+                        $event
+                          ? [
+                              (emergenciaBody._g.presion_arterial_mmhg = null),
+                              (emergenciaBody._g.presion_arterial_sistolica =
+                                null),
+                              (emergenciaBody._g.presion_arterial_diastolica =
+                                null),
+                              (emergenciaBody._g.pulso_por_min = null),
+                              (emergenciaBody._g.frecuencia_respiratoria_por_min =
+                                null),
+                              (emergenciaBody._g.pulsioximetria_porcentaje =
+                                null),
+                              (emergenciaBody._g.temperatura = null),
+                              (emergenciaBody._g.estado_conciencia = null),
+                              (emergenciaBody._g.proteinuria = null),
+                              (emergenciaBody._g.score_mama = null),
+                              (emergenciaBody._g.peso_kg = null),
+                              (emergenciaBody._g.talla_cm = null),
+                              (emergenciaBody._g.glicemia_capilar_mg_dl = null),
+                              (emergenciaBody._g.glasgow = null),
+                              (emergenciaBody._g.ocular = null),
+                              (emergenciaBody._g.verbal = null),
+                              (emergenciaBody._g.motora = null),
+                              (emergenciaBody._g.perimetro_cefalico = null),
+                              (emergenciaBody._g.eva = null),
+                              (emergenciaBody._g.pupila_izq = null),
+                              (emergenciaBody._g.pupila_der = null),
+                              (emergenciaBody._g.llenado_capilar = null),
+                              (emergenciaBody._j.score_mama = null)
+                            ]
+                          : null
+                      "
+                    />
+                    <label for="chk_sc_vitales">Activar</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FILA 2 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Presión Arterial (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="emergenciaBody._g.presion_arterial_mmhg"
+                    name="presion_arterial_mmhg"
+                    [disabled]="true"
+                    placeholder="S/D"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Presión Sistólica (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.presion_arterial_sistolica"
+                    name="presion_arterial_sistolica"
+                    (ngModelChange)="
+                      emergenciaBody._g.presion_arterial_mmhg =
+                        (emergenciaBody._g.presion_arterial_sistolica ?? '') +
+                        '/' +
+                        (emergenciaBody._g.presion_arterial_diastolica ?? '');
+                      variablesScoreMama(2, $event)
+                    "
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 120"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Presión Diastólica (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.presion_arterial_diastolica"
+                    name="presion_arterial_diastolica"
+                    (ngModelChange)="
+                      emergenciaBody._g.presion_arterial_mmhg =
+                        (emergenciaBody._g.presion_arterial_sistolica ?? '') +
+                        '/' +
+                        (emergenciaBody._g.presion_arterial_diastolica ?? '');
+                      variablesScoreMama(3, $event)
+                    "
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 80"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Frecuencia Respiratoria / min</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="
+                      emergenciaBody._g.frecuencia_respiratoria_por_min
+                    "
+                    (ngModelChange)="variablesScoreMama(4, $event)"
+                    name="frecuencia_respiratoria_por_min"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 16"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 3 -->
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>Pulso / min</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.pulso_por_min"
+                    name="pulso_por_min"
+                    (ngModelChange)="variablesScoreMama(1, $event)"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 72"
+                  />
+                </div>
+
+                <div class="col-md-2 form-group">
+                  <label>Pulsioximetría %</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.pulsioximetria_porcentaje"
+                    name="pulsioximetria_porcentaje"
+                    (ngModelChange)="variablesScoreMama(6, $event)"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 98"
+                  />
+                </div>
+
+                <div class="col-md-2 form-group">
+                  <label>Temperatura (°C)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.temperatura"
+                    name="temperatura"
+                    (ngModelChange)="variablesScoreMama(5, $event)"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    placeholder="Ej. 36.8"
+                  />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="estado_conciencia">Estado de Conciencia</label>
+                  <select
+                    id="estado_conciencia"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.estado_conciencia"
+                    (ngModelChange)="variablesScoreMama(7, $event)"
+                    name="estado_conciencia"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>
+                      Seleccione una opción...
+                    </option>
+                    <option value="alerta">Alerta</option>
+                    <option value="voz">Responde a la voz / Somnolienta</option>
+                    <option value="dolor">
+                      Responde al dolor / Estuporosa
+                    </option>
+                    <option value="agitada">Confusa / Agitada</option>
+                    <option value="nores">No Responde</option>
+                  </select>
+                </div>
+                <div class="col-md-2 form-group">
+                  <label for="proteinuria">Proteinuria</label>
+                  <select
+                    id="proteinuria"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.proteinuria"
+                    (ngModelChange)="variablesScoreMama(8, $event)"
+                    name="proteinuria"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    <option value="1">Positivo (+)</option>
+                    <option value="0">Negativo (-)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- FILA 4 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Acciones</label>
+                  <button
+                    class="btn btn-success btn-block"
+                    type="button"
+                    (click)="limpiarSignosVitalesSegunGenero()"
+                    title="Solo informativo"
+                  >
+                    Limpiar Proteinuria / Score Mamá
+                  </button>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Score Mamá</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.score_mama"
+                    name="score_mama"
+                    [disabled]="true"
+                    placeholder="—"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Recomendación</label>
+                  <p>{{ leyenda_scoremama }}</p>
+                </div>
+              </div>
+
+              <!-- FILA 5: Glasgow y componentes -->
+              <div class="row">
+                <!-- Ocular -->
+                <div class="col-md-3 form-group">
+                  <label for="ocular">Ocular (4)</label>
+                  <select
+                    id="ocular"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.ocular"
+                    name="ocular"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    (ngModelChange)="
+                      emergenciaBody._g.glasgow =
+                        (+emergenciaBody._g.ocular || 0) +
+                        (+emergenciaBody._g.verbal || 0) +
+                        (+emergenciaBody._g.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Verbal -->
+                <div class="col-md-3 form-group">
+                  <label for="verbal">Verbal (5)</label>
+                  <select
+                    id="verbal"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.verbal"
+                    name="verbal"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    (ngModelChange)="
+                      emergenciaBody._g.glasgow =
+                        (+emergenciaBody._g.ocular || 0) +
+                        (+emergenciaBody._g.verbal || 0) +
+                        (+emergenciaBody._g.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4,5]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Motora -->
+                <div class="col-md-3 form-group">
+                  <label for="motora">Motora (6)</label>
+                  <select
+                    id="motora"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.motora"
+                    name="motora"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    (ngModelChange)="
+                      emergenciaBody._g.glasgow =
+                        (+emergenciaBody._g.ocular || 0) +
+                        (+emergenciaBody._g.verbal || 0) +
+                        (+emergenciaBody._g.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4,5,6]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Glasgow (solo lectura, calculado en el template) -->
+                <div class="col-md-3 form-group">
+                  <label for="glasgow">Glasgow</label>
+                  <input
+                    id="glasgow"
+                    class="form-control"
+                    type="number"
+                    [value]="
+                      (+emergenciaBody._g.ocular || 0) +
+                      (+emergenciaBody._g.verbal || 0) +
+                      (+emergenciaBody._g.motora || 0)
+                    "
+                    [disabled]="true"
+                    name="glasgow"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 6 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Perímetro Cefálico (cm)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.perimetro_cefalico"
+                    name="perimetro_cefalico"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Talla (cm)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.talla_cm"
+                    name="talla_cm"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Peso (kg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.peso_kg"
+                    name="peso_kg"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label for="eva">EVA /10</label>
+                  <select
+                    id="eva"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.eva"
+                    name="eva"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [0,1,2,3,4,5,6,7,8,9,10]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <!-- FILA 7 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Reacción Pupila Der.</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.pupila_der"
+                    name="pupila_der"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Reacción Pupila Izq.</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.pupila_izq"
+                    name="pupila_izq"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>T. Llenado Capilar</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.llenado_capilar"
+                    name="llenado_capilar"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Glicemia Capilar (mg/dl)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="emergenciaBody._g.glicemia_capilar_mg_dl"
+                    name="glicemia_capilar_mg_dl"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                  />
+                </div>
+              </div>
+
+              <!-- =================== FIN SECCIÓN _g =================== -->
+            </div>
+
+            <!-- Panel H -->
+            <div
+              class="tab-pane fade"
+              id="dropdown5"
+              role="tabpanel"
+              aria-labelledby="dropdown5-tab"
+            >
+              <h5>H. EXAMEN FÍSICO</h5>
+
+              <!-- Fila 1 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_piel_faneras"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.piel_faneras"
+                      name="h_piel_faneras"
+                    />
+                    <label for="h_piel_faneras">Piel - Faneras</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_cabeza"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.cabeza"
+                      name="h_cabeza"
+                    />
+                    <label for="h_cabeza">Cabeza</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_ojos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.ojos"
+                      name="h_ojos"
+                    />
+                    <label for="h_ojos">Ojos</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_oidos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.oidos"
+                      name="h_oidos"
+                    />
+                    <label for="h_oidos">Oídos</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_nariz"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.nariz"
+                      name="h_nariz"
+                    />
+                    <label for="h_nariz">Nariz</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_boca"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.boca"
+                      name="h_boca"
+                    />
+                    <label for="h_boca">Boca</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_oro_faringe"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.oro_faringe"
+                      name="h_oro_faringe"
+                    />
+                    <label for="h_oro_faringe">Oro Faringe</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_cuello"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.cuello"
+                      name="h_cuello"
+                    />
+                    <label for="h_cuello">Cuello</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 3 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_axilas_mamas"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.axilas_mamas"
+                      name="h_axilas_mamas"
+                    />
+                    <label for="h_axilas_mamas">Axilas - Mamas</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_torax"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.torax"
+                      name="h_torax"
+                    />
+                    <label for="h_torax">Tórax</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_abdomen"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.abdomen"
+                      name="h_abdomen"
+                    />
+                    <label for="h_abdomen">Abdomen</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_columna_vertebral"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.columna_vertebral"
+                      name="h_columna_vertebral"
+                    />
+                    <label for="h_columna_vertebral">Columna Vertebral</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 4 -->
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_ingle_perine"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.ingle_perine"
+                      name="h_ingle_perine"
+                    />
+                    <label for="h_ingle_perine">Ingle - Periné</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_miembros_superiores"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.miembros_superiores"
+                      name="h_miembros_superiores"
+                    />
+                    <label for="h_miembros_superiores"
+                      >Miembros Superiores</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="h_miembros_inferiores"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._h.miembros_inferiores"
+                      name="h_miembros_inferiores"
+                    />
+                    <label for="h_miembros_inferiores"
+                      >Miembros Inferiores</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    [(ngModel)]="emergenciaBody._h.observacion_h"
+                    name="h_observacion_h"
+                    (ngModelChange)="
+                      emergenciaBody._h.observacion_h = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    placeholder="Ingrese observaciones…"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel I -->
+            <div
+              class="tab-pane fade"
+              id="dropdown6"
+              role="tabpanel"
+              aria-labelledby="dropdown6-tab"
+            >
+              <h5>I. EXAMEN FÍSICO DE TRAUMA / CRÍTICO</h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="i_observacion"
+                      class="form-control"
+                      rows="5"
+                      [(ngModel)]="emergenciaBody._i.observacion_i"
+                      name="i_observacion"
+                      placeholder="Ingrese observaciones..."
+                      (ngModelChange)="
+                        emergenciaBody._i.observacion_i = $event.toUpperCase()
+                      "
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel J -->
+            <div
+              class="tab-pane fade"
+              id="dropdown7"
+              role="tabpanel"
+              aria-labelledby="dropdown7-tab"
+            >
+              <h5>J. EMBARAZO - PARTO</h5>
+
+              <!-- FILA 1: No Aplica -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>No Aplica</label>
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="j_no_aplica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._j.no_aplica"
+                      name="j_no_aplica"
+                      (ngModelChange)="
+                        emergenciaBody._j.no_aplica = $event;
+                        $event && (emergenciaBody._j.numero_gestas = null);
+                        $event && (emergenciaBody._j.numero_partos = null);
+                        $event && (emergenciaBody._j.numero_abortos = null);
+                        $event && (emergenciaBody._j.numero_cesareas = null);
+                        $event && (emergenciaBody._j.fum = null);
+                        $event && (emergenciaBody._j.semanas_gestacion = null);
+                        $event && (emergenciaBody._j.movimiento_fetal = null);
+                        $event &&
+                          (emergenciaBody._j.frecuencia_cardiaca_fetal = null);
+                        $event &&
+                          (emergenciaBody._j.ruptura_de_membranas = null);
+                        $event && (emergenciaBody._j.tiempo = null);
+                        $event && (emergenciaBody._j.afu = null);
+                        $event && (emergenciaBody._j.presentacion = null);
+                        $event && (emergenciaBody._j.dilatacion = null);
+                        $event && (emergenciaBody._j.borramiento = null);
+                        $event && (emergenciaBody._j.plano = null);
+                        $event && (emergenciaBody._j.pelvis_viable = null);
+                        $event && (emergenciaBody._j.sangrado_vaginal = null);
+                        $event && (emergenciaBody._j.contracciones = null);
+                        $event && (emergenciaBody._j.observacion_j = null)
+                      "
+                    />
+                    <label for="j_no_aplica">Activar</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FILA 2 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Número de Gestas</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.numero_gestas"
+                    name="j_numero_gestas"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Número de Partos</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.numero_partos"
+                    name="j_numero_partos"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Número de Abortos</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.numero_abortos"
+                    name="j_numero_abortos"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Número de Cesáreas</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.numero_cesareas"
+                    name="j_numero_cesareas"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 3 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>FUM</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.fum"
+                    name="j_fum"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.fum = ($event || '').toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Semanas Gestación</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.semanas_gestacion"
+                    name="j_semanas_gestacion"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Movimiento Fetal</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.movimiento_fetal"
+                    name="j_movimiento_fetal"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Frecuencia Cardíaca Fetal</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.frecuencia_cardiaca_fetal"
+                    name="j_frecuencia_cardiaca_fetal"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 4 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Ruptura de Membranas</label>
+                  <select
+                    class="form-control"
+                    [(ngModel)]="emergenciaBody._j.ruptura_de_membranas"
+                    name="j_ruptura_de_membranas"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    <option [ngValue]="'SI'">SI</option>
+                    <option [ngValue]="'NO'">NO</option>
+                  </select>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Tiempo</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.tiempo"
+                    name="j_tiempo"
+                    placeholder="Ingrese"
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>AFU</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.afu"
+                    name="j_afu"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.afu = ($event || '').toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Presentación</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.presentacion"
+                    name="j_presentacion"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.presentacion = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 5 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Dilatación</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.dilatacion"
+                    name="j_dilatacion"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.dilatacion = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Borramiento</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.borramiento"
+                    name="j_borramiento"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.borramiento = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Plano</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.plano"
+                    name="j_plano"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.plano = ($event || '').toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Pelvis Viable</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.pelvis_viable"
+                    name="j_pelvis_viable"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.pelvis_viable = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 6 -->
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label>Sangrado Vaginal</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.sangrado_vaginal"
+                    name="j_sangrado_vaginal"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.sangrado_vaginal = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label>Contracciones</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.contracciones"
+                    name="j_contracciones"
+                    placeholder="Ingrese"
+                    (ngModelChange)="
+                      emergenciaBody._j.contracciones = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label>Score Mamá</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._j.score_mama"
+                    name="j_score_mama"
+                    placeholder="Ingrese"
+                    disabled
+                    (ngModelChange)="
+                      emergenciaBody._j.score_mama = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                  />
+                </div>
+              </div>
+
+              <!-- FILA 7 -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    [(ngModel)]="emergenciaBody._j.observacion_j"
+                    name="j_observacion_j"
+                    placeholder="Ingrese observaciones…"
+                    (ngModelChange)="
+                      emergenciaBody._j.observacion_j = (
+                        $event || ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="emergenciaBody._j.no_aplica"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel K -->
+            <div
+              class="tab-pane fade"
+              id="dropdown8"
+              role="tabpanel"
+              aria-labelledby="dropdown8-tab"
+            >
+              <h5>K. EXÁMENES COMPLEMENTARIOS</h5>
+              <!-- Fila 1: No Aplica -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_no_aplica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.no_aplica"
+                      name="k_no_aplica"
+                      (ngModelChange)="
+                        emergenciaBody._k.no_aplica = $event;
+                        emergenciaBody._k.biometria = false;
+                        emergenciaBody._k.uroanalisis = false;
+                        emergenciaBody._k.quimica_sanguinea = false;
+                        emergenciaBody._k.electrolitos = false;
+                        emergenciaBody._k.gasometria = false;
+                        emergenciaBody._k.electro_cardiograma = false;
+                        emergenciaBody._k.rx_torax = false;
+                        emergenciaBody._k.rx_osea = false;
+                        emergenciaBody._k.rx_abdomen = false;
+                        emergenciaBody._k.ecografia_pelvica = false;
+                        emergenciaBody._k.ecografia_abdomen = false;
+                        emergenciaBody._k.tomografia = false;
+                        emergenciaBody._k.resonancia = false;
+                        emergenciaBody._k.endoscopia = false;
+                        emergenciaBody._k.interconsulta = false;
+                        emergenciaBody._k.otros = false;
+                        emergenciaBody._k.observacion_k = ''
+                      "
+                    />
+                    <label for="k_no_aplica">No Aplica</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_biometria"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.biometria"
+                      name="k_biometria"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_biometria">Biometría</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_uroanalisis"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.uroanalisis"
+                      name="k_uroanalisis"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_uroanalisis">Uroanálisis</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_quimica_sanguinea"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.quimica_sanguinea"
+                      name="k_quimica_sanguinea"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_quimica_sanguinea">Química Sanguínea</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_electrolitos"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.electrolitos"
+                      name="k_electrolitos"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_electrolitos">Electrolitos</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 3 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_gasometria"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.gasometria"
+                      name="k_gasometria"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_gasometria">Gasometría</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_electro_cardiograma"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.electro_cardiograma"
+                      name="k_electro_cardiograma"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_electro_cardiograma"
+                      >Electro Cardiograma</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_rx_torax"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.rx_torax"
+                      name="k_rx_torax"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_rx_torax">RX Tórax</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_rx_osea"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.rx_osea"
+                      name="k_rx_osea"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_rx_osea">RX Ósea</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 4 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_ecografia_pelvica"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.ecografia_pelvica"
+                      name="k_ecografia_pelvica"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_ecografia_pelvica">Ecografía Pélvica</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_ecografia_abdomen"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.ecografia_abdomen"
+                      name="k_ecografia_abdomen"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_ecografia_abdomen">Ecografía Abdomen</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_tomografia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.tomografia"
+                      name="k_tomografia"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_tomografia">Tomografía</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_resonancia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.resonancia"
+                      name="k_resonancia"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_resonancia">Resonancia</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 5 -->
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_endoscopia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.endoscopia"
+                      name="k_endoscopia"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_endoscopia">Endoscopia</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_interconsulta"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.interconsulta"
+                      name="k_interconsulta"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_interconsulta">Interconsulta</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_rxabdomen"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.rx_abdomen"
+                      name="rxabdomen"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="rxabdomen">Rx Abdomen</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="k_otros"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._k.otros"
+                      name="k_otros"
+                      [disabled]="emergenciaBody._k.no_aplica"
+                    />
+                    <label for="k_otros">Otros</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    [(ngModel)]="emergenciaBody._k.observacion_k"
+                    name="k_observacion"
+                    [disabled]="emergenciaBody._k.no_aplica"
+                    (ngModelChange)="
+                      emergenciaBody._k.observacion_k = $event.toUpperCase()
+                    "
+                    placeholder="Ingrese..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel L-M -->
+            <div
+              class="tab-pane fade"
+              id="dropdown9"
+              role="tabpanel"
+              aria-labelledby="dropdown9-tab"
+            >
+              <h5>L-M. DIAGNÓSTICOS PRESUNTIVOS Y DEFINITIVOS</h5>
+              @if(this.emergenciaBody._a.pk_emerg === 0){
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar diagnosticos debe primero guardar los datos
+                  actuales del formulario 008.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+              >
+                Nuevo
+              </button>
+              <div class="table-responsive pointer">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_emerdiag) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">
+                        {{ item.desc_cie }}
+                      </td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_emerdiag === "P"
+                            ? "Presuntivo"
+                            : item.tipo_emerdiag === "D"
+                            ? "Definitivo"
+                            : ""
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- Panel N -->
+            <div
+              class="tab-pane fade"
+              id="dropdown10"
+              role="tabpanel"
+              aria-labelledby="dropdown10-tab"
+            >
+              <h5>N. PLAN DE TRATAMIENTO</h5>
+              @if(this.emergenciaBody._a.pk_emerg === 0){
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar planes de tratamiento debe primero guardar los
+                  datos actuales del formulario 008.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoPlanTratamiento()"
+              >
+                Nuevo
+              </button>
+              <div class="table-responsive pointer">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">MEDICAMENTO</th>
+                      <th scope="col">VÍA</th>
+                      <th scope="col">DOSIS</th>
+                      <th scope="col">POSOLOGÍA</th>
+                      <th scope="col">DÍAS</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                  <tbody>
+                    @for (item of listPlanTratamiento; track item.pk_plantra) {
+                    <tr>
+                      <td data-label="MEDICAMENTO">
+                        {{ item.medicamiento_plantra }}
+                      </td>
+                      <td data-label="VÍA">{{ item.via_plantra }}</td>
+                      <td data-label="DOSIS">{{ item.dosis_plantra }}</td>
+                      <td data-label="POSOLOGÍA">
+                        {{ item.posologia_plantra }}
+                      </td>
+                      <td data-label="DÍAS">{{ item.dias }}</td>
+
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarPlanTratamiento(item)"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- Panel O -->
+            <div
+              class="tab-pane fade"
+              id="dropdown11"
+              role="tabpanel"
+              aria-labelledby="dropdown11-tab"
+            >
+              <h5>O. CONDICIÓN AL EGRESO DE EMERGENCIA</h5>
+
+              <div class="row">
+                <!-- Fila 1 -->
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_vivo"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.vivo"
+                      name="o_vivo"
+                    />
+                    <label for="o_vivo">Vivo</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_estable"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.estable"
+                      name="o_estable"
+                    />
+                    <label for="o_estable">Estable</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_inestable"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.inestable"
+                      name="o_inestable"
+                    />
+                    <label for="o_inestable">Inestable</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_fallecido"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.fallecido"
+                      name="o_fallecido"
+                    />
+                    <label for="o_fallecido">Fallecido</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Fila 2 -->
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_alta_definitiva"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.alta_definitiva"
+                      name="o_alta_definitiva"
+                    />
+                    <label for="o_alta_definitiva">Alta Definitiva</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_consulta_externa"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.consulta_externa"
+                      name="o_consulta_externa"
+                    />
+                    <label for="o_consulta_externa">Consulta Externa</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_observacion_emergencia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.observacion_de_emergencia"
+                      name="o_observacion_emergencia"
+                    />
+                    <label for="o_observacion_emergencia"
+                      >Observación Emergencia</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_hospitalizacion"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.hospitalizacion"
+                      name="o_hospitalizacion"
+                    />
+                    <label for="o_hospitalizacion">Hospitalización</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Fila 3 -->
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_referencia"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.referencia"
+                      name="o_referencia"
+                    />
+                    <label for="o_referencia">Referencia</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_inversa"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.inversa"
+                      name="o_inversa"
+                    />
+                    <label for="o_inversa">Referencia Inversa</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="o_derivacion"
+                      class="chk-col-red"
+                      [(ngModel)]="emergenciaBody._o.derivacion"
+                      name="o_derivacion"
+                    />
+                    <label for="o_derivacion">Derivación</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Fila 4 -->
+                <div class="col-md-9 form-group">
+                  <label>Establecimiento</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._o.establecimiento"
+                    (ngModelChange)="
+                      emergenciaBody._o.establecimiento = $event.toUpperCase()
+                    "
+                    name="o_establecimiento"
+                    placeholder="Ingrese"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Días de Reposo</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-line"
+                    [(ngModel)]="emergenciaBody._o.dias_reposo"
+                    name="o_dias_reposo"
+                    placeholder="Ingrese"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    rows="5"
+                    class="form-control"
+                    [(ngModel)]="emergenciaBody._o.observacion_o"
+                    (ngModelChange)="
+                      emergenciaBody._o.observacion_o = $event.toUpperCase()
+                    "
+                    name="o_observacion_o"
+                    placeholder="Ingrese observaciones"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div class="align-self-center d-flex justify-content-end">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+              (click)="_routerService2.navigate(['/emergencia'])"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+        <!-- <pre>{{ emergenciaBody | json }}</pre> -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- Fin de los tabs -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="diagnosticoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Diagnostico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label> Cie (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnostico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código:{{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de Diagnostico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_emerdiag"
+              name="tipo_emerdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              <option [ngValue]="'P'">Presuntivo</option>
+              <option [ngValue]="'D'">Definitivo</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="planTratamientoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registro Plan de Tratamiento
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarPlanTratamiento()">
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Medicamento (*)</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="planTratamientoBody.medicamiento_plantra"
+                (ngModelChange)="
+                  planTratamientoBody.medicamiento_plantra =
+                    $event.toUpperCase()
+                "
+                name="medicamiento_plantra"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label>Vía (*)</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="planTratamientoBody.via_plantra"
+                (ngModelChange)="
+                  planTratamientoBody.via_plantra = $event.toUpperCase()
+                "
+                name="via_plantra"
+                placeholder="Ingrese"
+              />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>Dosis (*)</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="planTratamientoBody.dosis_plantra"
+                (ngModelChange)="
+                  planTratamientoBody.dosis_plantra = $event.toUpperCase()
+                "
+                name="dosis_plantra"
+                placeholder="Ingrese"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label>Posología (*)</label>
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="planTratamientoBody.posologia_plantra"
+                (ngModelChange)="
+                  planTratamientoBody.posologia_plantra = $event.toUpperCase()
+                "
+                name="posologia_plantra"
+                placeholder="Ingrese"
+              />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>Días (*)</label>
+              <input
+                type="number"
+                class="form-control form-control-line"
+                [(ngModel)]="planTratamientoBody.dias"
+                name="dias"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarPlanTratamiento()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

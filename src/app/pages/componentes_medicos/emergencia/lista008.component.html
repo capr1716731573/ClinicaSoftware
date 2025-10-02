@@ -1,0 +1,138 @@
+<!-- <pre>{{ historiaclinicaList | json }}</pre> -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Emergencia</h4>
+        <h6 class="card-subtitle">Lista de formularios de Emergencia 008.</h6>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqEmergencia"
+              (ngModelChange)="bsqEmergencia = $event.toUpperCase()"
+              (keyup)="buscarEmergencia()"
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-info" type="button" (click)="nuevo008()">
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#IDENTIFICACIÓN</th>
+                  <th scope="col">NOMBRES</th>
+                  <th scope="col">APELLIDOS</th>
+                  <th scope="col">SEXO</th>
+                  <th scope="col">EDAD</th>
+                  <th scope="col">ESTADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of emergenciaList; track item.pk_emerg) {
+                <tr>
+                  <td data-label="#IDENTIFICACIÓN">
+                    {{ item.numidentificacion_persona }}
+                  </td>
+                  <td data-label="NOMBRES">
+                    {{ item.nombre_primario_persona }}
+                    {{ item.nombre_secundario_persona }}
+                  </td>
+                  <td data-label="APELLIDOS">
+                    {{ item.apellidopat_persona }}
+                    {{ item.apellidomat_persona }}
+                  </td>
+                  <td data-label="SEXO">
+                    {{ item.sexo }}
+                  </td>
+                  <td data-label="EDAD">
+                    {{ item.edad.valor }} {{ item.edad.tipo }}
+                  </td>
+                  <td data-label="ESTADO">
+                    @if (item.estado_emerg) {
+                    <h4><span class="badge badge-danger">CERRADA</span></h4>
+                    } @else{
+                    <h4><span class="badge badge-success">ABIERTA</span></h4>
+                    }
+                  </td>
+
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a class="dropdown-item" (click)="editar008(item)"
+                          >Editar</a
+                        >
+
+                        <a
+                          class="dropdown-item"
+                          (click)="imprimirForm008(item.pk_emerg)"
+                          >Imprimir</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+            
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="Navegación de páginas"
+              >
+                <!-- Retroceder -->
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+
+                <!-- Indicador de página actual -->
+                <button type="button" class="btn btn-info" disabled>
+                  {{ numeracion }}
+                </button>
+
+                <!-- Avanzar -->
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="emergenciaList?.length < intervalo"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
