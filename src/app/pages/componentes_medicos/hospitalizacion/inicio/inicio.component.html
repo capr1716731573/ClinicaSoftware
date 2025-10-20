@@ -1,0 +1,81 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xlg-12">
+    <div class="card card-body">
+      <div class="row">
+        <!-- Avatar -->
+        <div class="col-md-4 col-lg-3 text-center">
+          <img
+            src="../assets/images/users/paciente_hospitalizado.jpg"
+            alt="user"
+            class="img-responsive"
+          />
+        </div>
+
+        <!-- Datos -->
+        <div class="col-md-8 col-lg-9">
+          <h3 class="box-title m-b-0">
+            {{ hcu?.apellidopat_persona }} {{ hcu?.apellidomat_persona }} {{ hcu?.nombres_persona }}
+          </h3>
+          <small class="text-muted">HCU #{{ hcu?.fk_hcu }} • ID: {{ hcu?.numidentificacion_persona }}</small>
+
+          <hr class="m-t-10 m-b-15"/>
+
+          <div class="row">
+            <!-- Columna 1 -->
+            <div class="col-md-6">
+              <ul class="list-unstyled m-b-0">
+                <li><b>Tipo de Ciclo:</b> {{ hcu?.tipo_ciclohosp || '-' }}</li>
+                <li><b>Motivo:</b> {{ hcu?.motivo_ciclohosp || '-' }}</li>
+                <li><b>Activo:</b> {{ hcu?.activo_ciclohosp ? 'SÍ' : 'NO' }}</li>
+                <li><b>Fecha Ingreso:</b> {{ hcu?.fecha_ciclohosp || '-' }}</li>
+                <li><b>Hora Ingreso:</b> {{ hcu?.hora_ciclohosp || '-' }}</li>
+                <li><b>Sexo:</b> {{ hcu?.sexo || '-' }}</li>
+                <li>
+                  <b>Edad:</b>
+                  <!-- ejemplo simple -->
+                  {{ hcu?.edad?.valor }} {{ hcu?.edad?.tipo }}
+                </li>
+                
+               
+              </ul>
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="col-md-6">
+              <ul class="list-unstyled m-b-0">
+                <li><b>Área:</b> {{ hcu?.area || '-' }}</li>
+                <li><b>Torre:</b> {{ hcu?.torre || '-' }} <small *ngIf="hcu?.torre_pk"></small></li>
+                <li><b>Piso:</b> {{ hcu?.piso || '-' }} <small *ngIf="hcu?.piso_pk"></small></li>
+                <li><b>Sala:</b> {{ hcu?.sala || '-' }} <small *ngIf="hcu?.sala_pk"></small></li>
+                <li><b>Habitación:</b> {{ hcu?.habitacion || '-' }}</li>
+                <li><b>Cama / Ubicación:</b> {{ hcu?.ubicacion || '-' }}</li>
+              
+              </ul>
+            </div>
+          </div>
+
+          <!-- Auditoría creación -->
+          <div class="m-t-15">
+            <h5 class="m-b-5"><b>Auditoría de Creación</b></h5>
+            <ul class="list-unstyled m-b-0">
+             
+              <li>
+                <b>Nombre Persona:</b>
+                {{ hcu?.fecha_creacion_ciclo?.apellidopat_persona }} {{ hcu?.fecha_creacion_ciclo?.apellidomat_persona }}
+                {{ hcu?.fecha_creacion_ciclo?.nombre_primario_persona }} {{ hcu?.fecha_creacion_ciclo?.nombre_secundario_persona }}
+              </li>
+              <li><b>Identificación:</b> {{ hcu?.fecha_creacion_ciclo?.numidentificacion_persona || '-' }}</li>
+              <li><b>Fecha/Hora:</b> {{ hcu?.fecha_creacion_ciclo?.fecha || '-' }} / {{ hcu?.fecha_creacion_ciclo?.hora || '-' }}</li>
+            </ul>
+          </div>
+
+        
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

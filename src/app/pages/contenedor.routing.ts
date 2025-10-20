@@ -23,6 +23,8 @@ import { HistoriaClinicaComponent } from './componentes_medicos/historia_clinica
 import { CensoareasComponent } from './componentes_medicos/ciclo_hospitalizacion/censoareas.component';
 import { Lista008Component } from './componentes_medicos/emergencia/lista008.component';
 import { Formulario008Component } from './componentes_medicos/emergencia/formulario008.component';
+import { InicioComponent } from './componentes_medicos/hospitalizacion/inicio/inicio.component';
+import { EvolucionComponent } from './componentes_medicos/hospitalizacion/evoluciones/evolucion.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -53,6 +55,10 @@ export const pagesChildRoutes: Routes = [
             { path: 'censo', canActivate: [JwtGuard],component: CensoareasComponent ,data:{titulo: 'Hospitalizaciones (Censo)'}},
             { path: 'emergencia', canActivate: [JwtGuard],component: Lista008Component ,data:{titulo: 'Emergencia'}},
             { path: 'emergencia/:id', canActivate: [JwtGuard],component: Formulario008Component ,data:{titulo: 'Formulario 008'}},
+
+            //Hospitalizacion
+            { path: 'hospitalizacion_inicio', canActivate: [JwtGuard],component: InicioComponent ,data:{titulo: 'Hospitalización'}},
+            { path: 'evolucion', canActivate: [JwtGuard],component: EvolucionComponent ,data:{titulo: 'Evoluciones'}},
 
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]

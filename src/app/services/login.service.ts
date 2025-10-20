@@ -68,6 +68,15 @@ export class LoginService {
     return localStorage.getItem('_token');
   }
 
+  setHcuLocalStorage(hcu: any) {
+    localStorage.setItem('_hcu', JSON.stringify(hcu));
+  }
+
+  getHcuLocalStorage() {
+    const hcu = localStorage.getItem('_hcu');
+    return hcu ? JSON.parse(hcu) : null;
+  }
+
   setUserLocalStorage(user: any) {
     localStorage.setItem('_user', JSON.stringify(user));
   }
@@ -105,6 +114,7 @@ export class LoginService {
     localStorage.removeItem('_token');
     localStorage.removeItem('_user');
     localStorage.removeItem('_perfil');
+    localStorage.removeItem('_hcu');
   }
 
   validarExpiracionToken(token: any) {
@@ -130,5 +140,10 @@ export class LoginService {
     } catch (Error) {
       return null;
     }
+  }
+
+  reemplazarComillasSimples(texto: string): string {
+    if (!texto) return texto;
+    return texto.replace(/'/g, '"');
   }
 }

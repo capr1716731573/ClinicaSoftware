@@ -39,17 +39,6 @@ export class Lista008Component {
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //@@@ Metodos de Paginacion  @@@@@
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  controlManejoPaginacion() {
-    if ((this.desde -= this.intervalo) < 0 || this.numeracion < 0) {
-      this.desde = 0;
-      this.numeracion = 1;
-    } else {
-      //alert(`1 desde ${this.desde}  numeracion=${this.numeracion}`)
-      this.desde -= this.intervalo;
-      this.numeracion -= 1;
-      //alert(`2 desde ${this.desde}  numeracion=${this.numeracion}`)
-    }
-  }
 
   revertirPaginacion() {
     this.desde = this.prevDesde ?? 0;
@@ -138,7 +127,6 @@ export class Lista008Component {
       this.getAllEmergencia();
     }
   }
-
   
 
   nuevo008() {

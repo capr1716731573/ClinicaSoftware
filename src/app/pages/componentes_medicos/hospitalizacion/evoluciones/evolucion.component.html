@@ -1,0 +1,480 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulario Evolución</h4>
+        <h6 class="card-subtitle">
+          Gestión de notas de evolución y prescripción.
+        </h6>
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqEvolucion"
+              (ngModelChange)="bsqEvolucion = $event.toUpperCase()"
+              (keyup)="buscarEvolucion()"
+            />
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-info dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Opciones
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" (click)="abrirModalNuevaEvolucion()"
+                  >Nuevo</a
+                >
+                <a class="dropdown-item" (click)="imprimirEvolucion()"
+                  >Imprimir</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Aqui Table -->
+          <br />
+          <div class="table-responsive">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th style="width: 8%">FECHA/HORA</th>
+                  <th style="width: 10%">ASUNTO</th>
+                  <th style="width: 26%">NOTA DE EVOLUCIÓN</th>
+                  <th style="width: 26%">PRESCRIPCIONES</th>
+                  <th style="width: 10%">ADM. MÉDICA</th>
+                  <th style="width: 10%">APROBADO</th>
+                  <th style="width: 10%">ACCIONES</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (item of evolucionList; track item.pk_evo) {
+                <tr [class.bg-fila]="!item.actual">
+                  <!-- FECHA -->
+                  <td>
+                    <div>
+                      <small>{{ item.fecha_evo }} </small>
+                    </div>
+                    <div>
+                      <small>{{ item.hora_evo }}</small>
+                    </div>
+                    
+                  </td>
+
+                  <!-- PROFESIONAL -->
+                  <td>{{ item.desc_catdetalle }}</td>
+
+                  <!-- NOTA DE EVOLUCIÓN -->
+                  <td class="text-start">
+                    @if (item.evolucion_evo?.length < 200) {
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="5"
+                      readonly
+                      name="nota_{{ item.pk_evo }}"
+                      >{{ item.evolucion_evo }}</textarea
+                    >
+                    } @else {
+                    <div class="texto-limitado" [title]="item.evolucion_evo">
+                      {{ item.evolucion_evo }}
+                    </div>
+                    }
+                  </td>
+
+                  <!-- PRESCRIPCIONES -->
+                  <td class="text-start">
+                    @if (item.prescripcion_evo?.length < 200) {
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="5"
+                      readonly
+                      name="presc_{{ item.pk_evo }}"
+                      >{{ item.prescripcion_evo }}</textarea
+                    >
+                    } @else {
+                    <div class="texto-limitado" [title]="item.prescripcion_evo">
+                      {{ item.prescripcion_evo }}
+                    </div>
+                    }
+                  </td>
+
+                  <!-- ADM. MÉDICA -->
+                  <td>
+                    @if (item.admin_medica_evo) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="quitarAdminMedicamentoEvolucion(item)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else{
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="adminMedicamentoEvolucion(item)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <!-- APROBADO -->
+                  <td>
+                    @if (item.aprobado_evo) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="quitarAprobarEvolucion(item)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else{
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="aprobarEvolucion(item)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <!-- ACCIONES -->
+                  <td>
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          data-toggle="modal"
+                          data-target="#evolucionModal"
+                          (click)="editarEvolucion(item)"
+                          >Ver/Editar</a
+                        >
+                        <a class="dropdown-item" (click)="abrirAuditoria(item)"
+                          >Auditoria</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!sig"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- sample modal content -->
+<div
+  id="evolucionModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Evolución</h4>
+      </div>
+
+      <div class="modal-body">
+        <!-- <pre>{{accionBloqueoEditarSuperUsuario(evolucionBody)}}</pre>
+        <pre>{{ evolucionBody | json }}</pre> -->
+        <form class="form" (ngSubmit)="guardarEvolucion()">
+          <!-- Fila 1 -->
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label class="control-label">Tipo Evolución (*)</label>
+              <ng-select
+                [items]="tiposEvolucion"
+                bindLabel="desc_catdetalle"
+                bindValue="pk_catdetalle"
+                placeholder="Buscar..."
+                [(ngModel)]="evolucionBody.fk_tipo_nota_evo"
+                name="fk_tipo_nota_evo"
+                [clearable]="true"
+                (clear)="evolucionBody.fk_tipo_nota_evo = null"
+                [disabled]="accionBloqueoEditarSuperUsuario(evolucionBody)"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <b>{{ item.desc_catdetalle }}</b>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+
+            <div class="col-md-3 form-group">
+              <div class="text-center">Adm. Medicamentos</div>
+              <div class="text-center">
+                {{ evolucionBody.admin_medica_evo ? "✔️" : "❌" }}
+              </div>
+            </div>
+
+            <div class="col-md-3 form-group">
+              <div class="text-center">Aprobado</div>
+              <div class="text-center">
+                {{ evolucionBody.aprobado_evo ? "✔️" : "❌" }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila 2 -->
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Evolución (*)</label>
+              <textarea
+                class="form-control form-control-line"
+                rows="20"
+                [(ngModel)]="evolucionBody.evolucion_evo"
+                (ngModelChange)="evolucionBody.evolucion_evo = $event?.toUpperCase?.() ?? $event"
+                name="evolucion_evo"
+                placeholder="Ingrese"
+                [disabled]="accionBloqueoEditarSuperUsuario(evolucionBody)"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Fila 3 -->
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Prescripción</label>
+              <textarea
+                class="form-control form-control-line"
+                rows="20"
+                [(ngModel)]="evolucionBody.prescripcion_evo"
+                (ngModelChange)="evolucionBody.prescripcion_evo = $event?.toUpperCase?.() ?? $event"
+                name="prescripcion_evo"
+                placeholder="Ingrese"
+                [disabled]="accionBloqueoEditarSuperUsuario(evolucionBody)"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            @if(!accionBloqueoEditarSuperUsuario(evolucionBody)){
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            }
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-body -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<!-- Fin Modal -->
+
+<div
+  id="auditoriaModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Auditoria Evolución</h4>
+      </div>
+
+      <div class="modal-body">
+        <!-- Fila 1 -->
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <h4>
+              <u><b>Creación</b></u>
+            </h4>
+            <div>
+              <b>Nombres: </b
+              >{{ evolucionBody.fecha_creacion_evo?.apellidopat_persona }}
+              {{ evolucionBody.fecha_creacion_evo?.apellidomat_persona }}
+              {{ evolucionBody.fecha_creacion_evo?.nombre_primario_persona }}
+              {{ evolucionBody.fecha_creacion_evo?.nombre_secundario_persona }}
+            </div>
+            <div>
+              <b>Indentificación: </b
+              >{{ evolucionBody.fecha_creacion_evo?.numidentificacion_persona }}
+            </div>
+            <div>
+              <b>Fecha: </b>{{ evolucionBody.fecha_creacion_evo?.fecha }}
+            </div>
+            <div><b>Hora: </b>{{ evolucionBody.fecha_creacion_evo?.hora }}</div>
+          </div>
+          <div class="col-md-6 form-group">
+            <h4>
+              <u><b>Última Modificación</b></u>
+            </h4>
+            @if(evolucionBody.fecha_modificacion_evo){
+            <div>
+              <b>Nombres: </b
+              >{{ evolucionBody.fecha_modificacion_evo?.apellidopat_persona }}
+              {{ evolucionBody.fecha_modificacion_evo?.apellidomat_persona }}
+              {{
+                evolucionBody.fecha_modificacion_evo?.nombre_primario_persona
+              }}
+              {{
+                evolucionBody.fecha_modificacion_evo?.nombre_secundario_persona
+              }}
+            </div>
+            <div>
+              <b>Indentificación: </b
+              >{{
+                evolucionBody.fecha_modificacion_evo?.numidentificacion_persona
+              }}
+            </div>
+            <div>
+              <b>Fecha: </b>{{ evolucionBody.fecha_modificacion_evo?.fecha }}
+            </div>
+            <div>
+              <b>Hora: </b>{{ evolucionBody.fecha_modificacion_evo?.hora }}
+            </div>
+            } @else {
+            <div>--- Sin Información ---</div>
+            }
+          </div>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <h4>
+              <u><b>Administración de Medicamentos</b></u>
+            </h4>
+            @if(evolucionBody.user_admin_medica_evo){
+            <div>
+              <b>Nombres: </b
+              >{{ evolucionBody.user_admin_medica_evo?.apellidopat_persona }}
+              {{ evolucionBody.user_admin_medica_evo?.apellidomat_persona }}
+              {{ evolucionBody.user_admin_medica_evo?.nombre_primario_persona }}
+              {{
+                evolucionBody.user_admin_medica_evo?.nombre_secundario_persona
+              }}
+            </div>
+            <div>
+              <b>Indentificación: </b
+              >{{
+                evolucionBody.user_admin_medica_evo?.numidentificacion_persona
+              }}
+            </div>
+            <div>
+              <b>Fecha: </b>{{ evolucionBody.user_admin_medica_evo?.fecha }}
+            </div>
+            <div>
+              <b>Hora: </b>{{ evolucionBody.user_admin_medica_evo?.hora }}
+            </div>
+            } @else {
+            <div>--- Sin Información ---</div>
+            }
+          </div>
+          <div class="col-md-6 form-group">
+            <h4>
+              <u><b>Aprobación</b></u>
+            </h4>
+            @if(evolucionBody.user_aprobado_evo){
+            <div>
+              <b>Nombres: </b
+              >{{ evolucionBody.user_aprobado_evo?.apellidopat_persona }}
+              {{ evolucionBody.user_aprobado_evo?.apellidomat_persona }}
+              {{ evolucionBody.user_aprobado_evo?.nombre_primario_persona }}
+              {{ evolucionBody.user_aprobado_evo?.nombre_secundario_persona }}
+            </div>
+            <div>
+              <b>Indentificación: </b
+              >{{ evolucionBody.user_aprobado_evo?.numidentificacion_persona }}
+            </div>
+            <div>
+              <b>Fecha: </b>{{ evolucionBody.user_aprobado_evo?.fecha }}
+            </div>
+            <div><b>Hora: </b>{{ evolucionBody.user_aprobado_evo?.hora }}</div>
+            } @else {
+            <div>--- Sin Información ---</div>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger waves-effect"
+            (click)="cerrarModalAuditoria()"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+      <!-- /.modal-body -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<!-- Fin Modal -->

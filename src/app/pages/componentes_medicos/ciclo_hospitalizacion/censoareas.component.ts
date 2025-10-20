@@ -11,6 +11,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FilterByPipe } from '../../../pipes/genericoListas.pipe';
 import { UbicacionService } from '../../../services/ubicaciones_camas/ubicacion.service';
 import { LoginService } from '../../../services/login.service';
+import { Router } from '@angular/router';
+
 
 export const SHARED_PIPES = [FilterByPipe];
 
@@ -45,6 +47,7 @@ export class CensoareasComponent {
   private _ubicacionService = inject(UbicacionService);
   private _loginService = inject(LoginService);
   private _cicloHospitalizacionService = inject(CicloHospitalizacionService);
+  public _routerService = inject(Router);
 
   casaSaludBody: any = {};
   listArea: any[] = [];
@@ -637,5 +640,9 @@ export class CensoareasComponent {
     });
   }
 
+  seleccionarPaciente(hcu:any){
+    this._loginService.setHcuLocalStorage(hcu);
+    this._routerService.navigate(['/hospitalizacion_inicio']);
+  }
   /* ----------------------------------------------------------*/
 }

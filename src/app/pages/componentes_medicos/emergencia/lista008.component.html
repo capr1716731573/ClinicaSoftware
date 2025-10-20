@@ -28,6 +28,8 @@
             <table class="table full-color-table full-info-table hover-table">
               <thead>
                 <tr>
+                  <th scope="col">#CÓDIGO</th>
+                  <th scope="col">FECHA/HORA</th>
                   <th scope="col">#IDENTIFICACIÓN</th>
                   <th scope="col">NOMBRES</th>
                   <th scope="col">APELLIDOS</th>
@@ -41,6 +43,12 @@
               <tbody>
                 @for (item of emergenciaList; track item.pk_emerg) {
                 <tr>
+                  <td data-label="#CÓDIGO">
+                    {{ item.pk_emerg }}
+                  </td>
+                  <td data-label="FECHA/HORA">
+                    {{ item.fecha_inicio }}/{{ item.hora_inicio }}
+                  </td>
                   <td data-label="#IDENTIFICACIÓN">
                     {{ item.numidentificacion_persona }}
                   </td>
