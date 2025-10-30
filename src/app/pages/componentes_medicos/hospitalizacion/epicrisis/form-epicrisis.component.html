@@ -1,0 +1,883 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="home-tab"
+              data-toggle="tab"
+              href="#seccionb"
+              role="tab"
+              aria-controls="seccionb"
+              aria-expanded="true"
+              ><span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="profile-tab"
+              data-toggle="tab"
+              href="#seccionc"
+              role="tab"
+              aria-controls="seccionc"
+              ><span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span></a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item"
+                id="dropdown1-tab"
+                href="#dropdown1"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown1"
+                >D</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown2-tab"
+                href="#dropdown2"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown2"
+                >E</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown3-tab"
+                href="#dropdown3"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown3"
+                >F</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown4-tab"
+                href="#dropdown4"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown4"
+                >G</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown5-tab"
+                href="#dropdown5"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown5"
+                >H</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown6-tab"
+                href="#dropdown6"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown6"
+                >I</a
+              >
+            </div>
+          </li>
+        </ul>
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- Aqui empiezan los tabs -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <form class="form" (ngSubmit)="guardarEpicrisis()">
+          <div class="tab-content tabcontent-border p-20" id="myTabContent">
+            <!-- Panel B -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show active"
+              id="seccionb"
+              aria-labelledby="seccionb-tab"
+            >
+              <h5>B. RESUMEN DEL CUADRO CLÍNICO</h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="f_resumen_cuadro_clinico"
+                      class="form-control"
+                      rows="15"
+                      [(ngModel)]="epicrisisBody._b.resumen_cuadro_clinico"
+                      name="f_resumen_cuadro_clinico"
+                      placeholder="Ingrese..."
+                      (ngModelChange)="
+                        epicrisisBody._b.resumen_cuadro_clinico =
+                          $event.toUpperCase()
+                      "
+                      [disabled]="accionVer"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel C -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="seccionc"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>C. RESUMEN DE EVOLUCIÓN Y COMPLICACIONES</h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="f_resumen_evolucion"
+                      class="form-control"
+                      rows="15"
+                      [(ngModel)]="epicrisisBody._c.resumen_evolucion"
+                      name="f_resumen_evolucion"
+                      placeholder="Ingrese..."
+                      (ngModelChange)="
+                        epicrisisBody._c.resumen_evolucion =
+                          $event.toUpperCase()
+                      "
+                      [disabled]="accionVer"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel D -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown1"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>
+                D. HALLAZGOS RELEVANTES DE EXÁMENES Y PROCEDIMIENTOS
+                DIAGNÓSTICOS
+              </h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="f_hallazgos_relevantes"
+                      class="form-control"
+                      rows="15"
+                      [(ngModel)]="epicrisisBody._d.hallazgos_relevantes"
+                      name="f_hallazgos_relevantes"
+                      placeholder="Ingrese..."
+                      (ngModelChange)="
+                        epicrisisBody._d.hallazgos_relevantes =
+                          $event.toUpperCase()
+                      "
+                      [disabled]="accionVer"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel E -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown2"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>E. RESUMEN DE TRATAMIENTO Y PROCEDIMIENTOS TERAPÉUTICOS</h5>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <textarea
+                      id="f_resumen_tratamiento"
+                      class="form-control"
+                      rows="15"
+                      [(ngModel)]="epicrisisBody._e.resumen_tratamiento"
+                      name="f_resumen_tratamiento"
+                      placeholder="Ingrese..."
+                      (ngModelChange)="
+                        epicrisisBody._e.resumen_tratamiento =
+                          $event.toUpperCase()
+                      "
+                      [disabled]="accionVer"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel F -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown3"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>F. INDICACIONES DE ALTA / EGRESO</h5>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Próximo Control</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="epicrisisBody._f.prox_control"
+                    name="prox_control"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+              <!-- Observaciones -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group mb-0">
+                    <label>Indicaciones</label>
+                    <textarea
+                      id="f_indicaciones_alta"
+                      class="form-control"
+                      rows="15"
+                      [(ngModel)]="epicrisisBody._f.indicaciones_alta"
+                      name="f_indicaciones_alta"
+                      placeholder="Ingrese..."
+                      (ngModelChange)="
+                        epicrisisBody._f.indicaciones_alta =
+                          $event.toUpperCase()
+                      "
+                      [disabled]="accionVer"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel G -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown4"
+              aria-labelledby="seccionc-tab"
+            >
+              @if(this.epicrisisBody._a.pk_epi=== 0){
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar diagnosticos debe primero guardar los datos
+                  actuales de la epicrisis.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+              <div class="table-responsive pointer">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_emerdiag) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">
+                        {{ item.desc_cie }}
+                      </td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_epidiag === "DP"
+                            ? "Diagnóstico Principal"
+                            : item.tipo_epidiag === "DS"
+                            ? "Diagnóstico Secundario"
+                            : item.tipo_epidiag === "CE"
+                            ? "Causa Externa"
+                            : ""
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- Panel H -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown5"
+              aria-labelledby="seccionc-tab"
+            >
+              <!-- CONDICIÓN DE ALTA / EGRESO -->
+              <div class="row">
+                <!-- Grupo 1: Vivo / Fallecido (mutuamente excluyentes) -->
+                <div class="col-md-6 form-group">
+                  <label class="d-block"
+                    ><b>O. CONDICIÓN AL EGRESO DE EMERGENCIA</b></label
+                  >
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="h_vivo"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.vivo"
+                      name="h_vivo"
+                      (ngModelChange)="
+                        (epicrisisBody._h.vivo = $event) &&
+                          (epicrisisBody._h.fallecido = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_vivo">Vivo</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="h_fallecido"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.fallecido"
+                      name="h_fallecido"
+                      (ngModelChange)="
+                        (epicrisisBody._h.fallecido = $event) &&
+                          (epicrisisBody._h.vivo = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_fallecido">Fallecido</label>
+                  </div>
+                </div>
+
+                <!-- Grupo 2: Alta Médica / Alta Voluntaria (mutuamente excluyentes) -->
+                <div class="col-md-6 form-group">
+                  <label class="d-block"><b>Alta</b></label>
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="h_alta_medica"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.alta_medica"
+                      name="h_alta_medica"
+                      (ngModelChange)="
+                        (epicrisisBody._h.alta_medica = $event) &&
+                          (epicrisisBody._h.alta_voluntaria = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_alta_medica">Alta Médica</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="h_alta_voluntaria"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.alta_voluntaria"
+                      name="h_alta_voluntaria"
+                      (ngModelChange)="
+                        (epicrisisBody._h.alta_voluntaria = $event) &&
+                          (epicrisisBody._h.alta_medica = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_alta_voluntaria">Alta Voluntaria</label>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-2" />
+
+              <div class="row">
+                <!-- Grupo 3: Asintomático / Discapacidad / Retiro no autorizado (exclusivos entre sí) -->
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Condición</b></label>
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="h_asintomatico"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.asintomatico"
+                      name="h_asintomatico"
+                      (ngModelChange)="
+                        (epicrisisBody._h.asintomatico = $event) &&
+                          (epicrisisBody._h.discapacidad = false) &&
+                          (epicrisisBody._h.retiro_no_autorizado = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_asintomatico">Asintomático</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="h_discapacidad"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.discapacidad"
+                      name="h_discapacidad"
+                      (ngModelChange)="
+                        (epicrisisBody._h.discapacidad = $event) &&
+                          (epicrisisBody._h.asintomatico = false) &&
+                          (epicrisisBody._h.retiro_no_autorizado = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_discapacidad">Discapacidad</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="h_retiro"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.retiro_no_autorizado"
+                      name="h_retiro"
+                      (ngModelChange)="
+                        (epicrisisBody._h.retiro_no_autorizado = $event) &&
+                          (epicrisisBody._h.discapacidad = false) &&
+                          (epicrisisBody._h.asintomatico = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_retiro">Retiro no autorizado</label>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-2" />
+
+              <div class="row">
+                <!-- Grupo 4: Defunción <48h / >48h (mutuamente excluyentes) -->
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Defunción</b></label>
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="h_def_menor"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.def_menor_48"
+                      name="h_def_menor"
+                      (ngModelChange)="
+                        (epicrisisBody._h.def_menor_48 = $event) &&
+                          (epicrisisBody._h.def_mayor_48 = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_def_menor">Defunción menos de 48 horas</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="h_def_mayor"
+                      class="chk-col-red"
+                      [(ngModel)]="epicrisisBody._h.def_mayor_48"
+                      name="h_def_mayor"
+                      (ngModelChange)="
+                        (epicrisisBody._h.def_mayor_48 = $event) &&
+                          (epicrisisBody._h.def_menor_48 = false)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_def_mayor">Defunción más de 48 horas</label>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-2" />
+
+              <!-- Días de estadía / reposo -->
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Días de Estadía</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    min="0"
+                    [(ngModel)]="epicrisisBody._h.dias_estada"
+                    name="h_dias_estada"
+                    placeholder="0"
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Días de Reposo</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    min="0"
+                    [(ngModel)]="epicrisisBody._h.dias_reposo"
+                    name="h_dias_reposo"
+                    placeholder="0"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Observaciones (mayúsculas) -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    class="form-control form-control-line"
+                    rows="5"
+                    [(ngModel)]="epicrisisBody._h.observacion_h"
+                    (ngModelChange)="
+                      epicrisisBody._h.observacion_h = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    name="h_observacion_h"
+                    placeholder="Ingrese"
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel I -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown6"
+              aria-labelledby="seccionc-tab"
+            >
+              @if(this.epicrisisBody._a.pk_epi=== 0){
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar periodos de médicos debe primero guardar los
+                  datos actuales de la epicrisis.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoMedico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+              <div class="table-responsive pointer">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">NOMBRES</th>
+                      <th scope="col">INDENTIFICACIÓN</th>
+                      <th scope="col">ESPECIALIDAD</th>
+                      <th scope="col">PERIODO DESDE</th>
+                      <th scope="col">PERIODO HASTA</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                  <tbody>
+                    @for (item of listMedicosEpicrisis; track item.pk_epi) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.pk_epimed }}</td>
+                      <td data-label="NOMBRES">
+                        {{ item.medico_nombre }}
+                      </td>
+                      <td data-label="INDENTIFICACIÓN">
+                        {{ item.medico_identificacion }}
+                      </td>
+                      <td data-label="ESPECIALIDAD">
+                        {{ item.medico_especilidad }}
+                      </td>
+                      <td data-label="PERIODO DESDE">
+                        {{ item.periodo_desde }}
+                      </td>
+                      <td data-label="PERIODO HASTA">
+                        {{ item.periodo_hasta }}
+                      </td>
+
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarMedico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+          </div>
+          <hr />
+          <div class="align-self-center d-flex justify-content-end">
+            @if(!accionVer){
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            }
+
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              (click)="cerrarEpicrisis()"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="diagnosticoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Diagnostico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label> Cie (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnostico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código:{{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de Diagnostico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_epidiag"
+              name="tipo_emerdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              <option [ngValue]="'DP'">Diagnóstico Principal</option>
+              <option [ngValue]="'DS'">Diagnóstico Secundario</option>
+              <option [ngValue]="'CE'">Causa Externa</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="medicoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registros Médicos - Periodos
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarMedico()">
+          <div class="form-group">
+            <label> Médico - Especialidad/SubEspecialidad (*)</label>
+            <ng-select
+              [items]="listMedicos"
+              [typeahead]="typeaheadMedicos"
+              bindLabel="nombre_completo"
+              bindValue="pk_espemed"
+              placeholder="Busca Médico..."
+              name="idMedico"
+              [(ngModel)]="idMedico"
+              (search)="onSearchMedico($event)"
+              [loading]="isLoading"
+              (change)="seleccionMedico($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small>{{ item.nombre_completo }}</small
+                  ><br />
+                  <small
+                    >Identificación: {{ item.numidentificacion_persona }}</small
+                  ><br />
+                  <small
+                    ><b
+                      >{{ item.desc_catdetalle }} ({{ item.tipo_espemed }})</b
+                    ></small
+                  ><br />
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label>Periodo Desde</label>
+              <input
+                class="form-control"
+                type="date"
+                [(ngModel)]="medicosBody.periodo_desde_epimed"
+                name="periodo_desde_epimed"
+              />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>Periodo Hasta</label>
+              <input
+                class="form-control"
+                type="date"
+                [(ngModel)]="medicosBody.periodo_hasta_epimed"
+                name="periodo_hasta_epimed"
+              />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarMedico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

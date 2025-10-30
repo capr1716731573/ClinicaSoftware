@@ -82,6 +82,23 @@ table th {
 
 }
 
+.table td.text-start {
+  white-space: normal;
+}
+
+.texto-limitado {
+  max-height: 6em;               /* ~5 líneas */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: box;                  /* fallback genérico */
+  -webkit-line-clamp: 5;         /* para navegadores WebKit */
+  line-clamp: 5;                 /* propiedad estándar */
+  -webkit-box-orient: vertical;
+  box-orient: vertical;          /* estándar */
+  font-size: 0.9rem;
+}
+
 .img-avatar {
   width: 300px;      /* Ancho fijo */
   height:200px;     /* Alto fijo */

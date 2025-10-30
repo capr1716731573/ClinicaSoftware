@@ -53,9 +53,13 @@
                   2.- Evolución
                 </a>
 
-                <a href="javascript:void(0)" class="list-group-item"
-                  >Morbi leo risus</a
+                <a
+                  class="list-group-item list-group-item-action text-primary"
+                  [routerLink]="['/epicrisis']"
+                  (click)="cerrarMenuModal()"
                 >
+                  3.- Epicrisis
+                </a>
                 <a href="javascript:void(0)" class="list-group-item"
                   >Porta ac consectetur ac</a
                 >

@@ -50,7 +50,6 @@ export class EvolucionComponent {
   private _casaSaludService = inject(CasasSaludService);
   private _loginService = inject(LoginService);
   private _detalleService = inject(CabeceraDetalleService);
-  private cdr = inject(ChangeDetectorRef);
 
   evolucionList: any[] = [];
   evolucionBody: Evolucion;

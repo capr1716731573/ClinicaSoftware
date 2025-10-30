@@ -60,6 +60,7 @@ export class EspecialidadMedicoComponent {
         next: (resp) => {
           if (resp.status === 'ok') {
             this.listEspecialidadesMedicos = resp.rows;
+            console.log(JSON.stringify(this.listEspecialidadesMedicos))
           }
         },
         error: (err) => {

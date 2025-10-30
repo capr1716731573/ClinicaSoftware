@@ -25,6 +25,8 @@ import { Lista008Component } from './componentes_medicos/emergencia/lista008.com
 import { Formulario008Component } from './componentes_medicos/emergencia/formulario008.component';
 import { InicioComponent } from './componentes_medicos/hospitalizacion/inicio/inicio.component';
 import { EvolucionComponent } from './componentes_medicos/hospitalizacion/evoluciones/evolucion.component';
+import { EpicrisisComponent } from './componentes_medicos/hospitalizacion/epicrisis/epicrisis.component';
+import { FormEpicrisisComponent } from './componentes_medicos/hospitalizacion/epicrisis/form-epicrisis.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -59,6 +61,8 @@ export const pagesChildRoutes: Routes = [
             //Hospitalizacion
             { path: 'hospitalizacion_inicio', canActivate: [JwtGuard],component: InicioComponent ,data:{titulo: 'Hospitalización'}},
             { path: 'evolucion', canActivate: [JwtGuard],component: EvolucionComponent ,data:{titulo: 'Evoluciones'}},
+            { path: 'epicrisis', canActivate: [JwtGuard],component: EpicrisisComponent ,data:{titulo: 'Epicrisis'}},
+            { path: 'form_epicrisis/:id/:accion', canActivate: [JwtGuard],component: FormEpicrisisComponent ,data:{titulo: 'Epicrisis'}},
 
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]

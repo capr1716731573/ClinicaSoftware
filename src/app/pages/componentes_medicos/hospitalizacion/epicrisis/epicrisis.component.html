@@ -1,0 +1,157 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Listado de Epicrisis</h4>
+        <h6 class="card-subtitle">
+          Gestión de información de epicrisis del paciente asignado.
+        </h6>
+        <div class="col-lg-12 text-right">
+          <button class="btn btn-info" type="button" (click)="nuevoEpicrisis()">Nuevo</button>
+        </div>
+
+        <!--  -->
+        <div class="col-lg-12">
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%" scope="col">FECHA/HORA INICIO</th>
+                  <th style="width: 10%" scope="col">FECHA/HORA FIN</th>
+                  <th style="width: 40%" scope="col">RESUMEN CUADRO CLÍNICO</th>
+                  <th style="width: 20%" scope="col">RESPONSABLE</th>
+                  <th style="width: 10%" scope="col">APROBADO</th>
+                  <th style="width: 10%" scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of epicrisisList; track item.pk_epi) {
+                <tr>
+                  <td data-label="FECHA/HORA INICIO">
+                    <small>
+                      <div>{{ item.fecha_inicio }}</div>
+                      <div>{{ item.hora_inicio }}</div>
+                      <div>{{ item.pk_epi}}</div>
+                    </small>
+                  </td>
+                  <td data-label="FECHA/HORA FIN">
+                    <small>
+                      <div>{{ item.fecha_fin }}</div>
+                      <div>{{ item.hora_fin }}</div>
+                    </small>
+                  </td>
+
+                  <td data-label="RESUMEN CUADRO CLÍNICO" class="text-start">
+                    @if (item.resumen_cuadro_clinico_epi?.length < 200) {
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="5"
+                      readonly
+                      name="resumen_{{ item.pk_epi }}"
+                      >{{ item.resumen_cuadro_clinico_epi }} ....</textarea
+                    >
+                    } @else {
+                    <div
+                      class="texto-limitado"
+                      [title]="item.resumen_cuadro_clinico_epi"
+                    >
+                      {{ item.resumen_cuadro_clinico_epi }}....
+                    </div>
+                    }
+                  </td>
+
+                  <td data-label="RESPONSABLE">
+                    <small>
+                      <div>
+                        {{ item.medico_apellidopat_persona }}
+                        {{ item.medico_apellidomat_persona }}
+                        {{ item.medico_nombre_primario_persona }}
+                        {{ item.medico_nombre_secundario_persona }}
+                      </div>
+                      <div>{{ item.medico_numidentificacion_persona }}</div>
+                    </small>
+                  </td>
+
+                  <td data-label="APROBADO">
+                    @if (item.estado_epi) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="desaprobarEpicrisis(item)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else{
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="aprobarEpicrisis(item)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a class="dropdown-item" (click)="editarEpicrisis(item)"
+                          >Editar</a
+                        >
+
+                        <a
+                          class="dropdown-item"
+                          (click)="imprimirEpicrisis(item.pk_epi)"
+                          >Imprimir</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!sig"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Aqui Table -->
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
