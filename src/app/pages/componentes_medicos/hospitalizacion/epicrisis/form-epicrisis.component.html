@@ -114,7 +114,7 @@
               id="seccionb"
               aria-labelledby="seccionb-tab"
             >
-              <h5>B. RESUMEN DEL CUADRO CLÍNICO</h5>
+              <h5><b>B. RESUMEN DEL CUADRO CLÍNICO</b></h5>
               <!-- Observaciones -->
               <div class="row">
                 <div class="col-md-12">
@@ -144,7 +144,7 @@
               id="seccionc"
               aria-labelledby="seccionc-tab"
             >
-              <h5>C. RESUMEN DE EVOLUCIÓN Y COMPLICACIONES</h5>
+              <h5><b>C. RESUMEN DE EVOLUCIÓN Y COMPLICACIONES</b></h5>
               <!-- Observaciones -->
               <div class="row">
                 <div class="col-md-12">
@@ -174,9 +174,9 @@
               id="dropdown1"
               aria-labelledby="seccionc-tab"
             >
-              <h5>
+              <h5><b>
                 D. HALLAZGOS RELEVANTES DE EXÁMENES Y PROCEDIMIENTOS
-                DIAGNÓSTICOS
+                DIAGNÓSTICOS</b>
               </h5>
               <!-- Observaciones -->
               <div class="row">
@@ -207,7 +207,7 @@
               id="dropdown2"
               aria-labelledby="seccionc-tab"
             >
-              <h5>E. RESUMEN DE TRATAMIENTO Y PROCEDIMIENTOS TERAPÉUTICOS</h5>
+              <h5><b>E. RESUMEN DE TRATAMIENTO Y PROCEDIMIENTOS TERAPÉUTICOS</b></h5>
               <!-- Observaciones -->
               <div class="row">
                 <div class="col-md-12">
@@ -237,7 +237,7 @@
               id="dropdown3"
               aria-labelledby="seccionc-tab"
             >
-              <h5>F. INDICACIONES DE ALTA / EGRESO</h5>
+              <h5><b>F. INDICACIONES DE ALTA / EGRESO</b></h5>
               <div class="row">
                 <div class="col-md-6 form-group">
                   <label>Próximo Control</label>
@@ -280,6 +280,7 @@
               id="dropdown4"
               aria-labelledby="seccionc-tab"
             >
+            <h5><b>G. DIAGNÓSTICOS</b></h5>
               @if(this.epicrisisBody._a.pk_epi=== 0){
               <div class="box bg-info">
                 <h4 class="text-white"><strong>Información</strong></h4>
@@ -360,7 +361,7 @@
                 <!-- Grupo 1: Vivo / Fallecido (mutuamente excluyentes) -->
                 <div class="col-md-6 form-group">
                   <label class="d-block"
-                    ><b>O. CONDICIÓN AL EGRESO DE EMERGENCIA</b></label
+                    ><b>H. CONDICIÓN DE ALTA / EGRESO</b></label
                   >
 
                   <div class="demo-checkbox d-inline-block mr-4">
@@ -594,6 +595,7 @@
               id="dropdown6"
               aria-labelledby="seccionc-tab"
             >
+            <h5><b>I. MÉDICOS TRATANTES</b></h5>
               @if(this.epicrisisBody._a.pk_epi=== 0){
               <div class="box bg-info">
                 <h4 class="text-white"><strong>Información</strong></h4>

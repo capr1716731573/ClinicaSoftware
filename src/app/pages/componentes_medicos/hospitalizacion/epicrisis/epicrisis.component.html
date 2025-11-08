@@ -8,9 +8,46 @@
         <h6 class="card-subtitle">
           Gestión de información de epicrisis del paciente asignado.
         </h6>
-        <div class="col-lg-12 text-right">
-          <button class="btn btn-info" type="button" (click)="nuevoEpicrisis()">Nuevo</button>
+
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <!-- <label>Fecha Desde</label> -->
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_desde"
+              (ngModelChange)="filtroFechas()"
+              name="fec_desde"
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <!-- <label>Fecha Hasta</label> -->
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_hasta"
+              (ngModelChange)="filtroFechas()"
+              name="fec_hasta"
+            />
+          </div>
+
+          <div
+            class="col-md-4 form-group d-flex justify-content-center"
+            style="align-items: center; height: 100%"
+          >
+            <button
+              class="btn btn-info"
+              type="button"
+              (click)="nuevoEpicrisis()"
+              style="padding: 8px 20px; font-weight: bold"
+            >
+              Nuevo
+            </button>
+          </div>
         </div>
+
+        <!--  <div class="col-lg-12 text-right"></div> -->
 
         <!--  -->
         <div class="col-lg-12">
@@ -34,7 +71,7 @@
                     <small>
                       <div>{{ item.fecha_inicio }}</div>
                       <div>{{ item.hora_inicio }}</div>
-                      <div>{{ item.pk_epi}}</div>
+                      <div>{{ item.pk_epi }}</div>
                     </small>
                   </td>
                   <td data-label="FECHA/HORA FIN">

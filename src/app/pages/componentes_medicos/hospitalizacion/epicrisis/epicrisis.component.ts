@@ -39,6 +39,8 @@ export class EpicrisisComponent {
   numeracion: number = 1;
   ant: boolean;
   sig: boolean;
+  fecha_desde: Date = null;
+  fecha_hasta: Date = null;
 
   constructor() {
     this.getCasaSalud();
@@ -149,6 +151,76 @@ export class EpicrisisComponent {
       });
   }
 
+  /*********** Manejo de fechas ******** */
+  getFechasEpicrisis() {
+    this._epicrisisService
+      .getFechasEpicrisis(this.hcu.fk_hcu, this.fecha_desde, this.fecha_hasta)
+      .subscribe({
+        next: (resp) => {
+          if (resp.status === 'ok') {
+            //Validacion para numeracion y parametro desde
+            //Si resp.rows sea mayor a 0 se actualiza sino no
+            if (resp.data.length > 0) {
+              this.epicrisisList = resp.data;
+              /* console.log(resp); */
+            } else {
+              this.epicrisisList = [];
+            }
+
+            this.desde = 0;
+            this.intervalo = environment.filas;
+            this.numeracion = 1;
+          }
+        },
+        error: (err) => {
+          // manejo de error
+          Swal.fire({
+            title: '¡Error!',
+            icon: 'error',
+            text: `Epicrisis (getFechasEpicrisis) - ${err.message}`,
+            confirmButtonText: 'Aceptar',
+          });
+        },
+      });
+  }
+
+  filtroFechas(): void {
+    const desdeVal = this.fecha_desde ? this.formatFecha(this.fecha_desde) : '';
+    const hastaVal = this.fecha_hasta ? this.formatFecha(this.fecha_hasta) : '';
+
+    const hasDesde = desdeVal !== '';
+    const hasHasta = hastaVal !== '';
+
+    // ✅ Ambas fechas llenas → filtrar
+    if (hasDesde && hasHasta) {
+      if (new Date(desdeVal) > new Date(hastaVal)) {
+        console.warn('⚠️ Fecha "Desde" es mayor que "Hasta"');
+        return;
+      }
+      this.getFechasEpicrisis();
+      return;
+    }
+
+    // ✅ Ambas vacías → cargar todo
+    if (!hasDesde && !hasHasta) {
+      this.getAllEpicrisis();
+      return;
+    }
+
+    // Opcional: una sola fecha
+    console.log('Esperando que el usuario complete ambas fechas');
+  }
+
+  private formatFecha(fecha: Date | string): string {
+    if (!fecha) return '';
+    if (typeof fecha === 'string') return fecha;
+    // Asegura formato ISO (sin zona horaria)
+    return fecha.toISOString().split('T')[0];
+  }
+
+  
+  /*********** Fin Manejo de fechas ******** */
+
   avanzar() {
     this.desde += this.intervalo;
     this.numeracion += 1;
@@ -255,15 +327,24 @@ export class EpicrisisComponent {
 
   editarEpicrisis(epicrisis: any) {
     if (this._loginService.getSuperUsuario()) {
-      this._routerService.navigate(['/form_epicrisis', epicrisis.pk_epi, false]); //true es editar
-      
+      this._routerService.navigate([
+        '/form_epicrisis',
+        epicrisis.pk_epi,
+        false,
+      ]); //true es editar
     } else {
       if (epicrisis.estado_epi) {
-        this._routerService.navigate(['/form_epicrisis', epicrisis.pk_epi, true]); //true es editar
-       
+        this._routerService.navigate([
+          '/form_epicrisis',
+          epicrisis.pk_epi,
+          true,
+        ]); //true es editar
       } else {
-        this._routerService.navigate(['/form_epicrisis', epicrisis.pk_epi, false]); //true es editar
-        
+        this._routerService.navigate([
+          '/form_epicrisis',
+          epicrisis.pk_epi,
+          false,
+        ]); //true es editar
       }
     }
   }
@@ -333,5 +414,4 @@ export class EpicrisisComponent {
       },
     });
   }
-  
 }
