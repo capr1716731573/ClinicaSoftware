@@ -1,0 +1,164 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Listado de Protocolos Quirúrgicos</h4>
+        <h6 class="card-subtitle">
+          Gestión de información de Protocolos Quirúrgicos del paciente
+          asignado.
+        </h6>
+
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <!-- <label>Fecha Desde</label> -->
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_desde"
+              (ngModelChange)="filtroFechas()"
+              name="fec_desde"
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <!-- <label>Fecha Hasta</label> -->
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_hasta"
+              (ngModelChange)="filtroFechas()"
+              name="fec_hasta"
+            />
+          </div>
+
+          <div
+            class="col-md-4 form-group d-flex justify-content-center"
+            style="align-items: center; height: 100%"
+          >
+            <button
+              class="btn btn-info"
+              type="button"
+              (click)="nuevoProtocoloPostOperatorio()"
+              style="padding: 8px 20px; font-weight: bold"
+            >
+              Nuevo
+            </button>
+          </div>
+        </div>
+
+        <!--  <div class="col-lg-12 text-right"></div> -->
+
+        <!--  -->
+        <div class="col-lg-12">
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%" scope="col">FECHA CREACIÓN</th>
+                  <th style="width: 70%" scope="col">USUARIO CREACIÓN</th>
+                  <th style="width: 10%" scope="col">APROBADO</th>
+                  <th style="width: 10%" scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for (item of postoperatorioList; track item.pk_epi) {
+                <tr>
+                  <td data-label="FECHA CREACIÓN">
+                    <div>{{ item.fecha_inicio }}</div>
+                  </td>
+                
+                  <td data-label="USUARIO CREACIÓN">
+                      <div>
+                        {{ item.medico_apellidopat_persona }}
+                        {{ item.medico_apellidomat_persona }}
+                        {{ item.medico_nombre_primario_persona }}
+                        {{ item.medico_nombre_secundario_persona }}
+                      </div>
+                      <div>{{ item.medico_numidentificacion_persona }}</div>
+                  </td>
+
+                  <td data-label="APROBADO">
+                    @if (item.estado_protope) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="desaprobarPostOperatorio(item)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else{
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="aprobarPostOperatorio(item)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          (click)="editarProtocoloPostOperatorio(item)"
+                          >Editar</a
+                        >
+
+                        <a
+                          class="dropdown-item"
+                          (click)="imprimirProtocoloPostOperatorio(item.pk_protope)"
+                          >Imprimir</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!sig"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Aqui Table -->
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

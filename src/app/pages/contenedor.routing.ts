@@ -27,6 +27,8 @@ import { InicioComponent } from './componentes_medicos/hospitalizacion/inicio/in
 import { EvolucionComponent } from './componentes_medicos/hospitalizacion/evoluciones/evolucion.component';
 import { EpicrisisComponent } from './componentes_medicos/hospitalizacion/epicrisis/epicrisis.component';
 import { FormEpicrisisComponent } from './componentes_medicos/hospitalizacion/epicrisis/form-epicrisis.component';
+import { PostoperatorioComponent } from './componentes_medicos/hospitalizacion/postoperatorio/postoperatorio.component';
+import { FormPostoperatorioComponent } from './componentes_medicos/hospitalizacion/postoperatorio/form-postoperatorio.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -63,7 +65,8 @@ export const pagesChildRoutes: Routes = [
             { path: 'evolucion', canActivate: [JwtGuard],component: EvolucionComponent ,data:{titulo: 'Evoluciones'}},
             { path: 'epicrisis', canActivate: [JwtGuard],component: EpicrisisComponent ,data:{titulo: 'Epicrisis'}},
             { path: 'form_epicrisis/:id/:accion', canActivate: [JwtGuard],component: FormEpicrisisComponent ,data:{titulo: 'Epicrisis'}},
-
+            { path: 'protocolo', canActivate: [JwtGuard],component: PostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
+            { path: 'form_protocolo/:id/:accion', canActivate: [JwtGuard],component: FormPostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

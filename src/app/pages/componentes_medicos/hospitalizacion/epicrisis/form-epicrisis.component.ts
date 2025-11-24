@@ -81,29 +81,6 @@ export class FormEpicrisisComponent {
   idMedico: any;
   typeaheadMedicos = new Subject<string>();
 
-  /* constructor() {
-    this.getCasaSalud();
-    this.inicializacionEpicrisis();
-    const id = this._routerService.snapshot.paramMap.get('id');
-    const accion = this._routerService.snapshot.paramMap.get('accion');
-    this.idNum = Number(id);
-    this.accionVer = accion;
-
-    if (this.idNum != 0) {
-      if (!isNaN(this.idNum)) {
-        this.opcion = 'U';
-        this.editarEpicrisis(this.idNum);
-        this.getListaDiagnosticos();
-        this.getListaMedicos();
-      } else {
-        console.error('ID no es un número válido');
-      }
-    } else {
-      //inicializaciones
-      this.inicializacionEpicrisis();
-    }
-  } */
-
   constructor(private route: ActivatedRoute) {
     this.getCasaSalud();
     this.inicializacionEpicrisis();

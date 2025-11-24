@@ -1,0 +1,1284 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              [class.active]="tabActivo === 'B'"
+              (click)="tabActivo = 'B'"
+              id="home-tab"
+              data-toggle="tab"
+              href="#seccionb"
+              role="tab"
+              aria-controls="seccionb"
+              aria-expanded="true"
+              ><span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'C'"
+              (click)="tabActivo = 'C'"
+              id="profile-tab"
+              data-toggle="tab"
+              href="#seccionc"
+              role="tab"
+              aria-controls="seccionc"
+              ><span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span></a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item"
+                id="dropdown1-tab"
+                href="#dropdown1"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown1"
+                (click)="tabActivo = 'D'"
+                >D</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown2-tab"
+                href="#dropdown2"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown2"
+                (click)="tabActivo = 'E'"
+                >E</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown3-tab"
+                href="#dropdown3"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown3"
+                (click)="tabActivo = 'F'"
+                >F</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown4-tab"
+                href="#dropdown4"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown4"
+                (click)="tabActivo = 'G'"
+                >G</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown5-tab"
+                href="#dropdown5"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown5"
+                (click)="tabActivo = 'H'"
+                >H</a
+              >
+
+              <a
+                class="dropdown-item"
+                id="dropdown6-tab"
+                href="#dropdown6"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown6"
+                (click)="tabActivo = 'I'"
+                >I</a
+              >
+              <a
+                class="dropdown-item"
+                id="dropdown7-tab"
+                href="#dropdown7"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="dropdown7"
+                (click)="tabActivo = 'J'"
+                >J</a
+              >
+            </div>
+          </li>
+        </ul>
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- Aqui empiezan los tabs -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <form class="form" (ngSubmit)="guardarPostOperatorio()">
+          <div class="tab-content tabcontent-border p-20" id="myTabContent">
+            <!-- Panel B -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show active"
+              id="seccionb"
+              aria-labelledby="seccionb-tab"
+            >
+              <h5><b>B. DIAGNÓSTICOS</b></h5>
+              @if (this.protocoloBody._a.pk_protope === 0) {
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar diagnósticos debe primero guardar los datos
+                  actuales del protocolo postoperatorio.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+
+              <div class="table-responsive pointer mt-3">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_protope_diag)
+                    {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">
+                        {{ item.desc_cie }}
+                      </td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_protope_diag === "PRE"
+                            ? "Diagnóstico Preoperatorio"
+                            : item.tipo_protope_diag === "POS"
+                            ? "Diagnóstico Postoperatorio"
+                            : item.tipo_protope_diag
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- Panel C -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="seccionc"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5><b>C. RESUMEN DE EVOLUCIÓN Y COMPLICACIONES</b></h5>
+              <!-- Fila de tipo de cirugía: Electiva / Emergencia / Urgencia -->
+              <div class="row mb-3">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Tipo de procedimiento</b></label>
+
+                  <!-- Electiva -->
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="c_electiva"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._c.electiva"
+                      name="c_electiva"
+                      (ngModelChange)="
+                        protocoloBody._c.electiva = $event;
+                        protocoloBody._c.emergencia = false;
+                        protocoloBody._c.urgencia = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="c_electiva">Electiva</label>
+                  </div>
+
+                  <!-- Emergencia -->
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="c_emergencia"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._c.emergencia"
+                      name="c_emergencia"
+                      (ngModelChange)="
+                        protocoloBody._c.emergencia = $event;
+                        protocoloBody._c.electiva = false;
+                        protocoloBody._c.urgencia = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="c_emergencia">Emergencia</label>
+                  </div>
+
+                  <!-- Urgencia -->
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="c_urgencia"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._c.urgencia"
+                      name="c_urgencia"
+                      (ngModelChange)="
+                        protocoloBody._c.urgencia = $event;
+                        protocoloBody._c.electiva = false;
+                        protocoloBody._c.emergencia = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="c_urgencia">Urgencia</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Proyectado -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Proyectado:</b></label>
+                  <textarea
+                    id="c_proyectado"
+                    class="form-control"
+                    rows="15"
+                    [(ngModel)]="protocoloBody._c.proyectado"
+                    name="c_proyectado"
+                    placeholder="Describa el procedimiento proyectado..."
+                    (ngModelChange)="
+                      protocoloBody._c.proyectado = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Realizado -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Realizado:</b></label>
+                  <textarea
+                    id="c_realizado"
+                    class="form-control"
+                    rows="15"
+                    [(ngModel)]="protocoloBody._c.realizado"
+                    name="c_realizado"
+                    placeholder="Describa el procedimiento realizado..."
+                    (ngModelChange)="
+                      protocoloBody._c.realizado = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel D -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown1"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>
+                <b> D. INTEGRANTES DEL EQUIPO QUIRÚRGICO</b>
+              </h5>
+
+              <!-- Cirujano 1 | Instrumentista -->
+              <div class="row mt-3">
+                <div class="col-md-6 form-group">
+                  <label><b>Cirujano 1:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.cirujano_1"
+                    name="d_cirujano_1"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.cirujano_1 = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label><b>Instrumentista:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.instrumentista"
+                    name="d_instrumentista"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.instrumentista = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Cirujano 2 | Circulante -->
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label><b>Cirujano 2:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.cirujano_2"
+                    name="d_cirujano_2"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.cirujano_2 = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label><b>Circulante:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.circulante"
+                    name="d_circulante"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.circulante = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Primer ayudante | Anestesiólogo -->
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label><b>Primer Ayudante:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.primer_ayudante"
+                    name="d_primer_ayudante"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.primer_ayudante = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label><b>Anestesiólogo/a:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.anestesiologo"
+                    name="d_anestesiologo"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.anestesiologo = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Segundo ayudante | Ayudante anestesia -->
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label><b>Segundo Ayudante:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.segundo_ayudante"
+                    name="d_segundo_ayudante"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.segundo_ayudante = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label><b>Ayudante Anestesia:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.tercer_ayudante"
+                    name="d_ayudante_anestesia"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._d.tercer_ayudante = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Otros -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Otros:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._d.otros"
+                    name="d_otros"
+                    placeholder="Ingrese..."
+                    (ngModelChange)="
+                      protocoloBody._d.otros = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel E -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown2"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5>
+                <b>E. TIPO ANESTESIA</b>
+              </h5>
+              <div class="row mt-3">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"
+                    ><b>Seleccione el tipo de anestesia</b></label
+                  >
+
+                  <!-- General -->
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="e_general"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._e.general"
+                      name="e_general"
+                      (ngModelChange)="
+                        protocoloBody._e.general = $event;
+                        protocoloBody._e.regional = false;
+                        protocoloBody._e.sedacion = false;
+                        protocoloBody._e.otros = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="e_general">General</label>
+                  </div>
+
+                  <!-- Regional -->
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="e_regional"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._e.regional"
+                      name="e_regional"
+                      (ngModelChange)="
+                        protocoloBody._e.regional = $event;
+                        protocoloBody._e.general = false;
+                        protocoloBody._e.sedacion = false;
+                        protocoloBody._e.otros = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="e_regional">Regional</label>
+                  </div>
+
+                  <!-- Sedación -->
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="e_sedacion"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._e.sedacion"
+                      name="e_sedacion"
+                      (ngModelChange)="
+                        protocoloBody._e.sedacion = $event;
+                        protocoloBody._e.general = false;
+                        protocoloBody._e.regional = false;
+                        protocoloBody._e.otros = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="e_sedacion">Sedación</label>
+                  </div>
+
+                  <!-- Otros -->
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="e_otros"
+                      class="chk-col-red"
+                      [(ngModel)]="protocoloBody._e.otros"
+                      name="e_otros"
+                      (ngModelChange)="
+                        protocoloBody._e.otros = $event;
+                        protocoloBody._e.general = false;
+                        protocoloBody._e.regional = false;
+                        protocoloBody._e.sedacion = false
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="e_otros">Otros</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel F -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown3"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5><b>F. TIEMPOS QUIRÚRGICOS</b></h5>
+              <div class="row mt-3">
+                <div class="col-md-4 form-group">
+                  <label><b>Fecha de operación</b></label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="protocoloBody._f.fecha_operacion"
+                    name="f_fecha_operacion"
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label><b>Hora inicio</b></label>
+                  <input
+                    class="form-control"
+                    type="time"
+                    [(ngModel)]="protocoloBody._f.hora_inicio"
+                    name="f_hora_inicio"
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label><b>Hora terminación</b></label>
+                  <input
+                    class="form-control"
+                    type="time"
+                    [(ngModel)]="protocoloBody._f.hora_terminacion"
+                    name="f_hora_terminacion"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Dieresis -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Diéresis</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="15"
+                    [(ngModel)]="protocoloBody._f.dieresis"
+                    name="f_dieresis"
+                    placeholder="Describa la incisión y apertura de planos..."
+                    (ngModelChange)="
+                      protocoloBody._f.dieresis = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Exposición -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Exposición</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="15"
+                    [(ngModel)]="protocoloBody._f.exposicion"
+                    name="f_exposicion"
+                    placeholder="Describa la exposición del campo operatorio..."
+                    (ngModelChange)="
+                      protocoloBody._f.exposicion = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Hallazgos -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Hallazgos</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="15"
+                    [(ngModel)]="protocoloBody._f.hallazgos"
+                    name="f_hallazgos"
+                    placeholder="Describa los hallazgos intraoperatorios..."
+                    (ngModelChange)="
+                      protocoloBody._f.hallazgos = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Procedimiento -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Procedimiento</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="20"
+                    [(ngModel)]="protocoloBody._f.procedimiento"
+                    name="f_procedimiento"
+                    placeholder="Describa el procedimiento realizado..."
+                    (ngModelChange)="
+                      protocoloBody._f.procedimiento = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel G -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown4"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5><b>G. COMPLICACIONES DEL PROCEDIMIENTO QUIRÚRGICO</b></h5>
+
+              <!-- Observación -->
+              <div class="row mt-3">
+                <div class="col-md-12 form-group">
+                  <label><b>Observación</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="protocoloBody._g.observacion"
+                    name="g_observacion"
+                    placeholder="Ingrese observación..."
+                    (ngModelChange)="
+                      protocoloBody._g.observacion = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Descripción -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="protocoloBody._g.descripcion"
+                    name="g_descripcion"
+                    placeholder="Ingrese descripción..."
+                    (ngModelChange)="
+                      protocoloBody._g.descripcion = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Pérdida y Sangrado -->
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label><b>Pérdida (ml)</b></label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    min="0"
+                    [(ngModel)]="protocoloBody._g.perdida"
+                    name="g_perdida"
+                    placeholder="0"
+                    [disabled]="accionVer"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label><b>Sangrado (ml)</b></label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    min="0"
+                    [(ngModel)]="protocoloBody._g.sangrado"
+                    name="g_sangrado"
+                    placeholder="0"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Uso SI / NO -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Uso</b></label>
+
+                  <div class="demo-radio-button d-inline-block mr-4">
+                    <input
+                      type="radio"
+                      id="g_uso_si"
+                      name="g_uso"
+                      class="with-gap"
+                      [value]="'SI'"
+                      [(ngModel)]="protocoloBody._g.uso"
+                      [disabled]="accionVer"
+                    />
+                    <label for="g_uso_si">SI</label>
+                  </div>
+
+                  <div class="demo-radio-button d-inline-block">
+                    <input
+                      type="radio"
+                      id="g_uso_no"
+                      name="g_uso"
+                      class="with-gap"
+                      [value]="'NO'"
+                      [(ngModel)]="protocoloBody._g.uso"
+                      [disabled]="accionVer"
+                    />
+                    <label for="g_uso_no">NO</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel H -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown5"
+              aria-labelledby="seccionc-tab"
+            >
+              <h5><b>H. EXÁMENES HISTOPATOLÓGICOS</b></h5>
+              <!-- Transquirúrgico -->
+              <div class="row mt-3">
+                <div class="col-md-12 form-group">
+                  <label><b>Incidentes transquirúrgicos</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="protocoloBody._h.transquirurgico"
+                    name="h_transquirurgico"
+                    placeholder="Describa los incidentes transquirúrgicos..."
+                    (ngModelChange)="
+                      protocoloBody._h.transquirurgico = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Biopsia SI/NO -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Biopsia</b></label>
+
+                  <div class="demo-radio-button d-inline-block mr-4">
+                    <input
+                      type="radio"
+                      id="h_biopsia_si"
+                      name="h_biopsia"
+                      class="with-gap"
+                      [value]="'SI'"
+                      [(ngModel)]="protocoloBody._h.biopsia"
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_biopsia_si">SI</label>
+                  </div>
+
+                  <div class="demo-radio-button d-inline-block">
+                    <input
+                      type="radio"
+                      id="h_biopsia_no"
+                      name="h_biopsia"
+                      class="with-gap"
+                      [value]="'NO'"
+                      [(ngModel)]="protocoloBody._h.biopsia"
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_biopsia_no">NO</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resultado -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Resultado</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="protocoloBody._h.resultado"
+                    name="h_resultado"
+                    placeholder="Describa el resultado..."
+                    (ngModelChange)="
+                      protocoloBody._h.resultado = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Medico Nombre -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Patólogo que reporta:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="protocoloBody._h.medico_nombre"
+                    name="h_medico_nombre_1"
+                    placeholder="Ingrese nombre..."
+                    (ngModelChange)="
+                      protocoloBody._h.medico_nombre = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+
+              <!-- Histopatológico SI/NO -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Informe histopatológico</b></label>
+
+                  <div class="demo-radio-button d-inline-block mr-4">
+                    <input
+                      type="radio"
+                      id="h_histopatologico_si"
+                      name="h_histopatologico"
+                      class="with-gap"
+                      [value]="'SI'"
+                      [(ngModel)]="protocoloBody._h.histopatologico"
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_histopatologico_si">SI</label>
+                  </div>
+
+                  <div class="demo-radio-button d-inline-block">
+                    <input
+                      type="radio"
+                      id="h_histopatologico_no"
+                      name="h_histopatologico"
+                      class="with-gap"
+                      [value]="'NO'"
+                      [(ngModel)]="protocoloBody._h.histopatologico"
+                      [disabled]="accionVer"
+                    />
+                    <label for="h_histopatologico_no">NO</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Muestra -->
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Muestra enviada</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="protocoloBody._h.muestra"
+                    name="h_muestra"
+                    placeholder="Describa la muestra enviada..."
+                    (ngModelChange)="
+                      protocoloBody._h.muestra = ($event ?? '').toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel I -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown6"
+              aria-labelledby="seccioni-tab"
+            >
+              <h5><b>I. DIAGRAMA DEL PROCEDIMIENTO</b></h5>
+
+              @if (this.protocoloBody._a.pk_protope === 0) {
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar el diagrama debe primero guardar los datos
+                  actuales del protocolo postoperatorio.
+                </h5>
+              </div>
+              } @else {
+
+              <!-- VISUALIZACIÓN: siempre visible -->
+              <div class="text-center">
+                <img
+                  [src]="imgDiagramaTemp || verImagenDiagrama()"
+                  class="img-avatar img-responsive"
+                  style="width: 400px; height: 400px; object-fit: contain"
+                />
+              </div>
+
+              <br />
+
+              <!-- SOLO si accionVer == false -->
+              @if (!this.accionVer) {
+
+              <input
+                type="file"
+                #fileInputFirma
+                accept="image/png, image/jpeg, image/jpg"
+                (change)="cambiarImagenDiagrama(fileInputFirma.files?.[0])"
+              />
+              <br />
+              <br />
+              <button
+                type="button"
+                class="btn btn-success waves-effect waves-light m-r-10"
+                [disabled]="!imgDiagrama"
+                (click)="subirImagenDiagrama()"
+              >
+                <i class="fa fa-save"></i>
+                Guardar Diagrama
+              </button>
+
+              } }
+            </div>
+
+            <!-- Panel J - DATOS DEL PROFESIONAL RESPONSABLE -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show"
+              id="dropdown7"
+              aria-labelledby="seccionj-tab"
+            >
+              <h5><b>J. DATOS DEL PROFESIONAL RESPONSABLE</b></h5>
+
+              @if (this.protocoloBody._a.pk_protope === 0) {
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar datos del profesional responsable debe primero
+                  guardar los datos actuales del protocolo postoperatorio.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoMedico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+
+              <div class="table-responsive pointer mt-3">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">NOMBRES</th>
+                      <th scope="col">IDENTIFICACIÓN</th>
+                      <th scope="col">ESPECIALIDAD</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (item of listMedicosProtocolo; track
+                    item.pk_protope_med) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.pk_protope_med }}</td>
+                      <td data-label="NOMBRES">
+                        {{ item.apellidopat_persona }}
+                        {{ item.apellidomat_persona }}
+                        {{ item.nombre_primario_persona }}
+                        {{ item.nombre_secundario_persona }}
+                      </td>
+                      <td data-label="IDENTIFICACIÓN">
+                        {{ item.numidentificacion_persona }}
+                      </td>
+                      <td data-label="ESPECIALIDAD">
+                        {{ item.desc_catdetalle }}
+                      </td>
+
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarMedico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+          </div>
+          <hr />
+          <div class="align-self-center d-flex justify-content-end">
+            @if (tabActivo !== 'I') { @if(!accionVer){
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              Guardar
+            </button>
+            } }
+
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              (click)="cerrarPostOperatorio()"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="diagnosticoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Diagnostico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label> Cie (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnostico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código:{{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de Diagnostico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_protope_diag"
+              name="tipo_emerdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              <option [ngValue]="'PRE OPERATORIO'">PRE OPERATORIO</option>
+              <option [ngValue]="'POST OPERATORIO'">POST OPERATORIO</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="medicoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Registros Médicos - Periodos
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarMedico()">
+          <div class="form-group">
+            <label> Médico (*)</label>
+            <ng-select
+              [items]="listMedicos"
+              [typeahead]="typeaheadMedicos"
+              bindLabel="nombre_completo"
+              bindValue="pk_espemed"
+              placeholder="Busca Médico..."
+              name="idMedico"
+              [(ngModel)]="idMedico"
+              (search)="onSearchMedico($event)"
+              [loading]="isLoading"
+              (change)="seleccionMedico($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small>{{ item.nombre_completo }}</small
+                  ><br />
+                  <small
+                    >Identificación: {{ item.numidentificacion_persona }}</small
+                  ><br />
+                  <small
+                    ><b
+                      >{{ item.desc_catdetalle }} ({{ item.tipo_espemed }})</b
+                    ></small
+                  ><br />
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarMedico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->

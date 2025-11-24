@@ -323,7 +323,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   subirImagenSello() {
     Swal.fire({
       title: 'Confirmación',
-      text: `Desea subir la imagen asiganada como sello del usuario ?`,
+      text: `Desea subir la imagen asignada como sello del usuario ?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí',

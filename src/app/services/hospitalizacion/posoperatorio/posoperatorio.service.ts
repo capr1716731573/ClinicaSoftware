@@ -1,21 +1,21 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../enviroments/enviroments';
 import { catchError, map } from 'rxjs';
 import { of } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../enviroments/enviroments';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsuarioService {
+export class PosOperatorioService {
   private readonly _http = inject(HttpClient);
   private _baseUrl = environment.apiUrl;
 
   constructor() {}
 
-  getAllUsuario(desde: number) {
-    const url = `${this._baseUrl}/usuario/?desde=${desde}`;
+  getAllPosOperatorio(desde: number, hcu: number) {
+    let url = `${this._baseUrl}/postoperatorio/ptope/all/${hcu}?desde=${desde}`;
 
     return this._http.get(url).pipe(
       map((resp: any) => {
@@ -24,7 +24,7 @@ export class UsuarioService {
       catchError((err) => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Operación incompleta en el Service. - Usuario',
+          text: 'Operación incompleta en el Service. - Listado Protocolo PosOperatorio',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -34,8 +34,28 @@ export class UsuarioService {
     );
   }
 
-  getAllUsuarioMedicos() {
-    const url = `${this._baseUrl}/usuario/medicos`;
+  getPosOperatorioId(id: number, opcion: any) {
+    const url = `${this._baseUrl}/postoperatorio/ptope/id/${opcion}/${id}`;
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta en el Service.(ID) -Protocolo PosOperatorio',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
+  getFechasPosOperatorio(hcu: number, fecha1: any, fecha2: any) {
+    const url = `${this._baseUrl}/postoperatorio/ptope/fechas/${hcu}/${fecha1}/${fecha2}`;
+    console.log(url);
 
     return this._http.get(url).pipe(
       map((resp: any) => {
@@ -44,7 +64,7 @@ export class UsuarioService {
       catchError((err) => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Operación incompleta en el Service. - getAllUsuarioMedicos',
+          text: 'Operación incompleta en el Service.(Bsq) - Protocolo PosOperatorio Fechas',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -54,8 +74,50 @@ export class UsuarioService {
     );
   }
 
-  getAllUsuarioId(id: number) {
-    const url = `${this._baseUrl}/usuario/id/${id}`;
+  guardarPosOperatorio(protocolo: any, opcion: string) {
+    const url = `${this._baseUrl}/postoperatorio/ptope/${opcion}`;
+
+    return this._http.post(url, protocolo).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'No se pudo registrar Protocolo PosOperatorio.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
+  impresionPosOperatorioId(id: number) {
+    const url = `${this._baseUrl}/postoperatorio/ptope/rep_frame/${id}`;
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta al generar impresión -Protocolo PosOperatorio',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@ Diagnosticos @@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  getDiagnosticos(id_protocolo: number) {
+    let url = `${this._baseUrl}/postoperatorio/diag/${id_protocolo}`;
 
     return this._http.get(url).pipe(
       map((resp: any) => {
@@ -64,7 +126,7 @@ export class UsuarioService {
       catchError((err) => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Operación incompleta en el Service.(ID) - getAllUsuarioId',
+          text: 'Operación incompleta en el Service. - Listado Diagnosticos Protocolo PosOperatorio',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -74,8 +136,32 @@ export class UsuarioService {
     );
   }
 
-  getBsqUsuario(bsq: string) {
-    const url = `${this._baseUrl}/usuario/bsq/${bsq}`;
+  guardarDiagnostico(diagnostico: any, opcion: string) {
+    const url = `${this._baseUrl}/postoperatorio/diag/${opcion}`;
+
+    return this._http.post(url, diagnostico).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'No se pudo crear Diagnostico de Protocolo PosOperatorio.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
+
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@     Medicos      @@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  getMedicos(id_protocolo: number) {
+    let url = `${this._baseUrl}/postoperatorio/med/${id_protocolo}`;
 
     return this._http.get(url).pipe(
       map((resp: any) => {
@@ -84,7 +170,7 @@ export class UsuarioService {
       catchError((err) => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Operación incompleta en el Service.(Bsq) - getBsqUsuario',
+          text: 'Operación incompleta en el Service. - Listado Médicos Protocolo PosOperatorio',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -94,17 +180,17 @@ export class UsuarioService {
     );
   }
 
-  getBsqUsuarioMedicos(bsq: string) {
-    const url = `${this._baseUrl}/usuario/bsqmedicos/${(bsq ?? '').toUpperCase()}`;
+  guardarMedicos(medico: any, opcion: string) {
+    const url = `${this._baseUrl}/postoperatorio/med/${opcion}`;
 
-    return this._http.get(url).pipe(
+    return this._http.post(url, medico).pipe(
       map((resp: any) => {
         return resp;
       }),
       catchError((err) => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Operación incompleta en el Service.(Bsq) - getBsqUsuario',
+          text: 'No se pudo registrar Médicos al Protocolo PosOperatorio.',
           icon: 'error',
           confirmButtonText: 'Aceptar',
         });
@@ -114,104 +200,23 @@ export class UsuarioService {
     );
   }
 
-  getPerfilesUsuario(id_usuario: number) {
-    const url = `${this._baseUrl}/usuario/usu_per2/${id_usuario}`;
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@     Imagenes     @@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    return this._http.get(url).pipe(
-      map((resp: any) => {
-        return resp;
-      }),
-      catchError((err) => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'Operación incompleta en el Service. - Perfiles de Usuario',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-        console.error('Error no controlado:', err);
-        return of(err);
-      })
-    );
-  }
-
-  guardarUsuario(usuario: any, opcion: string) {
-    const url = `${this._baseUrl}/usuario/crud/${opcion}`;
-
-    return this._http.post(url, usuario).pipe(
-      map((resp: any) => {
-        return resp;
-      }),
-      catchError((err) => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'No se pudo crear la Usuario.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-        console.error('Error no controlado:', err);
-        return of(err);
-      })
-    );
-  }
-
-  guardarUsuarioPassword(usuario: any, opcion: string) {
-    const url = `${this._baseUrl}/usuario/usu_password/${opcion}`;
-
-    return this._http.post(url, usuario).pipe(
-      map((resp: any) => {
-        return resp;
-      }),
-      catchError((err) => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'No se pudo actualizar la contraseña del Usuario.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-        console.error('Error no controlado:', err);
-        return of(err);
-      })
-    );
-  }
-
-  guardarPerfilUsuario(usuario: any, opcion: string) {
-    const url = `${this._baseUrl}/usuario/usu_per/${opcion}`;
-
-    return this._http.post(url, usuario).pipe(
-      map((resp: any) => {
-        return resp;
-      }),
-      catchError((err) => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'No se pudo asignar el perfíl al usuario, verifique que no este duplicado.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-        console.error('Error no controlado:', err);
-        return of(err);
-      })
-    );
-  }
-
-  async actualizarFirmaSello(
+  async actualizarDiagrama(
     archivo: File,
-    tipo: 'f' | 's', // 'f' = firma, 's' = sello
     data: any, // usuarioBody u objeto similar
     token?: string // opcional: JWT para Authorization
   ): Promise<any> {
     // Validaciones mínimas
     if (!archivo) throw new Error('No se proporcionó archivo');
-    let tipoimg;
-    if (tipo === 'f') tipoimg = 'firma';
-    else if (tipo === 's') tipoimg = 'sello';
-    if (!tipoimg) throw new Error(`Tipo inválido: ${tipo}`);
-
+   
     // Construcción de URL
     const url = `${this._baseUrl.replace(
       /\/$/,
       ''
-    )}/usuario/upload/${tipoimg}/U`;
+    )}/postoperatorio/upload/ptope/U`;
 
     // FormData exactamente como lo espera el backend
     const formData = new FormData();
@@ -234,24 +239,21 @@ export class UsuarioService {
         return false;
       }
     } catch (error) {
-      console.error('actualizarFirmaSello error:', error);
+      console.error('Actualizar Diagrama error:', error);
       throw error; // o `return false;` si prefieres silenciar
     }
   }
 
-  verFirmaSello(tipo: 'f' | 's', rutaImg: string) {
+  verDiagrama(rutaImg: string) {
     //valida que la ruta venga activa
     if (!rutaImg || rutaImg === undefined || rutaImg === '') return '';
 
     //Preparo que ruta elijo si firma o sello
 
     // Construcción de URL
-    let url = `${this._baseUrl}/usuario/ver`;
-    if (tipo === 'f') {
-      url = `${url}/firma?pathfirma=${rutaImg}`;
-    } else if (tipo === 's') {
-      url = `${url}/sello?pathsello=${rutaImg}`;
-    }
+    let url = `${this._baseUrl}/postoperatorio/ver/protope`;    
+    url = `${url}?pathprotope=${rutaImg}`;
+    
 
     return url;
   }
