@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
+import { SkeletonCrudComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-crud.component';
 import { EpicrisisService } from '../../../../services/hospitalizacion/epicrisis/epicrisis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
@@ -28,6 +29,7 @@ declare var $: any;
     RouterModule,
     MenuHospitalizacionComponent,
     NgSelectModule,
+    SkeletonCrudComponent,
   ],
   templateUrl: './form-epicrisis.component.html',
   styles: ``,
@@ -41,6 +43,7 @@ export class FormEpicrisisComponent {
   private _cieService = inject(CieService);
   private _especialidadMedicoService = inject(EspecialidadMedicoService);
 
+  tabActivo: 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' = 'B';
   opcion: string = 'I';
   hcu: any;
   casaSaludBody: any = {};
@@ -100,10 +103,12 @@ export class FormEpicrisisComponent {
 
       if (this.idNum !== 0 && !isNaN(this.idNum)) {
         this.opcion = 'U';
+        this.loading = true;
         this.editarEpicrisis(this.idNum);
         this.getListaDiagnosticos();
         this.getListaMedicos();
       } else {
+        this.loading = false;
         this.inicializacionEpicrisis();
       }
     });
@@ -260,8 +265,10 @@ export class FormEpicrisisComponent {
         this.epicrisisBody._a.casalud_id_fk = this.casaSaludBody.casalud_id_pk;
         this.epicrisisBody._j.medico_usu_id_fk =
           this._loginService.getUserLocalStorage().pk_usuario;
+        this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         toastr.error(
           'Error',

@@ -102,17 +102,18 @@
                       <i class="ti-settings"></i>
                     </button>
                     <div class="dropdown-menu pointer">
-                      <a class="dropdown-item" (click)="cambioCama(item)"
+                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="cambioCama(item)"
                         >Cambiar Cama</a
                       >
                       <a
-                        class="dropdown-item"
+                        class="dropdown-item pointer"
+                        style="cursor: pointer;"
                         (click)="transferenciaServicio(item)"
                         >Transferencia</a
                       >
 
-                      <a class="dropdown-item" (click)="alta(item)">Egreso</a>
-                      <a class="dropdown-item" (click)="seleccionarPaciente(item)">Seleccionar</a>
+                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="alta(item)">Egreso</a>
+                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="seleccionarPaciente(item)">Seleccionar</a>
                     </div>
                   </div>
                 </td>

@@ -29,6 +29,11 @@ import { EpicrisisComponent } from './componentes_medicos/hospitalizacion/epicri
 import { FormEpicrisisComponent } from './componentes_medicos/hospitalizacion/epicrisis/form-epicrisis.component';
 import { PostoperatorioComponent } from './componentes_medicos/hospitalizacion/postoperatorio/postoperatorio.component';
 import { FormPostoperatorioComponent } from './componentes_medicos/hospitalizacion/postoperatorio/form-postoperatorio.component';
+import { InterconsultasComponent } from './componentes_medicos/hospitalizacion/interconsulta/interconsultas.component';
+import { FormInterconsultaSolicitudComponent } from './componentes_medicos/hospitalizacion/interconsulta/form-interconsulta-solicitud.component';
+import { FormInterconsultaInformeComponent } from './componentes_medicos/hospitalizacion/interconsulta/form-interconsulta-informe.component';
+import { AnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/anamnesis.component';
+import { FormAnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/form-anamnesis.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -67,6 +72,11 @@ export const pagesChildRoutes: Routes = [
             { path: 'form_epicrisis/:id/:accion', canActivate: [JwtGuard],component: FormEpicrisisComponent ,data:{titulo: 'Epicrisis'}},
             { path: 'protocolo', canActivate: [JwtGuard],component: PostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
             { path: 'form_protocolo/:id/:accion', canActivate: [JwtGuard],component: FormPostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
+            { path: 'interconsultas', canActivate: [JwtGuard],component: InterconsultasComponent ,data:{titulo: 'Interconsultas'}},
+            { path: 'form_interconsulta_solicitud/:id/:accion', canActivate: [JwtGuard],component: FormInterconsultaSolicitudComponent ,data:{titulo: 'Interconsulta-Solicitud'}},
+            { path: 'form_interconsulta_informe/:id_sol/:id_inf/:accion', canActivate: [JwtGuard],component: FormInterconsultaInformeComponent ,data:{titulo: 'Interconsulta-Informe'}},
+            { path: 'anamnesis', canActivate: [JwtGuard],component: AnamnesisComponent ,data:{titulo: 'Anamnesis'}},
+            { path: 'form_anamnesis/:id/:accion', canActivate: [JwtGuard],component: FormAnamnesisComponent ,data:{titulo: 'Anamnesis'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

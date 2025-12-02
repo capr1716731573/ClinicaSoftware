@@ -1,5 +1,10 @@
 <app-menu-hospitalizacion></app-menu-hospitalizacion>
 
+@if (loading) {
+<app-skeleton-table></app-skeleton-table>
+}
+
+@if (!loading) {
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -113,13 +118,15 @@
                       </button>
                       <div class="dropdown-menu pointer">
                         <a
-                          class="dropdown-item"
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
                           (click)="editarProtocoloPostOperatorio(item)"
                           >Editar</a
                         >
 
                         <a
-                          class="dropdown-item"
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
                           (click)="imprimirProtocoloPostOperatorio(item.pk_protope)"
                           >Imprimir</a
                         >
@@ -162,3 +169,4 @@
     </div>
   </div>
 </div>
+}

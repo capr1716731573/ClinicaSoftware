@@ -42,7 +42,7 @@
                   [routerLink]="['/hospitalizacion_inicio']"
                   (click)="cerrarMenuModal()"
                 >
-                  1.- Información Paciente
+                  - Información Paciente
                 </a>
 
                 <a
@@ -50,7 +50,7 @@
                   [routerLink]="['/evolucion']"
                   (click)="cerrarMenuModal()"
                 >
-                  2.- Evolución
+                  - Evolución
                 </a>
 
                 <a
@@ -58,18 +58,29 @@
                   [routerLink]="['/epicrisis']"
                   (click)="cerrarMenuModal()"
                 >
-                  3.- Epicrisis
+                  - Epicrisis
                 </a>
                 <a
                   class="list-group-item list-group-item-action text-primary"
                   [routerLink]="['/protocolo']"
                   (click)="cerrarMenuModal()"
                 >
-                  4.- Protocolo Quirúrgico
+                  - Protocolo Quirúrgico
                 </a>
-                <a href="javascript:void(0)" class="list-group-item"
-                  >Vestibulum at eros</a
+                <a
+                  class="list-group-item list-group-item-action text-primary"
+                  [routerLink]="['/interconsultas']"
+                  (click)="cerrarMenuModal()"
                 >
+                  - Interconsultas
+                </a>
+                <a
+                  class="list-group-item list-group-item-action text-primary"
+                  [routerLink]="['/anamnesis']"
+                  (click)="cerrarMenuModal()"
+                >
+                  - Anamnesis
+                </a>
               </div>
             </div>
             <div class="col-md-6 col-sm-6 p-20">

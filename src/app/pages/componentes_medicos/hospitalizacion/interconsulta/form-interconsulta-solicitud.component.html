@@ -1,0 +1,597 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+<!-- <pre>{{interconsultaBody | json}}</pre> -->
+
+@if (loading) {
+<app-skeleton-crud></app-skeleton-crud>
+}
+
+@if (!loading) {
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'B'"
+              (click)="tabActivo = 'B'"
+              id="tabB-tab"
+              data-toggle="tab"
+              href="#tabB"
+              role="tab"
+              aria-controls="tabB"
+              aria-expanded="true"
+            >
+              <span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'C'"
+              (click)="tabActivo = 'C'"
+              id="tabC-tab"
+              data-toggle="tab"
+              href="#tabC"
+              role="tab"
+              aria-controls="tabC"
+            >
+              <span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              [class.active]="tabActivo === 'D' || tabActivo === 'E' || tabActivo === 'F'"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'D'"
+                [class.font-weight-bold]="tabActivo === 'D'"
+                id="dropdownD-tab"
+                href="#tabD"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabD"
+                (click)="tabActivo = 'D'"
+                >D - Resultados de Exámenes</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'E'"
+                [class.font-weight-bold]="tabActivo === 'E'"
+                id="dropdownE-tab"
+                href="#tabE"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabE"
+                (click)="tabActivo = 'E'"
+                >E - Diagnósticos</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'F'"
+                [class.font-weight-bold]="tabActivo === 'F'"
+                id="dropdownF-tab"
+                href="#tabF"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabF"
+                (click)="tabActivo = 'F'"
+                >F - Plan Terapéutico</a
+              >
+            </div>
+          </li>
+        </ul>
+
+        <form class="form" (ngSubmit)="guardarInterconsultaSolicitud()">
+          <div class="tab-content tabcontent-border p-20">
+            <!-- TAB B -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'B'"
+              [class.active]="tabActivo === 'B'"
+              id="tabB"
+              role="tabpanel"
+            >
+              <h5>
+                <b
+                  >B. CARACTERÍSTICA DE LA SOLICITUD, MOTIVO Y PRIORIDAD DE
+                  ATENCIÓN</b
+                >
+              </h5>
+
+              <div class="row mt-3">
+                <div class="col-md-3 form-group">
+                  <label><b>Fecha inicio</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ interconsultaBody.fecha_inicio || "—" }}
+                  </p>
+                  
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Hora inicio</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ interconsultaBody.hora_inicio || "—" }}
+                  </p>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Fecha fin</b></label>
+
+                  <!-- Se muestra como un input pero solo lectura -->
+                  <p class="form-control-plaintext mt-1">
+                    {{ interconsultaBody.fecha_fin || "—" }}
+                  </p>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Hora fin</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ interconsultaBody.hora_fin || "—" }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label class="d-block"><b>Servicio</b></label>
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="serv_emergencia"
+                      class="chk-col-red"
+                      [(ngModel)]="caracteristicasSolicitud.servicio.emergencia"
+                      name="serv_emergencia"
+                      (ngModelChange)="onServicioChange('emergencia', $event)"
+                      [disabled]="accionVer"
+                    />
+                    <label for="serv_emergencia">Emergencia</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block mr-4">
+                    <input
+                      type="checkbox"
+                      id="serv_consulta"
+                      class="chk-col-red"
+                      [(ngModel)]="
+                        caracteristicasSolicitud.servicio.consulta_externa
+                      "
+                      name="serv_consulta"
+                      (ngModelChange)="
+                        onServicioChange('consulta_externa', $event)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="serv_consulta">Consulta externa</label>
+                  </div>
+
+                  <div class="demo-checkbox d-inline-block">
+                    <input
+                      type="checkbox"
+                      id="serv_hosp"
+                      class="chk-col-red"
+                      [(ngModel)]="
+                        caracteristicasSolicitud.servicio.hospitalizacion
+                      "
+                      name="serv_hosp"
+                      (ngModelChange)="
+                        onServicioChange('hospitalizacion', $event)
+                      "
+                      [disabled]="accionVer"
+                    />
+                    <label for="serv_hosp">Hospitalización</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label><b>Especialidad solicitante</b></label>
+                  <ng-select
+                    [items]="listEspecialidades"
+                    bindLabel="desc_catdetalle"
+                    bindValue="pk_catdetalle"
+                    placeholder="Seleccione especialidad solicitante"
+                    name="esp_origen"
+                    [(ngModel)]="
+                      caracteristicasSolicitud.especialidad
+                        .id_especialidad_origen
+                    "
+                    (ngModelChange)="onSeleccionEspecialidadOrigen($event)"
+                    [disabled]="accionVer"
+                    [clearable]="false"
+                  >
+                  </ng-select>
+                </div>
+                <div class="col-md-4 form-group">
+                  <label><b>Especialidad consultada</b></label>
+                  <ng-select
+                    [items]="listEspecialidades"
+                    bindLabel="desc_catdetalle"
+                    bindValue="pk_catdetalle"
+                    placeholder="Seleccione especialidad consultada"
+                    name="esp_destino"
+                    [(ngModel)]="
+                      caracteristicasSolicitud.especialidad
+                        .id_especialidad_destino
+                    "
+                    (ngModelChange)="onSeleccionEspecialidadDestino($event)"
+                    [disabled]="accionVer"
+                    [clearable]="false"
+                  >
+                  </ng-select>
+                </div>
+                <div class="col-md-4 form-group">
+                  <label><b>Especialista</b></label>
+                  <ng-select
+                    [items]="listMedicos"
+                    bindLabel="nombres_completos"
+                    bindValue="pk_usuario"
+                    placeholder="Seleccione especialista"
+                    name="especialista"
+                    [(ngModel)]="caracteristicasSolicitud.especialista_id"
+                    (ngModelChange)="onSeleccionEspecialista($event)"
+                    [disabled]="accionVer"
+                    [clearable]="false"
+                  >
+                    <ng-template ng-option-tmp let-item="item">
+                      <div>
+                        <small
+                          ><b
+                            >{{ item.apellidopat_persona }}
+                            {{ item.apellidomat_persona }}
+                            {{ item.nombre_primario_persona }}
+                            {{ item.nombre_secundario_persona }}</b
+                          ></small
+                        ><br />
+                        <small>CI: {{ item.numidentificacion_persona }}</small>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label><b>No. cama</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="
+                      caracteristicasSolicitud.especialidad.numero_cama
+                    "
+                    name="num_cama"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label><b>No. sala</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="
+                      caracteristicasSolicitud.especialidad.numero_sala
+                    "
+                    name="num_sala"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label class="d-block"><b>Urgente</b></label>
+                  <div class="demo-radio-button d-inline-block mr-4">
+                    <input
+                      type="radio"
+                      id="urgente_si"
+                      class="with-gap"
+                      name="urgente"
+                      [value]="'SI'"
+                      [(ngModel)]="caracteristicasSolicitud.urgente"
+                      (change)="setUrgente('SI')"
+                      [disabled]="accionVer"
+                    />
+                    <label for="urgente_si">Sí</label>
+                  </div>
+                  <div class="demo-radio-button d-inline-block">
+                    <input
+                      type="radio"
+                      id="urgente_no"
+                      class="with-gap"
+                      name="urgente"
+                      [value]="'NO'"
+                      [(ngModel)]="caracteristicasSolicitud.urgente"
+                      (change)="setUrgente('NO')"
+                      [disabled]="accionVer"
+                    />
+                    <label for="urgente_no">No</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción del motivo</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="6"
+                    [(ngModel)]="caracteristicasSolicitud.descripcion_motivo"
+                    name="descripcion_motivo"
+                    placeholder="Detalle el motivo de la interconsulta..."
+                    (ngModelChange)="
+                      caracteristicasSolicitud.descripcion_motivo = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB C -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'C'"
+              [class.active]="tabActivo === 'C'"
+              id="tabC"
+              role="tabpanel"
+            >
+              <h5><b>C. CUADRO CLÍNICO ACTUAL</b></h5>
+              <p class="text-muted">
+                Registre de manera obligatoria el resumen del cuadro clínico
+                actual del paciente.
+              </p>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="interconsultaBody.cuadro_clinico_intersol"
+                name="cuadro_clinico"
+                (ngModelChange)="
+                  interconsultaBody.cuadro_clinico_intersol = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+
+            <!-- TAB D -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'D'"
+              [class.active]="tabActivo === 'D'"
+              id="tabD"
+            >
+              <h5>
+                <b
+                  >D. RESULTADOS DE EXÁMENES Y PROCEDIMIENTOS DIAGNÓSTICOS
+                  RELEVANTES</b
+                >
+              </h5>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="interconsultaBody.resultados_examenes_intersol"
+                name="resultados_examenes"
+                (ngModelChange)="
+                  interconsultaBody.resultados_examenes_intersol = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+
+            <!-- TAB E -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'E'"
+              [class.active]="tabActivo === 'E'"
+              id="tabE"
+            >
+              <h5><b>E. DIAGNÓSTICOS</b></h5>
+
+              @if (interconsultaBody.pk_intersol === 0) {
+              <div class="box bg-info mt-3">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para gestionar diagnósticos debe guardar primero la solicitud.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+
+              <div class="table-responsive pointer mt-3">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_interdiag) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">{{ item.desc_cie }}</td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_interdiag?.toLowerCase() === 'presuntivos' ? 'Presuntivo' :
+                          item.tipo_interdiag?.toLowerCase() === 'definitivos' ? 'Definitivo' :
+                          item.tipo_interdiag
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- TAB F -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'F'"
+              [class.active]="tabActivo === 'F'"
+              id="tabF"
+            >
+              <h5><b>F. PLAN TERAPÉUTICO REALIZADO</b></h5>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="interconsultaBody.plan_terapeutico_intersol"
+                name="plan_terapeutico"
+                (ngModelChange)="
+                  interconsultaBody.plan_terapeutico_intersol = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+          </div>
+
+          <hr />
+          <div class="align-self-center d-flex justify-content-end">
+            @if(!accionVer){
+            <button
+              type="submit"
+              class="btn btn-success mr-2"
+              [disabled]="!validarGuardar()"
+            >
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            }
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="cerrarFormulario()"
+            >
+              <i class="fa fa-times"></i> Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal Diagnóstico -->
+<div
+  id="diagnosticoInterconsultaModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Registro Diagnóstico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label>Diagnóstico CIE10 (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnóstico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código: {{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de diagnóstico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_interdiag"
+              name="tipo_interdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              @for (tipo of diagnosticoTipos; track tipo.value) {
+              <option [ngValue]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

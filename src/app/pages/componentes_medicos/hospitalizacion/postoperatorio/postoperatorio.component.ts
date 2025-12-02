@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
+import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
 import { ProtocoloOperatorio } from './postoperatorio.interface';
 import { PosOperatorioService } from '../../../../services/hospitalizacion/posoperatorio/posoperatorio.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
@@ -19,6 +20,7 @@ declare var $: any;
     FormsModule,
     RouterModule,
     MenuHospitalizacionComponent,
+    SkeletonTableComponent,
   ],
   templateUrl: './postoperatorio.component.html',
   styles: ``,
@@ -39,6 +41,7 @@ export class PostoperatorioComponent {
   sig: boolean;
   fecha_desde: Date = null;
   fecha_hasta: Date = null;
+  loading: boolean = true;
 
   constructor() {
     this.getCasaSalud();
@@ -154,6 +157,7 @@ export class PostoperatorioComponent {
   }
 
   getAllPostOperatorio() {
+    this.loading = true;
     this._postoperatorioService
       .getAllPosOperatorio(this.desde, this.hcu.fk_hcu)
       .subscribe({
@@ -170,8 +174,10 @@ export class PostoperatorioComponent {
               /* console.log(resp); */
             }
           }
+          this.loading = false;
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -185,6 +191,7 @@ export class PostoperatorioComponent {
 
   /*********** Manejo de fechas ******** */
   getFechasPostOperatorio() {
+    this.loading = true;
     this._postoperatorioService
       .getFechasPosOperatorio(
         this.hcu.fk_hcu,
@@ -207,8 +214,10 @@ export class PostoperatorioComponent {
             this.intervalo = environment.filas;
             this.numeracion = 1;
           }
+          this.loading = false;
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',

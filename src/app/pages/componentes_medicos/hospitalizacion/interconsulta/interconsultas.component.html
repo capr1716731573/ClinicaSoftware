@@ -1,5 +1,4 @@
 <app-menu-hospitalizacion></app-menu-hospitalizacion>
-
 @if (loading) {
 <app-skeleton-table></app-skeleton-table>
 }
@@ -9,9 +8,9 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Listado de Epicrisis</h4>
+        <h4 class="card-title">Listado de Interconsultas</h4>
         <h6 class="card-subtitle">
-          Gestión de información de epicrisis del paciente asignado.
+          Gestión de información de Interconsultas del paciente asignado.
         </h6>
 
         <div class="row">
@@ -44,7 +43,7 @@
             <button
               class="btn btn-info"
               type="button"
-              (click)="nuevoEpicrisis()"
+              (click)="nuevoInterconsultaSolicitud()"
               style="padding: 8px 20px; font-weight: bold"
             >
               Nuevo
@@ -60,81 +59,56 @@
             <table class="table full-color-table full-info-table hover-table">
               <thead>
                 <tr>
-                  <th style="width: 10%" scope="col">FECHA/HORA INICIO</th>
-                  <th style="width: 10%" scope="col">FECHA/HORA FIN</th>
-                  <th style="width: 40%" scope="col">RESUMEN CUADRO CLÍNICO</th>
-                  <th style="width: 20%" scope="col">RESPONSABLE</th>
-                  <th style="width: 10%" scope="col">APROBADO</th>
+                  <th style="width: 10%" scope="col">FECHA CREACIÓN</th>
+                  <th style="width: 10%" scope="col">HORA CREACIÓN</th>
+                  <th style="width: 15%" scope="col">ESPECIALIDAD ORIGEN</th>
+                  <th style="width: 15%" scope="col">ESPECIALIDAD DESTINO</th>
+                  <th style="width: 30%" scope="col">USUARIO CREACIÓN</th>
+                  <th style="width: 10%" scope="col">CONTESTADA</th>
                   <th style="width: 10%" scope="col">ACCIÓN</th>
                 </tr>
               </thead>
               <tbody></tbody>
               <tbody>
-                @for (item of epicrisisList; track item.pk_epi) {
+                @for (item of interconsultaList; track item.pk_intersol) {
                 <tr>
-                  <td data-label="FECHA/HORA INICIO">
-                    <small>
-                      <div>{{ item.fecha_inicio }}</div>
-                      <div>{{ item.hora_inicio }}</div>
-                      <div>{{ item.pk_epi }}</div>
-                    </small>
+                  <td data-label="FECHA CREACIÓN">
+                    <div>{{ item.fecha_inicio }}</div>
                   </td>
-                  <td data-label="FECHA/HORA FIN">
-                    <small>
-                      <div>{{ item.fecha_fin }}</div>
-                      <div>{{ item.hora_fin }}</div>
-                    </small>
+                  <td data-label="HORA CREACIÓN">
+                    <div>{{ item.hora_inicio }}</div>
                   </td>
-
-                  <td data-label="RESUMEN CUADRO CLÍNICO" class="text-start">
-                    @if (item.resumen_cuadro_clinico_epi?.length < 200) {
-                    <textarea
-                      class="form-control form-control-sm"
-                      rows="5"
-                      readonly
-                      name="resumen_{{ item.pk_epi }}"
-                      >{{ item.resumen_cuadro_clinico_epi }} ....</textarea
-                    >
-                    } @else {
-                    <div
-                      class="texto-limitado"
-                      [title]="item.resumen_cuadro_clinico_epi"
-                    >
-                      {{ item.resumen_cuadro_clinico_epi }}....
+                  <td data-label="ESPECIALIDAD ORIGEN">
+                    <div>
+                      {{
+                        item.caracteristicas_solicitud_intersol.especialidad
+                          .especialidad_origen
+                      }}
                     </div>
-                    }
+                  </td>
+                  <td data-label="ESPECIALIDAD DESTINO">
+                    <div>
+                      {{
+                        item.caracteristicas_solicitud_intersol.especialidad
+                          .especialidad_destino
+                      }}
+                    </div>
                   </td>
 
-                  <td data-label="RESPONSABLE">
-                    <small>
-                      <div>
-                        {{ item.medico_apellidopat_persona }}
-                        {{ item.medico_apellidomat_persona }}
-                        {{ item.medico_nombre_primario_persona }}
-                        {{ item.medico_nombre_secundario_persona }}
-                      </div>
-                      <div>{{ item.medico_numidentificacion_persona }}</div>
-                    </small>
+                  <td data-label="USUARIO CREACIÓN">
+                    <div>
+                      {{ item.medico_apellidopat_persona }}
+                      {{ item.medico_apellidomat_persona }}
+                      {{ item.medico_nombre_primario_persona }}
+                      {{ item.medico_nombre_secundario_persona }}
+                    </div>
+                    <div>{{ item.medico_numidentificacion_persona }}</div>
                   </td>
 
-                  <td data-label="APROBADO">
-                    @if (item.estado_epi) {
-                    <button
-                      type="button"
-                      class="btn btn-success btn-circle"
-                      (click)="desaprobarEpicrisis(item)"
-                    >
-                      <i class="fa fa-check"></i>
-                    </button>
-                    } @else{
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-circle"
-                      (click)="aprobarEpicrisis(item)"
-                    >
-                      <i class="fa fa-times"></i>
-                    </button>
-                    }
+                  <td data-label="CONTESTADA">
+                    <div>
+                      {{ item.contestada === "SI" ? "✔️" : "❌" }}
+                    </div>
                   </td>
 
                   <td data-label="ACCIÓN">
@@ -149,14 +123,34 @@
                         <i class="ti-settings"></i>
                       </button>
                       <div class="dropdown-menu pointer">
-                        <a class="dropdown-item pointer" style="cursor: pointer;" (click)="editarEpicrisis(item)"
-                          >Editar</a
+                        @if(item.contestada === 'NO'){
+                        <a
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
+                          (click)="nuevoInterconsultaInforme(item.pk_intersol)"
+                          >Informe</a
                         >
+                        }
 
                         <a
                           class="dropdown-item pointer"
                           style="cursor: pointer;"
-                          (click)="imprimirEpicrisis(item.pk_epi)"
+                          (click)="editarInterconsultaSolicitud(item)"
+                          >Editar/Ver Solicitud</a
+                        >
+                        @if(item.contestada === 'SI'){
+                        <a
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
+                          (click)="editarInterconsultaInforme(item)"
+                          >Editar/Ver Informe</a
+                        >
+                        }
+
+                        <a
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
+                          (click)="imprimirInterconsulta(item)"
                           >Imprimir</a
                         >
                       </div>

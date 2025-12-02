@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
+import { SkeletonCrudComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-crud.component';
 import { PosOperatorioService } from '../../../../services/hospitalizacion/posoperatorio/posoperatorio.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
@@ -29,6 +30,7 @@ declare var $: any;
     RouterModule,
     MenuHospitalizacionComponent,
     NgSelectModule,
+    SkeletonCrudComponent,
   ],
   templateUrl: './form-postoperatorio.component.html',
   styles: ``,
@@ -106,10 +108,12 @@ export class FormPostoperatorioComponent {
 
       if (this.idNum !== 0 && !isNaN(this.idNum)) {
         this.opcion = 'U';
+        this.loading = true;
         this.editarProtocolo(this.idNum);
         this.getListaDiagnosticos();
         this.getListaMedicos();
       } else {
+        this.loading = false;
         this.inicializacionPostOperatorio();
       }
     });
@@ -397,8 +401,10 @@ export class FormPostoperatorioComponent {
         this.protocoloBody._a.casalud_id_fk = this.casaSaludBody.casalud_id_pk;
         this.protocoloBody._a.medico_usu_id_fk =
           this._loginService.getUserLocalStorage().pk_usuario;
+        this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         toastr.error(
           'Error',

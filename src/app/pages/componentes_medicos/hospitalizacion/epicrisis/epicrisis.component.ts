@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
+import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
 import { EpicrisisService } from '../../../../services/hospitalizacion/epicrisis/epicrisis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
@@ -21,6 +22,7 @@ declare var $: any;
     RouterModule,
     MenuHospitalizacionComponent,
     NgSelectModule,
+    SkeletonTableComponent,
   ],
   templateUrl: './epicrisis.component.html',
   styles: ``,
@@ -41,6 +43,7 @@ export class EpicrisisComponent {
   sig: boolean;
   fecha_desde: Date = null;
   fecha_hasta: Date = null;
+  loading: boolean = true;
 
   constructor() {
     this.getCasaSalud();
@@ -122,6 +125,7 @@ export class EpicrisisComponent {
   }
 
   getAllEpicrisis() {
+    this.loading = true;
     this._epicrisisService
       .getAllEpicrisis(this.desde, this.hcu.fk_hcu)
       .subscribe({
@@ -138,8 +142,10 @@ export class EpicrisisComponent {
               /* console.log(resp); */
             }
           }
+          this.loading = false;
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -153,6 +159,7 @@ export class EpicrisisComponent {
 
   /*********** Manejo de fechas ******** */
   getFechasEpicrisis() {
+    this.loading = true;
     this._epicrisisService
       .getFechasEpicrisis(this.hcu.fk_hcu, this.fecha_desde, this.fecha_hasta)
       .subscribe({
@@ -171,8 +178,10 @@ export class EpicrisisComponent {
             this.intervalo = environment.filas;
             this.numeracion = 1;
           }
+          this.loading = false;
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',

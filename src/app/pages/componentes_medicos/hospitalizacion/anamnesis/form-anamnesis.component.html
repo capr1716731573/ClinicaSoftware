@@ -1,0 +1,1645 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+@if (loading) {
+<app-skeleton-crud></app-skeleton-crud>
+}
+
+@if (!loading) {
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <!-- Tab B -->
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'B'"
+              (click)="tabActivo = 'B'"
+              data-toggle="tab"
+              href="#seccionB"
+              role="tab"
+              aria-controls="seccionB"
+              aria-expanded="true"
+            >
+              <span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span>
+            </a>
+          </li>
+          <!-- Tab C -->
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'C'"
+              (click)="tabActivo = 'C'"
+              data-toggle="tab"
+              href="#seccionC"
+              role="tab"
+              aria-controls="seccionC"
+            >
+              <span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span>
+            </a>
+          </li>
+          <!-- Tab D -->
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'D'"
+              (click)="tabActivo = 'D'"
+              data-toggle="tab"
+              href="#seccionD"
+              role="tab"
+              aria-controls="seccionD"
+            >
+              <span class="hidden-sm-up">D</span>
+              <span class="hidden-xs-down">D</span>
+            </a>
+          </li>
+          <!-- Dropdown Mas.. -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              [class.active]="tabActivo === 'E' || tabActivo === 'F' || tabActivo === 'G' || tabActivo === 'H' || tabActivo === 'I' || tabActivo === 'J' || tabActivo === 'K'"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionE"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionE"
+                (click)="tabActivo = 'E'"
+                [class.active]="tabActivo === 'E'"
+                >E - Enfermedad Actual</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionF"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionF"
+                (click)="tabActivo = 'F'"
+                [class.active]="tabActivo === 'F'"
+                >F - Revisión Órganos/Sistemas</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionG"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionG"
+                (click)="tabActivo = 'G'"
+                [class.active]="tabActivo === 'G'"
+                >G - Signos Vitales</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionH"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionH"
+                (click)="tabActivo = 'H'"
+                [class.active]="tabActivo === 'H'"
+                >H - Examen Físico</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionI"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionI"
+                (click)="tabActivo = 'I'"
+                [class.active]="tabActivo === 'I'"
+                >I - Análisis</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionJ"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionJ"
+                (click)="tabActivo = 'J'"
+                [class.active]="tabActivo === 'J'"
+                >J - Diagnósticos</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                href="#seccionK"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="seccionK"
+                (click)="tabActivo = 'K'"
+                [class.active]="tabActivo === 'K'"
+                >K - Plan de Tratamiento</a
+              >
+            </div>
+          </li>
+        </ul>
+
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- CONTENIDO DE TABS -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <form class="form" (ngSubmit)="guardarAnamnesis()">
+          <div class="tab-content tabcontent-border p-20" id="myTabContent">
+            <!-- ======================= SECCIÓN B - MOTIVO DE CONSULTA ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'B'"
+              [class.active]="tabActivo === 'B'"
+              id="seccionB"
+            >
+              <h5><b>B. MOTIVO DE CONSULTA</b></h5>
+              <small class="text-muted">Marcar la causa del problema en la consulta, referimiento</small>
+              <hr />
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción del motivo de consulta</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="motivo_consulta"
+                    [(ngModel)]="anamnesisBody._b.observacion_b"
+                    (ngModelChange)="anamnesisBody._b.observacion_b = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                    placeholder="Describa el motivo de consulta..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN C - ANTECEDENTES PATOLÓGICOS PERSONALES ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'C'"
+              [class.active]="tabActivo === 'C'"
+              id="seccionC"
+            >
+              <h5><b>C. ANTECEDENTES PATOLÓGICOS PERSONALES</b></h5>
+              <small class="text-muted">Marcar con X. Describir abreviado en número respectivo</small>
+              <hr />
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="alergia_medicamentos"
+                      name="alergia_medicamentos"
+                      [(ngModel)]="anamnesisBody._c.alergia_medicamentos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="alergia_medicamentos"
+                      >1. Alergia a Medicamentos</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="otras_alergias"
+                      name="otras_alergias"
+                      [(ngModel)]="anamnesisBody._c.otras_alergias"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="otras_alergias">2. Otras Alergias</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="vacunas"
+                      name="vacunas"
+                      [(ngModel)]="anamnesisBody._c.vacunas"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="vacunas">3. Vacunas</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="patologias_clinicas"
+                      name="patologias_clinicas"
+                      [(ngModel)]="anamnesisBody._c.patologias_clinicas"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="patologias_clinicas">4. Patologías Clínicas</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="medicacion_habitual"
+                      name="medicacion_habitual"
+                      [(ngModel)]="anamnesisBody._c.medicacion_habitual"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="medicacion_habitual">5. Medicación Habitual</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="quirurgicos"
+                      name="quirurgicos"
+                      [(ngModel)]="anamnesisBody._c.quirurgicos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="quirurgicos">6. Quirúrgicos</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="habitos"
+                      name="habitos"
+                      [(ngModel)]="anamnesisBody._c.habitos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="habitos">7. Hábitos</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="condicion_socio_economica"
+                      name="condicion_socio_economica"
+                      [(ngModel)]="anamnesisBody._c.condicion_socio_economica"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="condicion_socio_economica"
+                      >8. Condición Socio Económica</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="discapacidad"
+                      name="discapacidad"
+                      [(ngModel)]="anamnesisBody._c.discapacidad"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="discapacidad">9. Discapacidad</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="religion"
+                      name="religion"
+                      [(ngModel)]="anamnesisBody._c.religion"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="religion">10. Religión</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="tipificacion_sanguinea"
+                      name="tipificacion_sanguinea"
+                      [(ngModel)]="anamnesisBody._c.tipificacion_sanguinea"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="tipificacion_sanguinea"
+                      >11. Tipificación Sanguínea</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- GINECO OBSTÉTRICOS -->
+              <hr />
+              <h6><b>12. GINECO OBSTÉTRICOS Y ANDROLÓGICOS</b></h6>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>Edad Menarquía</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="edad_menarquia"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.edad_menarquia"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Edad Menopausia</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="edad_menopausia"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.edad_menopausia"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Ciclos</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    name="ciclos"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.ciclos"
+                    (ngModelChange)="anamnesisBody._c.gineco_obstetricos.ciclos = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Edad Inicio</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="edad_inicio"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.edad_inicio"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>No. Gestas</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="numero_gestas"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.numero_gestas"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>No. Partos</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="numero_partos"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.numero_partos"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>No. Abortos</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="numero_abortos"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.numero_abortos"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>No. Cesáreas</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="numero_cesareas"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.numero_cesareas"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>No. Hijos Vivos</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="numero_hijos_vivos"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.numero_hijos_vivos"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Última Menstruación</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultima_menstruacion"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultima_menstruacion"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Último Parto</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultimo_parto"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultimo_parto"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Fecha Última Citología Cervical</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultima_citologia_cervical"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultima_citologia_cervical"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Última Colposcopía</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultima_colposcopia"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultima_colposcopia"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Última Mamografía</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultima_mamografia"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultima_mamografia"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Método Planificación Familiar</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    name="metodo_planificacion_familiar"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.metodo_planificacion_familiar"
+                    (ngModelChange)="anamnesisBody._c.gineco_obstetricos.metodo_planificacion_familiar = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Terapia Hormonal</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    name="terapia_hormonal"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.terapia_hormonal"
+                    (ngModelChange)="anamnesisBody._c.gineco_obstetricos.terapia_hormonal = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Último Eco Prostático</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultimo_eco_prostatico"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultimo_eco_prostatico"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-3 form-group">
+                  <label>Fecha Último Antígeno Prostático</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="fecha_ultimo_antigeno_prostatico"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.fecha_ultimo_antigeno_prostatico"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones Gineco-Obstétricas</label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="gineco_observacion"
+                    [(ngModel)]="anamnesisBody._c.gineco_obstetricos.gineco_observacion"
+                    (ngModelChange)="anamnesisBody._c.gineco_obstetricos.gineco_observacion = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN D - ANTECEDENTES PATOLÓGICOS FAMILIARES ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'D'"
+              [class.active]="tabActivo === 'D'"
+              id="seccionD"
+            >
+              <h5><b>D. ANTECEDENTES PATOLÓGICOS FAMILIARES</b></h5>
+              <hr />
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cardiopatia"
+                      name="cardiopatia"
+                      [(ngModel)]="anamnesisBody._d.cardiopatia"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cardiopatia">1. Cardiopatía</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="hipertension"
+                      name="hipertension"
+                      [(ngModel)]="anamnesisBody._d.hipertension"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="hipertension">2. Hipertensión</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="enfermedadCerebrovascular"
+                      name="enfermedadCerebrovascular"
+                      [(ngModel)]="anamnesisBody._d.enfermedadCerebrovascular"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="enfermedadCerebrovascular"
+                      >3. Enf. Cerebrovascular</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="endocrinoMetabolico"
+                      name="endocrinoMetabolico"
+                      [(ngModel)]="anamnesisBody._d.endocrinoMetabolico"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="endocrinoMetabolico"
+                      >4. Endocrino Metabólico</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cancer"
+                      name="cancer"
+                      [(ngModel)]="anamnesisBody._d.cancer"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cancer">5. Cáncer</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="tuberculosis"
+                      name="tuberculosis"
+                      [(ngModel)]="anamnesisBody._d.tuberculosis"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="tuberculosis">6. Tuberculosis</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="enfermedadMental"
+                      name="enfermedadMental"
+                      [(ngModel)]="anamnesisBody._d.enfermedadMental"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="enfermedadMental">7. Enf. Mental</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="enfermedadInfecciosa"
+                      name="enfermedadInfecciosa"
+                      [(ngModel)]="anamnesisBody._d.enfermedadInfecciosa"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="enfermedadInfecciosa">8. Enf. Infecciosa</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="malformacion"
+                      name="malformacion"
+                      [(ngModel)]="anamnesisBody._d.malformacion"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="malformacion">9. Malformación</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="otro_d"
+                      name="otro_d"
+                      [(ngModel)]="anamnesisBody._d.otro"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="otro_d">10. Otro</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Observaciones</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_d"
+                    [(ngModel)]="anamnesisBody._d.observacion_d"
+                    (ngModelChange)="anamnesisBody._d.observacion_d = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN E - ENFERMEDAD O PROBLEMA ACTUAL ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'E'"
+              [class.active]="tabActivo === 'E'"
+              id="seccionE"
+            >
+              <h5><b>E. ENFERMEDAD O PROBLEMA ACTUAL</b></h5>
+              <hr />
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción de la enfermedad o problema actual</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_e"
+                    [(ngModel)]="anamnesisBody._e.observacion_e"
+                    (ngModelChange)="anamnesisBody._e.observacion_e = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                    placeholder="Describa la enfermedad o problema actual..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN F - REVISIÓN ACTUAL DE ÓRGANOS Y SISTEMAS ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'F'"
+              [class.active]="tabActivo === 'F'"
+              id="seccionF"
+            >
+              <h5><b>F. REVISIÓN ACTUAL DE ÓRGANOS Y SISTEMAS</b></h5>
+              <small class="text-muted">Marcar X cuando presente patología y describa</small>
+              <hr />
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="piel_anexos"
+                      name="piel_anexos"
+                      [(ngModel)]="anamnesisBody._f.piel_anexos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="piel_anexos">1. Piel - Anexos</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="organos_sentidos_f"
+                      name="organos_sentidos_f"
+                      [(ngModel)]="anamnesisBody._f.organos_sentidos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="organos_sentidos_f">2. Órganos de los Sentidos</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="respiratorio_f"
+                      name="respiratorio_f"
+                      [(ngModel)]="anamnesisBody._f.respiratorio"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="respiratorio_f">3. Respiratorio</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cardio"
+                      name="cardio"
+                      [(ngModel)]="anamnesisBody._f.cardio"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cardio">4. Cardio - Vascular</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="digestivo_f"
+                      name="digestivo_f"
+                      [(ngModel)]="anamnesisBody._f.digestivo"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="digestivo_f">5. Digestivo</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="genito"
+                      name="genito"
+                      [(ngModel)]="anamnesisBody._f.genito"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="genito">6. Génito - Urinario</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="musculo"
+                      name="musculo"
+                      [(ngModel)]="anamnesisBody._f.musculo"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="musculo">7. Músculo - Esquelético</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="endocrino_f"
+                      name="endocrino_f"
+                      [(ngModel)]="anamnesisBody._f.endocrino"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="endocrino_f">8. Endocrino</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="hemo"
+                      name="hemo"
+                      [(ngModel)]="anamnesisBody._f.hemo"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="hemo">9. Hemo - Linfático</label>
+                  </div>
+                </div>
+                <div class="col-md-3 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="nervioso"
+                      name="nervioso"
+                      [(ngModel)]="anamnesisBody._f.nervioso"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="nervioso">10. Nervioso</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Observaciones</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_f"
+                    [(ngModel)]="anamnesisBody._f.observacion_f"
+                    (ngModelChange)="anamnesisBody._f.observacion_f = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN G - SIGNOS VITALES Y ANTROPOMETRÍA ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'G'"
+              [class.active]="tabActivo === 'G'"
+              id="seccionG"
+            >
+              <h5><b>G. CONSTANTES VITALES Y ANTROPOMETRÍA</b></h5>
+              <hr />
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>Temperatura (°C)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    class="form-control form-control-sm"
+                    name="temperatura_c"
+                    [(ngModel)]="anamnesisBody._g.temperatura_c"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Presión Arterial (mmHg)</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    name="presion_arterial_mmHg"
+                    [(ngModel)]="anamnesisBody._g.presion_arterial_mmHg"
+                    (ngModelChange)="anamnesisBody._g.presion_arterial_mmHg = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                    placeholder="120/80"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Pulso (min)</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="pulso_por_minuto"
+                    [(ngModel)]="anamnesisBody._g.pulso_por_minuto"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Frec. Respiratoria (min)</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="frecuencia_respiratoria_por_minuto"
+                    [(ngModel)]="anamnesisBody._g.frecuencia_respiratoria_por_minuto"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Peso (Kg)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control form-control-sm"
+                    name="peso_kg"
+                    [(ngModel)]="anamnesisBody._g.peso_kg"
+                    [disabled]="accionVer"
+                    (change)="calcularIMC()"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Talla (cm)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    class="form-control form-control-sm"
+                    name="talla_cm"
+                    [(ngModel)]="anamnesisBody._g.talla_cm"
+                    [disabled]="accionVer"
+                    (change)="calcularIMC()"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>IMC (Kg/m²)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control form-control-sm"
+                    name="imc_kg_m2"
+                    [(ngModel)]="anamnesisBody._g.imc_kg_m2"
+                    [disabled]="true"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Perímetro Cefálico (cm)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    class="form-control form-control-sm"
+                    name="perimetro_cefalico_cm"
+                    [(ngModel)]="anamnesisBody._g.perimetro_cefalico_cm"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Pulsioximetría (%)</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="pulsioximetria_porcentaje"
+                    [(ngModel)]="anamnesisBody._g.pulsioximetria_porcentaje"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-2 form-group">
+                  <label>Score MAMA</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    name="score_mama"
+                    [(ngModel)]="anamnesisBody._g.score_mama"
+                    [disabled]="accionVer"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <label>Otros</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    name="otros_g"
+                    [(ngModel)]="anamnesisBody._g.otros"
+                    (ngModelChange)="anamnesisBody._g.otros = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN H - EXAMEN FÍSICO ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'H'"
+              [class.active]="tabActivo === 'H'"
+              id="seccionH"
+            >
+              <h5><b>H. EXAMEN FÍSICO</b></h5>
+              <small class="text-muted">Marcar X cuando presente patología y describa</small>
+              <hr />
+              <h6><b>REGIONAL</b></h6>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="piel_faneras"
+                      name="piel_faneras"
+                      [(ngModel)]="anamnesisBody._h.piel_faneras"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="piel_faneras">1. Piel / Faneras</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cabeza"
+                      name="cabeza"
+                      [(ngModel)]="anamnesisBody._h.cabeza"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cabeza">2. Cabeza</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="ojos"
+                      name="ojos"
+                      [(ngModel)]="anamnesisBody._h.ojos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="ojos">3. Ojos</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="oidos"
+                      name="oidos"
+                      [(ngModel)]="anamnesisBody._h.oidos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="oidos">4. Oídos</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="nariz"
+                      name="nariz"
+                      [(ngModel)]="anamnesisBody._h.nariz"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="nariz">5. Nariz</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="boca"
+                      name="boca"
+                      [(ngModel)]="anamnesisBody._h.boca"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="boca">6. Boca</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="orofaringe"
+                      name="orofaringe"
+                      [(ngModel)]="anamnesisBody._h.orofaringe"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="orofaringe">7. Orofaringe</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cuello"
+                      name="cuello"
+                      [(ngModel)]="anamnesisBody._h.cuello"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cuello">8. Cuello</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="axilas_mamas"
+                      name="axilas_mamas"
+                      [(ngModel)]="anamnesisBody._h.axilas_mamas"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="axilas_mamas">9. Axilas / Mamas</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="torax"
+                      name="torax"
+                      [(ngModel)]="anamnesisBody._h.torax"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="torax">10. Tórax</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="abdomen"
+                      name="abdomen"
+                      [(ngModel)]="anamnesisBody._h.abdomen"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="abdomen">11. Abdomen</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="columna_vertebral"
+                      name="columna_vertebral"
+                      [(ngModel)]="anamnesisBody._h.columna_vertebral"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="columna_vertebral">12. Columna Vertebral</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="ingle_perine"
+                      name="ingle_perine"
+                      [(ngModel)]="anamnesisBody._h.ingle_perine"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="ingle_perine">13. Ingle / Periné</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="miembros_superiores"
+                      name="miembros_superiores"
+                      [(ngModel)]="anamnesisBody._h.miembros_superiores"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="miembros_superiores">14. Miembros Superiores</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="miembros_inferiores"
+                      name="miembros_inferiores"
+                      [(ngModel)]="anamnesisBody._h.miembros_inferiores"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="miembros_inferiores">15. Miembros Inferiores</label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <h6><b>SISTÉMICO</b></h6>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="organos_sentidos_h"
+                      name="organos_sentidos_h"
+                      [(ngModel)]="anamnesisBody._h.organos_sentidos"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="organos_sentidos_h">1. Órganos de los Sentidos</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="respiratorio_h"
+                      name="respiratorio_h"
+                      [(ngModel)]="anamnesisBody._h.respiratorio"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="respiratorio_h">2. Respiratorio</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="cardio_vascular"
+                      name="cardio_vascular"
+                      [(ngModel)]="anamnesisBody._h.cardio_vascular"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="cardio_vascular">3. Cardio - Vascular</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="digestivo_h"
+                      name="digestivo_h"
+                      [(ngModel)]="anamnesisBody._h.digestivo"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="digestivo_h">4. Digestivo</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="genital"
+                      name="genital"
+                      [(ngModel)]="anamnesisBody._h.genital"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="genital">5. Genital</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="urinario"
+                      name="urinario"
+                      [(ngModel)]="anamnesisBody._h.urinario"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="urinario">6. Urinario</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="musculo_esqueletico"
+                      name="musculo_esqueletico"
+                      [(ngModel)]="anamnesisBody._h.musculo_esqueletico"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="musculo_esqueletico">7. Músculo - Esquelético</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="endocrino_h"
+                      name="endocrino_h"
+                      [(ngModel)]="anamnesisBody._h.endocrino"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="endocrino_h">8. Endocrino</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="hemo_linfatico"
+                      name="hemo_linfatico"
+                      [(ngModel)]="anamnesisBody._h.hemo_linfatico"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="hemo_linfatico">9. Hemo - Linfático</label>
+                  </div>
+                </div>
+                <div class="col-md-2 form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="neurologico"
+                      name="neurologico"
+                      [(ngModel)]="anamnesisBody._h.neurologico"
+                      [disabled]="accionVer"
+                    />
+                    <label class="custom-control-label" for="neurologico">10. Neurológico</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Observaciones del Examen Físico</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_h"
+                    [(ngModel)]="anamnesisBody._h.observacion_h"
+                    (ngModelChange)="anamnesisBody._h.observacion_h = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN I - ANÁLISIS ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'I'"
+              [class.active]="tabActivo === 'I'"
+              id="seccionI"
+            >
+              <h5><b>I. ANÁLISIS</b></h5>
+              <hr />
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción del análisis</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_i"
+                    [(ngModel)]="anamnesisBody._i.observacion_i"
+                    (ngModelChange)="anamnesisBody._i.observacion_i = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                    placeholder="Describa el análisis..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================= SECCIÓN J - DIAGNÓSTICOS ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'J'"
+              [class.active]="tabActivo === 'J'"
+              id="seccionJ"
+            >
+              <h5><b>J. DIAGNÓSTICO</b></h5>
+              @if (anamnesisBody._a.pk_anam === 0) {
+              <div class="box bg-info">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para agregar diagnósticos debe primero guardar los datos actuales de la anamnesis.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+
+              <div class="table-responsive pointer mt-3">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_anamdiag) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">{{ item.desc_cie }}</td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_anamdiag?.toLowerCase() === 'presuntivos' ? 'Presuntivo' :
+                          item.tipo_anamdiag?.toLowerCase() === 'definitivos' ? 'Definitivo' :
+                          item.tipo_anamdiag
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- ======================= SECCIÓN K - PLAN DE TRATAMIENTO ======================= -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'K'"
+              [class.active]="tabActivo === 'K'"
+              id="seccionK"
+            >
+              <h5><b>K. PLAN DE TRATAMIENTO</b></h5>
+              <small class="text-muted">DX DIAGNÓSTICO, TERAPÉUTICO, EDUCACIONALES Y REHABILITACIÓN</small>
+              <hr />
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Descripción del plan de tratamiento</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="10"
+                    name="observacion_k"
+                    [(ngModel)]="anamnesisBody._k.observacion_k"
+                    (ngModelChange)="anamnesisBody._k.observacion_k = ($event ?? '').toUpperCase()"
+                    [disabled]="accionVer"
+                    placeholder="Describa el plan de tratamiento..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ======================= BOTONES DE ACCIÓN ======================= -->
+          <div class="row mt-3">
+            <div class="col-md-12 text-right">
+              @if (!accionVer) {
+              <button type="submit" class="btn btn-success mr-2">
+                <i class="fa fa-save"></i> Guardar
+              </button>
+              }
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="cerrarFormulario()"
+              >
+                <i class="fa fa-times"></i> Cerrar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ======================= MODAL DIAGNÓSTICO ======================= -->
+<div
+  id="diagnosticoAnamnesisModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Registro Diagnóstico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label>Diagnóstico CIE10 (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnóstico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código: {{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de diagnóstico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_anamdiag"
+              name="tipo_anamdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              @for (tipo of diagnosticoTipos; track tipo.value) {
+              <option [ngValue]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

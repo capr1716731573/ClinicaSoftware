@@ -1,0 +1,410 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+<!-- <pre>{{informeBody | json}}</pre> -->
+
+@if (loading) {
+<app-skeleton-crud></app-skeleton-crud>
+}
+
+@if (!loading) {
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'B'"
+              (click)="tabActivo = 'B'"
+              id="tabB-tab"
+              data-toggle="tab"
+              href="#tabB"
+              role="tab"
+              aria-controls="tabB"
+              aria-expanded="true"
+            >
+              <span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'C'"
+              (click)="tabActivo = 'C'"
+              id="tabC-tab"
+              data-toggle="tab"
+              href="#tabC"
+              role="tab"
+              aria-controls="tabC"
+            >
+              <span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              [class.active]="tabActivo === 'D' || tabActivo === 'E' || tabActivo === 'F'"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="hidden-sm-up">Mas..</span>
+              <span class="hidden-xs-down">Mas..</span>
+            </a>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'D'"
+                [class.font-weight-bold]="tabActivo === 'D'"
+                id="dropdownD-tab"
+                href="#tabD"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabD"
+                (click)="tabActivo = 'D'"
+                >D - Diagnóstico</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'E'"
+                [class.font-weight-bold]="tabActivo === 'E'"
+                id="dropdownE-tab"
+                href="#tabE"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabE"
+                (click)="tabActivo = 'E'"
+                >E - Plan de Diagnóstico</a
+              >
+              <a
+                class="dropdown-item pointer"
+                style="cursor: pointer;"
+                [class.text-primary]="tabActivo === 'F'"
+                [class.font-weight-bold]="tabActivo === 'F'"
+                id="dropdownF-tab"
+                href="#tabF"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="tabF"
+                (click)="tabActivo = 'F'"
+                >F - Plan Terapéutico</a
+              >
+            </div>
+          </li>
+        </ul>
+
+        <form class="form" (ngSubmit)="guardarInforme()">
+          <div class="tab-content tabcontent-border p-20">
+            <!-- TAB B -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'B'"
+              [class.active]="tabActivo === 'B'"
+              id="tabB"
+              role="tabpanel"
+            >
+              <h5>
+                <b>B. CUADRO CLÍNICO DE INTERCONSULTA</b>
+              </h5>
+
+              <div class="row mt-3">
+                <div class="col-md-3 form-group">
+                  <label><b>Fecha inicio</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ informeBody.fecha_inicio || "—" }}
+                  </p>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Hora inicio</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ informeBody.hora_inicio || "—" }}
+                  </p>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Fecha fin</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ informeBody.fecha_fin || "—" }}
+                  </p>
+                </div>
+                <div class="col-md-3 form-group">
+                  <label><b>Hora fin</b></label>
+                  <p class="form-control-plaintext mt-1">
+                    {{ informeBody.hora_fin || "—" }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label><b>Cuadro clínico de interconsulta (*)</b></label>
+                  <textarea
+                    class="form-control"
+                    rows="12"
+                    [(ngModel)]="informeBody.cuadro_clinico_interresp"
+                    name="cuadro_clinico"
+                    placeholder="Describa el cuadro clínico de la interconsulta..."
+                    (ngModelChange)="
+                      informeBody.cuadro_clinico_interresp = (
+                        $event ?? ''
+                      ).toUpperCase()
+                    "
+                    [disabled]="accionVer"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB C -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'C'"
+              [class.active]="tabActivo === 'C'"
+              id="tabC"
+              role="tabpanel"
+            >
+              <h5><b>C. RESUMEN DEL CRITERIO CLÍNICO</b></h5>
+              <p class="text-muted">
+                Registre el resumen del criterio clínico del paciente.
+              </p>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="informeBody.resultados_criterio_interresp"
+                name="resultados_criterio"
+                (ngModelChange)="
+                  informeBody.resultados_criterio_interresp = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+
+            <!-- TAB D -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'D'"
+              [class.active]="tabActivo === 'D'"
+              id="tabD"
+            >
+              <h5><b>D. DIAGNÓSTICO</b></h5>
+
+              @if (informeBody.pk_interresp === 0) {
+              <div class="box bg-info mt-3">
+                <h4 class="text-white"><strong>Información</strong></h4>
+                <h5 class="text-white">
+                  Para gestionar diagnósticos debe guardar primero el informe.
+                </h5>
+              </div>
+              } @else {
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="nuevoDiagnostico()"
+                [disabled]="accionVer"
+              >
+                Nuevo
+              </button>
+
+              <div class="table-responsive pointer mt-3">
+                <table
+                  class="table full-color-table full-info-table hover-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">CÓDIGO</th>
+                      <th scope="col">DESCRIPCIÓN</th>
+                      <th scope="col">TIPO</th>
+                      <th scope="col">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of listDiagnosticos; track item.pk_interdiag) {
+                    <tr>
+                      <td data-label="CÓDIGO">{{ item.codigo_cie }}</td>
+                      <td data-label="DESCRIPCIÓN">{{ item.desc_cie }}</td>
+                      <td data-label="TIPO">
+                        {{
+                          item.tipo_interdiag?.toLowerCase() === 'presuntivos' ? 'Presuntivo' :
+                          item.tipo_interdiag?.toLowerCase() === 'definitivos' ? 'Definitivo' :
+                          item.tipo_interdiag
+                        }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            (click)="eliminarDiagnostico(item)"
+                            [disabled]="accionVer"
+                          >
+                            <i class="ti-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              }
+            </div>
+
+            <!-- TAB E -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'E'"
+              [class.active]="tabActivo === 'E'"
+              id="tabE"
+            >
+              <h5><b>E. PLAN DE DIAGNÓSTICO PROPUESTO</b></h5>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="informeBody.plan_diagnostico_interresp"
+                name="plan_diagnostico"
+                (ngModelChange)="
+                  informeBody.plan_diagnostico_interresp = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+
+            <!-- TAB F -->
+            <div
+              class="tab-pane fade"
+              [class.show]="tabActivo === 'F'"
+              [class.active]="tabActivo === 'F'"
+              id="tabF"
+            >
+              <h5><b>F. PLAN TERAPÉUTICO PROPUESTO</b></h5>
+              <textarea
+                class="form-control"
+                rows="15"
+                [(ngModel)]="informeBody.plan_terapeutico_interresp"
+                name="plan_terapeutico"
+                (ngModelChange)="
+                  informeBody.plan_terapeutico_interresp = (
+                    $event ?? ''
+                  ).toUpperCase()
+                "
+                [disabled]="accionVer"
+              ></textarea>
+            </div>
+          </div>
+
+          <hr />
+          <div class="align-self-center d-flex justify-content-end">
+            @if(!accionVer){
+            <button
+              type="submit"
+              class="btn btn-success mr-2"
+              [disabled]="!validarGuardar()"
+            >
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            }
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="cerrarFormulario()"
+            >
+              <i class="fa fa-times"></i> Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal Diagnóstico -->
+<div
+  id="diagnosticoInformeModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Registro Diagnóstico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label>Diagnóstico CIE10 (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnóstico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código: {{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de diagnóstico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_interdiag"
+              name="tipo_interdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              @for (tipo of diagnosticoTipos; track tipo.value) {
+              <option [ngValue]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
