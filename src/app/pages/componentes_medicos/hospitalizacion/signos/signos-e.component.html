@@ -209,16 +209,18 @@
           <div class="row">
             <div class="col-md-12 form-group">
               <label><b>Reposo:</b></label>
-              <input
-                type="text"
+              <select
                 class="form-control"
                 [(ngModel)]="signoBody.reposo_sigvita_e"
-                (input)="convertirAMayusculas('reposo_sigvita_e', $event)"
-                (keyup)="convertirAMayusculas('reposo_sigvita_e', $event)"
                 name="reposo_sigvita_e"
-                placeholder="Ingrese"
-                style="text-transform: uppercase;"
-              />
+              >
+                <option value="" disabled>Seleccione una opción</option>
+                <option value="ABSOLUTO">ABSOLUTO</option>
+                <option value="RELATIVO">RELATIVO</option>
+                <option value="AMBULATORIO">AMBULATORIO</option>
+                <option value="POR DIA">POR DIA</option>
+                <option value="POR HORAS">POR HORAS</option>
+              </select>
             </div>
           </div>
 
@@ -226,16 +228,20 @@
           <div class="row">
             <div class="col-md-12 form-group">
               <label><b>Posición:</b></label>
-              <input
-                type="text"
+              <select
                 class="form-control"
                 [(ngModel)]="signoBody.posicion_sigvita_e"
-                (input)="convertirAMayusculas('posicion_sigvita_e', $event)"
-                (keyup)="convertirAMayusculas('posicion_sigvita_e', $event)"
                 name="posicion_sigvita_e"
-                placeholder="Ingrese"
-                style="text-transform: uppercase;"
-              />
+              >
+                <option value="" disabled>Seleccione una opción</option>
+                <option value="FOWLER">FOWLER</option>
+                <option value="SEMIFOWLER">SEMIFOWLER</option>
+                <option value="DECÚBITO">DECÚBITO</option>
+                <option value="SUPINO">SUPINO</option>
+                <option value="PRONO">PRONO</option>
+                <option value="LATERAL">LATERAL</option>
+                <option value="OTRAS">OTRAS</option>
+              </select>
             </div>
           </div>
 

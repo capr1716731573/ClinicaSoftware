@@ -309,12 +309,7 @@ export class SignosEComponent {
     if (this.signoBody.bano_sigvita_e) {
       this.signoBody.bano_sigvita_e = this.signoBody.bano_sigvita_e.toUpperCase();
     }
-    if (this.signoBody.reposo_sigvita_e) {
-      this.signoBody.reposo_sigvita_e = this.signoBody.reposo_sigvita_e.toUpperCase();
-    }
-    if (this.signoBody.posicion_sigvita_e) {
-      this.signoBody.posicion_sigvita_e = this.signoBody.posicion_sigvita_e.toUpperCase();
-    }
+    // reposo_sigvita_e y posicion_sigvita_e son selects, no necesitan conversión
     if (this.signoBody.otros_sigvita_e) {
       this.signoBody.otros_sigvita_e = this.signoBody.otros_sigvita_e.toUpperCase();
     }
