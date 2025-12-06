@@ -34,6 +34,7 @@ import { FormInterconsultaSolicitudComponent } from './componentes_medicos/hospi
 import { FormInterconsultaInformeComponent } from './componentes_medicos/hospitalizacion/interconsulta/form-interconsulta-informe.component';
 import { AnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/anamnesis.component';
 import { FormAnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/form-anamnesis.component';
+import { SignosComponent } from './componentes_medicos/hospitalizacion/signos/signos.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -77,6 +78,7 @@ export const pagesChildRoutes: Routes = [
             { path: 'form_interconsulta_informe/:id_sol/:id_inf/:accion', canActivate: [JwtGuard],component: FormInterconsultaInformeComponent ,data:{titulo: 'Interconsulta-Informe'}},
             { path: 'anamnesis', canActivate: [JwtGuard],component: AnamnesisComponent ,data:{titulo: 'Anamnesis'}},
             { path: 'form_anamnesis/:id/:accion', canActivate: [JwtGuard],component: FormAnamnesisComponent ,data:{titulo: 'Anamnesis'}},
+            { path: 'signos', canActivate: [JwtGuard],component: SignosComponent ,data:{titulo: 'Signos Vitales'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

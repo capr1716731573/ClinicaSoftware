@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
 import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
-import { AnamnesisHosp } from './anamnesis.interface';
 import { AnamnesisService } from '../../../../services/hospitalizacion/anamnesis/anamnesis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';

@@ -1,0 +1,421 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Filtros de Fecha y Botón Nuevo -->
+        <div class="row mb-3">
+          <div class="col-md-4 form-group">
+            <label><b>Fecha Desde:</b></label>
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_desde"
+              (ngModelChange)="filtroFechas()"
+              name="fecha_desde"
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label><b>Fecha Hasta:</b></label>
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_hasta"
+              (ngModelChange)="filtroFechas()"
+              name="fecha_hasta"
+            />
+          </div>
+
+          <div class="col-md-4 form-group d-flex align-items-end">
+            <button
+              class="btn btn-info"
+              type="button"
+              (click)="nuevoSigno()"
+              style="padding: 8px 20px; font-weight: bold"
+            >
+              <i class="fa fa-plus"></i> Nuevo
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla de Signos Vitales F -->
+        <div class="table-responsive pointer">
+          @if (loading) {
+            <app-skeleton-table></app-skeleton-table>
+          } @else {
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">CÓDIGO</th>
+                  <th scope="col">FECHA</th>
+                  <th scope="col">HORA</th>
+                  <th scope="col">RESPONSABLE</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of listSignosF; track item.pk_sigvita_f) {
+                <tr>
+                  <td data-label="CÓDIGO">{{ item.pk_sigvita_f }}</td>
+                  <td data-label="FECHA">{{ item.fecha_sigvita_f }}</td>
+                  <td data-label="HORA">{{ item.hora_sigvita_f }}</td>
+                  <td data-label="RESPONSABLE">
+                    <small>
+                      <div>
+                        {{ item.medico_apellidopat_persona }}
+                        {{ item.medico_apellidomat_persona }}
+                        {{ item.medico_nombre_primario_persona }}
+                        {{ item.medico_nombre_secundario_persona }}
+                      </div>
+                      <div class="text-muted">{{ item.medico_numidentificacion_persona }}</div>
+                    </small>
+                  </td>
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item"
+                          (click)="editarSigno(item.pk_sigvita_f)"
+                          style="cursor: pointer;"
+                        >
+                          <i class="fa fa-edit text-info"></i> Editar
+                        </a>
+                        <a
+                          class="dropdown-item"
+                          (click)="verAuditoria(item)"
+                          style="cursor: pointer;"
+                        >
+                          <i class="fa fa-history text-warning"></i> Auditoría
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          }
+
+          <!-- Paginación -->
+          <br />
+          <div class="text-right">
+            <div class="btn-group" role="group" aria-label="Paginación">
+              <button
+                type="button"
+                class="btn btn-info"
+                [disabled]="numeracion === 1"
+                (click)="retroceder()"
+              >
+                <i class="fa fa-fast-backward"></i>
+              </button>
+              <button type="button" class="btn btn-info">
+                {{ numeracion }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-info"
+                (click)="avanzar()"
+                [disabled]="!sig"
+              >
+                <i class="fa fa-fast-forward"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Crear/Editar Signos Vitales F -->
+<div
+  id="signosFModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="signosFModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h4 class="modal-title" id="signosFModalLabel">
+            {{ opcion === 'I' ? 'Nuevo' : 'Editar' }} Registro - Dispositivos y Procedimientos
+          </h4>
+          
+          @if (opcion === 'U') {
+            <small class="text-muted">
+              <i class="fa fa-calendar"></i> Fecha: <b>{{ signoBody.fecha_sigvita_f }}</b> | 
+              <i class="fa fa-clock-o"></i> Hora: <b>{{ signoBody.hora_sigvita_f }}</b>
+            </small>
+          }
+        </div>
+      </div>
+      <div class="modal-body">
+        
+        @if (loadingEdit) {
+          <app-skeleton-crud></app-skeleton-crud>
+        } @else {
+          <form class="form" (ngSubmit)="guardarSigno()">
+          
+          <!-- Fila 1: Vía Central -->
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label><b>Vía Central:</b></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="signoBody.viacentral_sigvita_f"
+                name="viacentral_sigvita_f"
+              />
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label><b>Vía Periférica:</b></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="signoBody.viaperiferica_sigvita_f"
+                name="viaperiferica_sigvita_f"
+              />
+            </div>
+          </div>
+
+          <!-- Fila 2: Sonda Naso y Sonda Vesical -->
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label><b>Sonda Naso:</b></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="signoBody.sondanaso_sigvita_f"
+                name="sondanaso_sigvita_f"
+              />
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label><b>Sonda Vesical:</b></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="signoBody.sondavesi_sigvita_f"
+                name="sondavesi_sigvita_f"
+              />
+            </div>
+          </div>
+
+          <!-- Fila 3: Otros -->
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label><b>Otros:</b></label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="signoBody.otros_sigvita_f"
+                (input)="convertirAMayusculas('otros_sigvita_f', $event)"
+                (keyup)="convertirAMayusculas('otros_sigvita_f', $event)"
+                name="otros_sigvita_f"
+                placeholder="Ingrese"
+                style="text-transform: uppercase;"
+              />
+            </div>
+          </div>
+
+          <!-- Botones del Modal -->
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal -->
+
+<!-- Modal de Auditoría -->
+<div
+  id="auditoriaModalSignosF"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="auditoriaModalSignosFLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h4 class="modal-title text-white" id="auditoriaModalSignosFLabel">
+          <i class="fa fa-history"></i> Información de Auditoría
+        </h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Fecha de Creación -->
+          <div class="col-md-6">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-plus-circle"></i> Fecha de Creación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_creacion_sigvita_f) {
+                  <!-- Fecha -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-calendar text-success"></i> <b>Fecha:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_sigvita_f.fecha || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Hora -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-clock-o text-success"></i> <b>Hora:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_sigvita_f.hora || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Identificación -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-id-card text-success"></i> <b>Identificación:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_sigvita_f.numidentificacion_persona || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="mb-0 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-user text-success"></i> <b>Nombres:</b>
+                    </label>
+                    <h6 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_sigvita_f.apellidopat_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_sigvita_f.apellidomat_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_sigvita_f.nombre_primario_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_sigvita_f.nombre_secundario_persona || '' }}
+                    </h6>
+                  </div>
+                } @else {
+                  <div class="text-center p-4">
+                    <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Sin información de creación</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Fecha de Modificación -->
+          <div class="col-md-6">
+            <div class="card border-danger">
+              <div class="card-header bg-danger text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-edit"></i> Última Modificación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_modificacion_sigvita_f) {
+                  <!-- Fecha -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-calendar text-danger"></i> <b>Fecha:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.fecha || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Hora -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-clock-o text-danger"></i> <b>Hora:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.hora || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Identificación -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-id-card text-danger"></i> <b>Identificación:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.numidentificacion_persona || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="mb-0 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-user text-danger"></i> <b>Nombres:</b>
+                    </label>
+                    <h6 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.apellidopat_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.apellidomat_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.nombre_primario_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_sigvita_f.nombre_secundario_persona || '' }}
+                    </h6>
+                  </div>
+                } @else {
+                  <div class="text-center p-4">
+                    <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Sin modificaciones registradas</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Auditoría -->

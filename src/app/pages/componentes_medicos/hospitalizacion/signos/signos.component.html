@@ -1,0 +1,183 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h4 class="card-title mb-0">Signos Vitales</h4>
+            <br>
+            <h6 class="card-subtitle">Gestión de signos vitales del paciente</h6>
+          </div>
+          
+          <!-- Botón Dropdown de Impresión -->
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-info dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="fa fa-print"></i> Imprimir
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a
+                class="dropdown-item pointer"
+                (click)="imprimir('periodo')"
+                style="cursor: pointer;"
+              >
+                <i class="fa fa-calendar"></i> Imprimir Periodo
+              </a>
+              <a
+                class="dropdown-item pointer"
+                (click)="imprimir('total')"
+                style="cursor: pointer;"
+              >
+                <i class="fa fa-file-text"></i> Imprimir Total
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="signosTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              [class.active]="tabActivo === 'B'"
+              (click)="cambiarTab('B')"
+              id="tab-b"
+              data-toggle="tab"
+              href="#seccion-b"
+              role="tab"
+              aria-controls="seccion-b"
+              aria-expanded="true"
+            >
+              <span class="hidden-sm-up">B</span>
+              <span class="hidden-xs-down">B. Constantes Vitales</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'C'"
+              (click)="cambiarTab('C')"
+              id="tab-c"
+              data-toggle="tab"
+              href="#seccion-c"
+              role="tab"
+              aria-controls="seccion-c"
+            >
+              <span class="hidden-sm-up">C</span>
+              <span class="hidden-xs-down">C. Medidas Antropométricas</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'D'"
+              (click)="cambiarTab('D')"
+              id="tab-d"
+              data-toggle="tab"
+              href="#seccion-d"
+              role="tab"
+              aria-controls="seccion-d"
+            >
+              <span class="hidden-sm-up">D</span>
+              <span class="hidden-xs-down">D. Ingesta - Eliminación</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'E'"
+              (click)="cambiarTab('E')"
+              id="tab-e"
+              data-toggle="tab"
+              href="#seccion-e"
+              role="tab"
+              aria-controls="seccion-e"
+            >
+              <span class="hidden-sm-up">E</span>
+              <span class="hidden-xs-down">E. Cuidados Generales</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="tabActivo === 'F'"
+              (click)="cambiarTab('F')"
+              id="tab-f"
+              data-toggle="tab"
+              href="#seccion-f"
+              role="tab"
+              aria-controls="seccion-f"
+            >
+              <span class="hidden-sm-up">F</span>
+              <span class="hidden-xs-down">F. Dispositivos Médicos</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Tabs Content -->
+        <div class="tab-content tabcontent-border p-20" id="signosTabContent">
+          <!-- Tab B -->
+          <div
+            role="tabpanel"
+            class="tab-pane fade show active"
+            id="seccion-b"
+            aria-labelledby="tab-b"
+          >
+            <app-signos-b></app-signos-b>
+          </div>
+
+          <!-- Tab C -->
+          <div
+            role="tabpanel"
+            class="tab-pane fade"
+            id="seccion-c"
+            aria-labelledby="tab-c"
+          >
+            <app-signos-c></app-signos-c>
+          </div>
+
+          <!-- Tab D -->
+          <div
+            role="tabpanel"
+            class="tab-pane fade"
+            id="seccion-d"
+            aria-labelledby="tab-d"
+          >
+            <app-signos-d></app-signos-d>
+          </div>
+
+          <!-- Tab E -->
+          <div
+            role="tabpanel"
+            class="tab-pane fade"
+            id="seccion-e"
+            aria-labelledby="tab-e"
+          >
+            <app-signos-e></app-signos-e>
+          </div>
+
+          <!-- Tab F -->
+          <div
+            role="tabpanel"
+            class="tab-pane fade"
+            id="seccion-f"
+            aria-labelledby="tab-f"
+          >
+            <app-signos-f></app-signos-f>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
