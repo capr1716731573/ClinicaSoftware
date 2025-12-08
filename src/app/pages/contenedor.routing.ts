@@ -35,6 +35,8 @@ import { FormInterconsultaInformeComponent } from './componentes_medicos/hospita
 import { AnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/anamnesis.component';
 import { FormAnamnesisComponent } from './componentes_medicos/hospitalizacion/anamnesis/form-anamnesis.component';
 import { SignosComponent } from './componentes_medicos/hospitalizacion/signos/signos.component';
+import { KardexComponent } from './componentes_medicos/hospitalizacion/kardex/kardex.component';
+import { KardexDetComponent } from './componentes_medicos/hospitalizacion/kardex/kardex-det.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -79,6 +81,8 @@ export const pagesChildRoutes: Routes = [
             { path: 'anamnesis', canActivate: [JwtGuard],component: AnamnesisComponent ,data:{titulo: 'Anamnesis'}},
             { path: 'form_anamnesis/:id/:accion', canActivate: [JwtGuard],component: FormAnamnesisComponent ,data:{titulo: 'Anamnesis'}},
             { path: 'signos', canActivate: [JwtGuard],component: SignosComponent ,data:{titulo: 'Signos Vitales'}},
+            { path: 'kardex', canActivate: [JwtGuard],component: KardexComponent ,data:{titulo: 'Administración Medicamentos'}},
+            { path: 'kardex_detalle/:id/:accion', canActivate: [JwtGuard],component: KardexDetComponent ,data:{titulo: 'Administración Medicamentos - Detalle'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

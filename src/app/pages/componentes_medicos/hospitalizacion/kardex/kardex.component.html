@@ -1,0 +1,559 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+@if (loading) {
+<app-skeleton-table></app-skeleton-table>
+}
+
+@if (!loading) {
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Listado de Kardex</h4>
+        <h6 class="card-subtitle">
+          Gestión de administración de medicamentos del paciente asignado.
+        </h6>
+
+        <div class="row">
+          <div class="col-md-3 form-group">
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_desde"
+              (ngModelChange)="filtroFechas()"
+              name="fec_desde"
+            />
+          </div>
+
+          <div class="col-md-3 form-group">
+            <input
+              class="form-control"
+              type="date"
+              [(ngModel)]="fecha_hasta"
+              (ngModelChange)="filtroFechas()"
+              name="fec_hasta"
+            />
+          </div>
+
+          <!-- <div
+            class="col-md-3 form-group d-flex justify-content-center"
+            style="align-items: center; height: 100%"
+          >
+            <button
+              class="btn btn-info"
+              type="button"
+              (click)="nuevoKardex()"
+              style="padding: 8px 20px; font-weight: bold"
+            >
+              Nuevo
+            </button>
+          </div>
+ -->
+          <!-- Dropdown de Impresión -->
+          <div class="col-md-3 form-group d-flex justify-content-center align-items-center">
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-info dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fa fa-print"></i> Imprimir
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a
+                  class="dropdown-item pointer"
+                  (click)="imprimirKardex('periodo')"
+                  style="cursor: pointer;"
+                >
+                  <i class="fa fa-calendar"></i> Imprimir Periodo
+                </a>
+                <a
+                  class="dropdown-item pointer"
+                  (click)="imprimirKardex('total')"
+                  style="cursor: pointer;"
+                >
+                  <i class="fa fa-file-text"></i> Imprimir Total
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqKardex"
+              (ngModelChange)="bsqKardex = $event.toUpperCase()"
+              (keyup)="busquedaKardex()"
+              [disabled]="!bsqKardexHabilitado"
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-info" type="button" (click)="nuevoKardex()">
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <br />
+
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th style="width: 8%" scope="col">CÓDIGO</th>
+                  <th style="width: 10%" scope="col">FECHA</th>
+                  <th style="width: 20%" scope="col">MEDICAMENTO</th>
+                  <th style="width: 15%" scope="col">DOSIS</th>
+                  <th style="width: 12%" scope="col">VÍA</th>
+                  <th style="width: 10%" scope="col">ESTADO</th>
+                  <th style="width: 15%" scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of kardexList; track item.pk_kardexcab) {
+                <tr>
+                  <td data-label="CÓDIGO">{{ item.pk_kardexcab }}</td>
+
+                  <td data-label="FECHA">{{ item.fecha_kardexcab }}</td>
+
+                  <td data-label="MEDICAMENTO" class="text-start">
+                    {{ item.medicamento_kardexcab }}
+                  </td>
+
+                  <td data-label="DOSIS">{{ item.dosis_kardexcab }}</td>
+
+                  <td data-label="VÍA">{{ item.via_kardexcab }}</td>
+
+                  <td data-label="ESTADO">
+                    @if (item.estado_kardexcab) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="desaprobarKardex(item)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else {
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="aprobarKardex(item)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="administrarKardex(item)"
+                          style="cursor: pointer;"
+                        >
+                          <i class="fa fa-capsules text-primary"></i> Administración
+                        </a>
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="editarKardex(item)"
+                          style="cursor: pointer;"
+                        >
+                          <i class="fa fa-edit text-info"></i> Ver/Editar
+                        </a>
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="verAuditoria(item)"
+                          style="cursor: pointer;"
+                        >
+                          <i class="fa fa-history text-warning"></i> Auditoría
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+            <div class="text-right">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button type="button" class="btn btn-info">
+                  {{ numeracion }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!sig"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal de Formulario Kardex -->
+<div
+  id="kardexModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="kardexModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="kardexModalLabel">
+          {{ opcion === 'I' ? 'Nuevo Registro de Kardex' : 'Editar Registro de Kardex' }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        @if (loadingEdit) {
+        <app-skeleton-crud></app-skeleton-crud>
+        } @else {
+        <form class="form" (ngSubmit)="guardarKardex()">
+          @if (kardexBody) {
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label><b>Medicamento:</b> <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="kardexBody.medicamento_kardexcab"
+                (ngModelChange)="kardexBody.medicamento_kardexcab = ($event ?? '').toUpperCase()"
+                name="medicamento_kardexcab"
+                placeholder="Ingrese el nombre del medicamento"
+                [readonly]="accionVer"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label><b>Dosis:</b> <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="kardexBody.dosis_kardexcab"
+                (ngModelChange)="kardexBody.dosis_kardexcab = ($event ?? '').toUpperCase()"
+                name="dosis_kardexcab"
+                placeholder="Ej: 500mg, 10ml"
+                [readonly]="accionVer"
+                required
+              />
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label><b>Vía de Administración:</b> <span class="text-danger">*</span></label>
+              <select
+                class="custom-select col-12"
+                [(ngModel)]="kardexBody.via_kardexcab"
+                name="via_kardexcab"
+                [disabled]="accionVer"
+                required
+              >
+                <option [ngValue]="null" disabled>Seleccionar...</option>
+                <option value="ORAL (VO)">ORAL (VO)</option>
+                <option value="SUBLINGUAL (SL)">SUBLINGUAL (SL)</option>
+                <option value="INTRAVENOSA (IV)">INTRAVENOSA (IV)</option>
+                <option value="INTRAMUSCULAR (IM)">INTRAMUSCULAR (IM)</option>
+                <option value="SUBCUTÁNEA (SC)">SUBCUTÁNEA (SC)</option>
+                <option value="INTRADÉRMICA (ID)">INTRADÉRMICA (ID)</option>
+                <option value="RECTAL (VR)">RECTAL (VR)</option>
+                <option value="VAGINAL (VV)">VAGINAL (VV)</option>
+                <option value="TÓPICA (VT)">TÓPICA (VT)</option>
+                <option value="INHALATORIA (INH)">INHALATORIA (INH)</option>
+                <option value="NASAL (VN)">NASAL (VN)</option>
+                <option value="OFTÁLMICA (VOF)">OFTÁLMICA (VOF)</option>
+                <option value="ÓTICA (VO)">ÓTICA (VO)</option>
+                <option value="ENTERAL (VE)">ENTERAL (VE)</option>
+                <option value="PARENTERAL (VP)">PARENTERAL (VP)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label><b>Frecuencia:</b> <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="kardexBody.frecuencia_kardexcab"
+                (ngModelChange)="kardexBody.frecuencia_kardexcab = ($event ?? '').toUpperCase()"
+                name="frecuencia_kardexcab"
+                placeholder="Ej: Cada 8 horas, 3 veces al día"
+                [readonly]="accionVer"
+                required
+              />
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label><b>Fecha:</b> <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="kardexBody.fecha_kardexcab"
+                name="fecha_kardexcab"
+                [readonly]="accionVer"
+                required
+              />
+            </div>
+          </div>
+          }
+          <!-- Botones del Modal -->
+          <div class="modal-footer">
+            @if (!accionVer) {
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardar()"
+            >
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            }
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              <i class="fa fa-times"></i> {{ accionVer ? 'Cerrar' : 'Cancelar' }}
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Formulario -->
+
+<!-- Modal de Auditoría -->
+<div
+  id="auditoriaKardexCabModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="auditoriaKardexCabModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h4 class="modal-title text-white" id="auditoriaKardexCabModalLabel">
+          <i class="fa fa-history"></i> Información de Auditoría - Kardex
+        </h4>
+        <button
+          type="button"
+          class="close text-white"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Fecha de Creación -->
+          <div class="col-md-6">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-plus-circle"></i> Fecha de Creación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_creacion_kardexcab) {
+                <!-- Fecha -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-calendar text-success"></i> <b>Fecha:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{ auditoriaData.fecha_creacion_kardexcab.fecha || 'N/A' }}
+                  </h5>
+                </div>
+
+                <!-- Hora -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-clock-o text-success"></i> <b>Hora:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{ auditoriaData.fecha_creacion_kardexcab.hora || 'N/A' }}
+                  </h5>
+                </div>
+
+                <!-- Identificación -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-id-card text-success"></i>
+                    <b>Identificación:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{
+                      auditoriaData.fecha_creacion_kardexcab.numidentificacion_persona ||
+                        'N/A'
+                    }}
+                  </h5>
+                </div>
+
+                <!-- Nombres -->
+                <div class="mb-0 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-user text-success"></i> <b>Nombres:</b>
+                  </label>
+                  <h6 class="text-success mb-0">
+                    {{
+                      auditoriaData.fecha_creacion_kardexcab.apellidopat_persona || ''
+                    }}
+                    {{
+                      auditoriaData.fecha_creacion_kardexcab.apellidomat_persona || ''
+                    }}
+                    {{
+                      auditoriaData.fecha_creacion_kardexcab.nombre_primario_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.fecha_creacion_kardexcab
+                        .nombre_secundario_persona || ''
+                    }}
+                  </h6>
+                </div>
+                } @else {
+                <div class="text-center p-4">
+                  <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                  <p class="text-muted mb-0">Sin información de creación</p>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Fecha de Modificación -->
+          <div class="col-md-6">
+            <div class="card border-danger">
+              <div class="card-header bg-danger text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-edit"></i> Última Modificación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_modificacion_kardexcab) {
+                <!-- Fecha -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-calendar text-danger"></i> <b>Fecha:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{ auditoriaData.fecha_modificacion_kardexcab.fecha || 'N/A' }}
+                  </h5>
+                </div>
+
+                <!-- Hora -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-clock-o text-danger"></i> <b>Hora:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{ auditoriaData.fecha_modificacion_kardexcab.hora || 'N/A' }}
+                  </h5>
+                </div>
+
+                <!-- Identificación -->
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-id-card text-danger"></i>
+                    <b>Identificación:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{
+                      auditoriaData.fecha_modificacion_kardexcab
+                        .numidentificacion_persona || 'N/A'
+                    }}
+                  </h5>
+                </div>
+
+                <!-- Nombres -->
+                <div class="mb-0 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-user text-danger"></i> <b>Nombres:</b>
+                  </label>
+                  <h6 class="text-danger mb-0">
+                    {{
+                      auditoriaData.fecha_modificacion_kardexcab
+                        .apellidopat_persona || ''
+                    }}
+                    {{
+                      auditoriaData.fecha_modificacion_kardexcab
+                        .apellidomat_persona || ''
+                    }}
+                    {{
+                      auditoriaData.fecha_modificacion_kardexcab
+                        .nombre_primario_persona || ''
+                    }}
+                    {{
+                      auditoriaData.fecha_modificacion_kardexcab
+                        .nombre_secundario_persona || ''
+                    }}
+                  </h6>
+                </div>
+                } @else {
+                <div class="text-center p-4">
+                  <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                  <p class="text-muted mb-0">Sin modificaciones registradas</p>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Auditoría -->

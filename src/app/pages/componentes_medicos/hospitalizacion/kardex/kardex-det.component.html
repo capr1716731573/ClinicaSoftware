@@ -1,0 +1,234 @@
+<app-menu-hospitalizacion></app-menu-hospitalizacion>
+
+@if (loading) {
+<app-skeleton-crud></app-skeleton-crud>
+}
+
+@if (!loading && kardexCab) {
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Administración de Medicamentos - Detalle</h4>
+        <h6 class="card-subtitle mb-4">
+          <i class="fa fa-capsules"></i> Medicamento: <strong>{{ medicamentoNombre }}</strong> | 
+          Dosis: {{ kardexCab.dosis_kardexcab }} | 
+          Vía: {{ kardexCab.via_kardexcab }} | 
+          Frecuencia: {{ kardexCab.frecuencia_kardexcab }}
+        </h6>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="volver()"
+            >
+              <i class="fa fa-arrow-left"></i> Volver
+            </button>
+            @if (!accionVer) {
+            <button
+              type="button"
+              class="btn btn-info ml-2"
+              (click)="nuevoDetalle()"
+            >
+              <i class="fa fa-plus"></i> Nuevo Detalle
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Tabla de Detalles -->
+        <div class="table-responsive">
+          @if (loadingDetalle) {
+          <app-skeleton-table></app-skeleton-table>
+          } @else {
+          <table class="table full-color-table full-success-table hover-table">
+            <thead>
+              <tr>
+                <th style="width: 8%" scope="col">CÓDIGO</th>
+                <th style="width: 12%" scope="col">FECHA</th>
+                <th style="width: 10%" scope="col">HORA</th>
+                <th style="width: 15%" scope="col">ADMINISTRADO</th>
+                <th style="width: 25%" scope="col">RESPONSABLE</th>
+                <th style="width: 15%" scope="col">ACCIÓN</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (kardexDetList.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center text-muted">
+                  <i class="fa fa-info-circle"></i> No hay registros de administración
+                </td>
+              </tr>
+              } @else {
+              @for (item of kardexDetList; track item.pk_kardexdet) {
+              <tr>
+                <td data-label="CÓDIGO">{{ item.pk_kardexdet }}</td>
+                <td data-label="FECHA">{{ item.fecha_kardexdet }}</td>
+                <td data-label="HORA">{{ item.hora_kardexdet }}</td>
+                <td data-label="ADMINISTRADO">
+                  @if (item.administrado_kardexdet) {
+                  <button
+                    type="button"
+                    class="btn btn-success btn-circle"
+                    (click)="marcarNoAdministrado(item)"
+                    [disabled]="accionVer"
+                  >
+                    <i class="fa fa-check"></i>
+                  </button>
+                  } @else {
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-circle"
+                    (click)="marcarAdministrado(item)"
+                    [disabled]="accionVer"
+                  >
+                    <i class="fa fa-times"></i>
+                  </button>
+                  }
+                </td>
+                <td data-label="RESPONSABLE">
+                  <small>
+                    <div>
+                      {{ item.medico_apellidopat_persona || '' }}
+                      {{ item.medico_apellidomat_persona || '' }}
+                      {{ item.medico_nombre_primario_persona || '' }}
+                      {{ item.medico_nombre_secundario_persona || '' }}
+                    </div>
+                    <div class="text-muted">
+                      {{ item.medico_numidentificacion_persona || '' }}
+                    </div>
+                  </small>
+                </td>
+                <td data-label="ACCIÓN">
+                  @if (!accionVer) {
+                  <div class="btn-group d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-success dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="ti-settings"></i>
+                    </button>
+                    <div class="dropdown-menu pointer">
+                      <a
+                        class="dropdown-item pointer"
+                        (click)="editarDetalle(item)"
+                        style="cursor: pointer;"
+                      >
+                        <i class="fa fa-edit text-info"></i> Editar
+                      </a>
+                    </div>
+                  </div>
+                  } @else {
+                  <span class="text-muted">
+                    <i class="fa fa-lock"></i> Solo lectura
+                  </span>
+                  }
+                </td>
+              </tr>
+              }
+              }
+            </tbody>
+          </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal de Formulario Detalle -->
+<div
+  id="kardexDetModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="kardexDetModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="kardexDetModalLabel">
+          {{ opcionDet === 'I' ? 'Nuevo Registro de Administración' : 'Editar Registro de Administración' }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        @if (loadingDetalle) {
+        <app-skeleton-crud></app-skeleton-crud>
+        } @else {
+        <form class="form" (ngSubmit)="guardarDetalle()">
+          @if (kardexDetBody) {
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label><b>Fecha:</b> <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="kardexDetBody.fecha_kardexdet"
+                name="fecha_kardexdet"
+                required
+              />
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label><b>Hora:</b> <span class="text-danger">*</span></label>
+              <input
+                type="time"
+                class="form-control"
+                [(ngModel)]="kardexDetBody.hora_kardexdet"
+                name="hora_kardexdet"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="administrado"
+                  [(ngModel)]="kardexDetBody.administrado_kardexdet"
+                  name="administrado_kardexdet"
+                />
+                <label class="form-check-label" for="administrado">
+                  <b>Medicamento Administrado</b>
+                </label>
+              </div>
+            </div>
+          </div>
+          }
+
+          <!-- Botones del Modal -->
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDetalle()"
+            >
+              <i class="fa fa-save"></i> Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              <i class="fa fa-times"></i> Cancelar
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Formulario -->
