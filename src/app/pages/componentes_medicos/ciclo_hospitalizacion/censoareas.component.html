@@ -1,4 +1,3 @@
-
 <!-- {{ area | json }} -->
 <div class="row">
   <div class="col-12">
@@ -55,74 +54,81 @@
           </span>
         </div>
         <br />
-        <div class="table-responsive pointer overflow-visible">
-          <table class="table full-color-table full-info-table hover-table">
-            <thead>
-              <tr>
-                <th scope="col">TORRE</th>
-                <th scope="col">PISO</th>
-                <th scope="col">HABITACIÓN</th>
-                <th scope="col">CAMA</th>
-                <th scope="col">IDENTIFICACIÓN</th>
-                <th scope="col">NOMBRES</th>
-                <th scope="col">EDAD</th>
-                <th scope="col">ACCIÓN</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tbody>
-              @for ( item of listCenso | filterBy: bsqCenso : { keys:
-              ['numidentificacion_persona','apellidopat_persona','apellidomat_persona','nombres_persona']
-              }; track item.pk_ciclohosp ) {
-              <tr>
-                <td data-label="TORRE">{{ item.torre }}</td>
-                <td data-label="PISO">{{ item.piso }}</td>
-                <td data-label="HABITACIÓN">{{ item.habitacion }}</td>
-                <td data-label="CAMA">{{ item.ubicacion }}</td>
-                <td data-label="  IDENTIFICACIÓN">
-                  {{ item.numidentificacion_persona }}
-                </td>
-                <td data-label="NOMBRES">
-                  {{ item.apellidopat_persona }} {{ item.apellidomat_persona }}
-                  {{ item.nombres_persona }}
-                </td>
-                <td data-label="EDAD">
-                  {{ item.edad?.valor }} {{ item.edad?.tipo }}
-                </td>
+        
+        @if (loading) {
+          <app-skeleton-table></app-skeleton-table>
+        }
+        
+        @if (!loading) {
+          <div class="table-responsive pointer overflow-visible">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">TORRE</th>
+                  <th scope="col">PISO</th>
+                  <th scope="col">HABITACIÓN</th>
+                  <th scope="col">CAMA</th>
+                  <th scope="col">IDENTIFICACIÓN</th>
+                  <th scope="col">NOMBRES</th>
+                  <th scope="col">EDAD</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tbody>
+                @for ( item of listCenso | filterBy: bsqCenso : { keys:
+                ['numidentificacion_persona','apellidopat_persona','apellidomat_persona','nombres_persona']
+                }; track item.pk_ciclohosp ) {
+                <tr>
+                  <td data-label="TORRE">{{ item.torre }}</td>
+                  <td data-label="PISO">{{ item.piso }}</td>
+                  <td data-label="HABITACIÓN">{{ item.habitacion }}</td>
+                  <td data-label="CAMA">{{ item.ubicacion }}</td>
+                  <td data-label="  IDENTIFICACIÓN">
+                    {{ item.numidentificacion_persona }}
+                  </td>
+                  <td data-label="NOMBRES">
+                    {{ item.apellidopat_persona }} {{ item.apellidomat_persona }}
+                    {{ item.nombres_persona }}
+                  </td>
+                  <td data-label="EDAD">
+                    {{ item.edad?.valor }} {{ item.edad?.tipo }}
+                  </td>
 
-                <td data-label="ACCIÓN">
-                  <div class="btn-group d-flex justify-content-center">
-                    <button
-                      type="button"
-                      class="btn btn-success dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <i class="ti-settings"></i>
-                    </button>
-                    <div class="dropdown-menu pointer">
-                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="cambioCama(item)"
-                        >Cambiar Cama</a
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
                       >
-                      <a
-                        class="dropdown-item pointer"
-                        style="cursor: pointer;"
-                        (click)="transferenciaServicio(item)"
-                        >Transferencia</a
-                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a class="dropdown-item pointer" style="cursor: pointer;" (click)="cambioCama(item)"
+                          >Cambiar Cama</a
+                        >
+                        <a
+                          class="dropdown-item pointer"
+                          style="cursor: pointer;"
+                          (click)="transferenciaServicio(item)"
+                          >Transferencia</a
+                        >
 
-                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="alta(item)">Egreso</a>
-                      <a class="dropdown-item pointer" style="cursor: pointer;" (click)="seleccionarPaciente(item)">Seleccionar</a>
+                        <a class="dropdown-item pointer" style="cursor: pointer;" (click)="alta(item)">Egreso</a>
+                        <a class="dropdown-item pointer" style="cursor: pointer;" (click)="seleccionarPaciente(item)">Seleccionar</a>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-          <br />
-        </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <br />
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -606,7 +612,7 @@
           </div>
 
           <div class="form-group row">
-            <label class="control-label col-md-2">Áreas:</label>
+            <label class="control-label col-md-2">Áreas: <span class="text-danger">*</span></label>
             <div class="col-md-8">
               <ng-select
                 [items]="listAreaTransferencia"
@@ -615,8 +621,8 @@
                 [(ngModel)]="idAreaTransferencia"
                 (change)="onAreaTransferenciaChange($event)"
                 name="idAreaTransferencia"
-                [clearable]="true"
-                (clear)="idAreaTransferencia = null; areaTransferencia = null"
+                [clearable]="false"
+                [class.is-invalid]="!idAreaTransferencia"
                 [typeToSearchText]="'Seleccionar'"
               >
                 <ng-template ng-option-tmp let-item="item">
@@ -631,7 +637,7 @@
           </div>
 
           <div class="form-group row">
-            <label class="control-label col-md-2">Camas:</label>
+            <label class="control-label col-md-2">Camas: <span class="text-danger">*</span></label>
             <div class="col-md-8">
               <ng-select
                 [items]="listCamas"
@@ -640,8 +646,8 @@
                 [(ngModel)]="idCama"
                 name="idCama"
                 (change)="cama = $event"
-                [clearable]="true"
-                (clear)="cama = null; idCama = null"
+                [clearable]="false"
+                [class.is-invalid]="!cama"
                 [typeToSearchText]="'Seleccionar'"
               >
                 <ng-template ng-option-tmp let-item="item">
@@ -700,6 +706,143 @@
             <pre>{{ hcu | json }}</pre> -->
           </div>
           }
+
+          <!-- INEC Especialidad Médica -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Especialidad Médica INEC: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listInecEspecialidades"
+                bindLabel="nombre_inecespe"
+                placeholder="Seleccionar especialidad médica INEC..."
+                [(ngModel)]="inecEspecialidad"
+                name="inecEspecialidadTransferencia"
+                (change)="seleccionInecEspecialidad($event)"
+                [clearable]="false"
+                [class.is-invalid]="!egresoBody?.fk_inecespe"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.nombre_inecespe }}</b></small><br />
+                    <small>Código: {{ item.codigo_inecespe }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Principal CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Principal CIE10: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Principal"
+                [typeahead]="typeaheadCiePrincipal"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico principal CIE10..."
+                [(ngModel)]="ciePrincipal"
+                name="ciePrincipalTransferencia"
+                (search)="onSearchCiePrincipal($event)"
+                [loading]="isLoadingCiePrincipal"
+                (change)="seleccionCiePrincipal($event)"
+                [clearable]="false"
+                [class.is-invalid]="!egresoBody?.fk_cieprincipal"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 1 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Secundario 1 CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria1"
+                [typeahead]="typeaheadCieSecundaria1"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 1 CIE10..."
+                [(ngModel)]="cieSecundaria1"
+                name="cieSecundaria1Transferencia"
+                (search)="onSearchCieSecundaria1($event)"
+                [loading]="isLoadingCieSecundaria1"
+                (change)="seleccionCieSecundaria1($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria1 = null; egresoBody.fk_ciesecundaria1 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 2 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Secundario 2 CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria2"
+                [typeahead]="typeaheadCieSecundaria2"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 2 CIE10..."
+                [(ngModel)]="cieSecundaria2"
+                name="cieSecundaria2Transferencia"
+                (search)="onSearchCieSecundaria2($event)"
+                [loading]="isLoadingCieSecundaria2"
+                (change)="seleccionCieSecundaria2($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria2 = null; egresoBody.fk_ciesecundaria2 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Causa Externa CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Causa Externa CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10CausaExt"
+                [typeahead]="typeaheadCieCausaExt"
+                bindLabel="cie_completo"
+                placeholder="Buscar causa externa CIE10..."
+                [(ngModel)]="cieCausaExt"
+                name="cieCausaExtTransferencia"
+                (search)="onSearchCieCausaExt($event)"
+                [loading]="isLoadingCieCausaExt"
+                (change)="seleccionCieCausaExt($event)"
+                [clearable]="true"
+                (clear)="cieCausaExt = null; egresoBody.fk_ciecausaext = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
           <div class="modal-footer">
             <button
               type="submit"
@@ -829,6 +972,143 @@
 
             }
           </div>
+
+          <!-- INEC Especialidad Médica -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Especialidad Médica INEC: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listInecEspecialidades"
+                bindLabel="nombre_inecespe"
+                placeholder="Seleccionar especialidad médica INEC..."
+                [(ngModel)]="inecEspecialidad"
+                name="inecEspecialidad"
+                (change)="seleccionInecEspecialidad($event)"
+                [clearable]="false"
+                [class.is-invalid]="!egresoBody?.fk_inecespe"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.nombre_inecespe }}</b></small><br />
+                    <small>Código: {{ item.codigo_inecespe }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Principal CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Principal CIE10: <span class="text-danger">*</span></label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Principal"
+                [typeahead]="typeaheadCiePrincipal"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico principal CIE10..."
+                [(ngModel)]="ciePrincipal"
+                name="ciePrincipal"
+                (search)="onSearchCiePrincipal($event)"
+                [loading]="isLoadingCiePrincipal"
+                (change)="seleccionCiePrincipal($event)"
+                [clearable]="false"
+                [class.is-invalid]="!egresoBody?.fk_cieprincipal"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 1 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Secundario 1 CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria1"
+                [typeahead]="typeaheadCieSecundaria1"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 1 CIE10..."
+                [(ngModel)]="cieSecundaria1"
+                name="cieSecundaria1"
+                (search)="onSearchCieSecundaria1($event)"
+                [loading]="isLoadingCieSecundaria1"
+                (change)="seleccionCieSecundaria1($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria1 = null; egresoBody.fk_ciesecundaria1 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 2 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Diagnóstico Secundario 2 CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria2"
+                [typeahead]="typeaheadCieSecundaria2"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 2 CIE10..."
+                [(ngModel)]="cieSecundaria2"
+                name="cieSecundaria2"
+                (search)="onSearchCieSecundaria2($event)"
+                [loading]="isLoadingCieSecundaria2"
+                (change)="seleccionCieSecundaria2($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria2 = null; egresoBody.fk_ciesecundaria2 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Causa Externa CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Causa Externa CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10CausaExt"
+                [typeahead]="typeaheadCieCausaExt"
+                bindLabel="cie_completo"
+                placeholder="Buscar causa externa CIE10..."
+                [(ngModel)]="cieCausaExt"
+                name="cieCausaExt"
+                (search)="onSearchCieCausaExt($event)"
+                [loading]="isLoadingCieCausaExt"
+                (change)="seleccionCieCausaExt($event)"
+                [clearable]="true"
+                (clear)="cieCausaExt = null; egresoBody.fk_ciecausaext = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
           <!-- <pre>{{ egresoBody | json }}</pre> -->
           <div class="modal-footer">
             <button

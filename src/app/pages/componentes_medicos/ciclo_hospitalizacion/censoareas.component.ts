@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { format } from '@formkit/tempo';
-import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { AreasService } from '../../../services/ubicaciones_camas/areas.service';
 import { CasasSaludService } from '../../../services/casas_salud/casas_salud.service';
@@ -12,6 +11,10 @@ import { FilterByPipe } from '../../../pipes/genericoListas.pipe';
 import { UbicacionService } from '../../../services/ubicaciones_camas/ubicacion.service';
 import { LoginService } from '../../../services/login.service';
 import { Router } from '@angular/router';
+import { InecEspecialidadesService } from '../../../services/hospitalizacion/inec/inec_especialidades.service';
+import { CieService } from '../../../services/cie/cie.service';
+import { Subject } from 'rxjs';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 
 export const SHARED_PIPES = [FilterByPipe];
@@ -33,11 +36,16 @@ export interface CicloHospitalizacion {
   fecha_creacion_ciclo: any; // json NOT NULL (guardar usuario/fecha)
   fecha_modificacion_ciclo: any | null; // json NULL (guardar usuario/fecha modif.)
   defuncion_48_ciclohosp: number | null; // int4 DEFAULT 0 NULL (valores 0,1,2)
+  fk_inecespe: number | null; // int8 NULL (FK a inec_especialidades)
+  fk_cieprincipal: number | null; // int8 NULL (FK a cie)
+  fk_ciesecundaria1: number | null; // int8 NULL (FK a cie)
+  fk_ciesecundaria2: number | null; // int8 NULL (FK a cie)
+  fk_ciecausaext: number | null; // int8 NULL (FK a cie)
 }
 
 @Component({
   selector: 'app-censoareas',
-  imports: [CommonModule, FormsModule, NgSelectModule, SHARED_PIPES],
+  imports: [CommonModule, FormsModule, NgSelectModule, SHARED_PIPES, SkeletonTableComponent],
   templateUrl: './censoareas.component.html',
   styles: ``,
 })
@@ -47,6 +55,8 @@ export class CensoareasComponent {
   private _ubicacionService = inject(UbicacionService);
   private _loginService = inject(LoginService);
   private _cicloHospitalizacionService = inject(CicloHospitalizacionService);
+  private _inecEspecialidadesService = inject(InecEspecialidadesService);
+  private _cieService = inject(CieService);
   public _routerService = inject(Router);
 
   casaSaludBody: any = {};
@@ -61,7 +71,7 @@ export class CensoareasComponent {
   areaTransferencia = null;
   bsqCenso = null;
   listCenso: any[] = [];
-  loading = true;
+  loading = false;
 
   altaDefuncion: boolean = false;
 
@@ -69,6 +79,34 @@ export class CensoareasComponent {
 
   identificacion: string = null;
   hcu: any = null;
+
+  // Variables para INEC Especialidades
+  listInecEspecialidades: any[] = [];
+  inecEspecialidad: any = null;
+
+  // Variables para CIE10 Principal
+  listCie10Principal: any[] = [];
+  isLoadingCiePrincipal = false;
+  ciePrincipal: any = null;
+  typeaheadCiePrincipal = new Subject<string>();
+
+  // Variables para CIE10 Secundaria 1
+  listCie10Secundaria1: any[] = [];
+  isLoadingCieSecundaria1 = false;
+  cieSecundaria1: any = null;
+  typeaheadCieSecundaria1 = new Subject<string>();
+
+  // Variables para CIE10 Secundaria 2
+  listCie10Secundaria2: any[] = [];
+  isLoadingCieSecundaria2 = false;
+  cieSecundaria2: any = null;
+  typeaheadCieSecundaria2 = new Subject<string>();
+
+  // Variables para CIE10 Causa Externa
+  listCie10CausaExt: any[] = [];
+  isLoadingCieCausaExt = false;
+  cieCausaExt: any = null;
+  typeaheadCieCausaExt = new Subject<string>();
 
   ingresoBody: CicloHospitalizacion = {
     pk_ciclohosp: 0, // PK inicial en 0
@@ -84,6 +122,11 @@ export class CensoareasComponent {
     fecha_creacion_ciclo: {}, // Aquí guardarás json con usuario/fecha
     fecha_modificacion_ciclo: null, // Inicialmente null hasta que se actualice
     defuncion_48_ciclohosp: 0, // Por defecto 0 (sin defunción)
+    fk_inecespe: null, // FK a inec_especialidades (opcional)
+    fk_cieprincipal: null, // FK a cie principal (opcional)
+    fk_ciesecundaria1: null, // FK a cie secundaria 1 (opcional)
+    fk_ciesecundaria2: null, // FK a cie secundaria 2 (opcional)
+    fk_ciecausaext: null, // FK a cie causa externa (opcional)
   };
 
   egresoBody: CicloHospitalizacion = {
@@ -100,10 +143,30 @@ export class CensoareasComponent {
     fecha_creacion_ciclo: {}, // Aquí guardarás json con usuario/fecha
     fecha_modificacion_ciclo: null, // Inicialmente null hasta que se actualice
     defuncion_48_ciclohosp: 0, // Por defecto 0 (sin defunción)
+    fk_inecespe: null, // FK a inec_especialidades (opcional)
+    fk_cieprincipal: null, // FK a cie principal (opcional)
+    fk_ciesecundaria1: null, // FK a cie secundaria 1 (opcional)
+    fk_ciesecundaria2: null, // FK a cie secundaria 2 (opcional)
+    fk_ciecausaext: null, // FK a cie causa externa (opcional)
   };
 
   constructor() {
     this.getCasaSalud();
+    
+    // Manejador global para filtrar errores de extensiones del navegador
+    window.addEventListener('unhandledrejection', (event: any) => {
+      const errorMessage = event?.reason?.message || event?.reason || '';
+      // Filtrar errores conocidos de extensiones del navegador
+      if (
+        typeof errorMessage === 'string' &&
+        (errorMessage.includes('message channel') ||
+         errorMessage.includes('Extension context invalidated') ||
+         errorMessage.includes('Receiving end does not exist'))
+      ) {
+        event.preventDefault(); // Prevenir que se muestre en la consola
+        return;
+      }
+    });
   }
 
   getCasaSalud() {
@@ -219,6 +282,11 @@ export class CensoareasComponent {
       fecha_creacion_ciclo: null,
       fecha_modificacion_ciclo: null,
       defuncion_48_ciclohosp: 0,
+      fk_inecespe: null,
+      fk_cieprincipal: null,
+      fk_ciesecundaria1: null,
+      fk_ciesecundaria2: null,
+      fk_ciecausaext: null,
     };
     this.hcu = null;
     this.identificacion = null;
@@ -313,6 +381,11 @@ export class CensoareasComponent {
       fecha_creacion_ciclo: ingreso.fecha_creacion_ciclo,
       fecha_modificacion_ciclo: ingreso.fecha_modificacion_ciclo,
       defuncion_48_ciclohosp: ingreso.defuncion_48_ciclohosp,
+      fk_inecespe: ingreso.fk_inecespe ?? null,
+      fk_cieprincipal: ingreso.fk_cieprincipal ?? null,
+      fk_ciesecundaria1: ingreso.fk_ciesecundaria1 ?? null,
+      fk_ciesecundaria2: ingreso.fk_ciesecundaria2 ?? null,
+      fk_ciecausaext: ingreso.fk_ciecausaext ?? null,
     };
     this.ingresoBody = ingreso;
     this.hcu = ingreso;
@@ -379,6 +452,8 @@ export class CensoareasComponent {
     this.opcion = 'I';
     this.idCama = null;
     this.cama = null;
+    this.idAreaTransferencia = null;
+    this.areaTransferencia = null;
     this.hcu = egreso;
     this.egresoBody = {
       pk_ciclohosp: 0,
@@ -394,9 +469,30 @@ export class CensoareasComponent {
       fecha_creacion_ciclo: null,
       fecha_modificacion_ciclo: null,
       defuncion_48_ciclohosp: egreso.defuncion_48_ciclohosp,
+      fk_inecespe: egreso.fk_inecespe ?? null,
+      fk_cieprincipal: egreso.fk_cieprincipal ?? null,
+      fk_ciesecundaria1: egreso.fk_ciesecundaria1 ?? null,
+      fk_ciesecundaria2: egreso.fk_ciesecundaria2 ?? null,
+      fk_ciecausaext: egreso.fk_ciecausaext ?? null,
     };
+    
+    // Limpiar campos de selección
+    this.inecEspecialidad = null;
+    this.ciePrincipal = null;
+    this.listCie10Principal = [];
+    this.cieSecundaria1 = null;
+    this.listCie10Secundaria1 = [];
+    this.cieSecundaria2 = null;
+    this.listCie10Secundaria2 = [];
+    this.cieCausaExt = null;
+    this.listCie10CausaExt = [];
+    
+    // Cargar especialidades INEC si no están cargadas
+    if (this.listInecEspecialidades.length === 0) {
+      this.getInecEspecialidades();
+    }
 
-    console.log(JSON.stringify(this.egresoBody));
+   
 
     $('#transferenciaModal').modal('show');
   }
@@ -446,8 +542,13 @@ export class CensoareasComponent {
     if (
       !this.egresoBody ||
       !this.cama ||
+      !this.idAreaTransferencia ||
       this.idAreaTransferencia === this.idArea
     ) {
+      return false;
+    }
+    // Validar campos obligatorios
+    if(!this.egresoBody.fk_inecespe || !this.egresoBody.fk_cieprincipal){
       return false;
     }
     return true;
@@ -488,6 +589,11 @@ export class CensoareasComponent {
       fecha_creacion_ciclo: null,
       fecha_modificacion_ciclo: null,
       defuncion_48_ciclohosp: this.egresoBody.defuncion_48_ciclohosp ?? 0,
+      fk_inecespe: this.egresoBody.fk_inecespe ?? null,
+      fk_cieprincipal: this.egresoBody.fk_cieprincipal ?? null,
+      fk_ciesecundaria1: this.egresoBody.fk_ciesecundaria1 ?? null,
+      fk_ciesecundaria2: this.egresoBody.fk_ciesecundaria2 ?? null,
+      fk_ciecausaext: this.egresoBody.fk_ciecausaext ?? null,
     };
 
     // 1) Crear EGRESO
@@ -518,6 +624,11 @@ export class CensoareasComponent {
             fecha_creacion_ciclo: null,
             fecha_modificacion_ciclo: null,
             defuncion_48_ciclohosp: 0,
+            fk_inecespe: egresoCreado.fk_inecespe ?? null,
+            fk_cieprincipal: egresoCreado.fk_cieprincipal ?? null,
+            fk_ciesecundaria1: egresoCreado.fk_ciesecundaria1 ?? null,
+            fk_ciesecundaria2: egresoCreado.fk_ciesecundaria2 ?? null,
+            fk_ciecausaext: egresoCreado.fk_ciecausaext ?? null,
           };
 
           // 2) Crear INGRESO
@@ -535,7 +646,36 @@ export class CensoareasComponent {
                   this.areaTransferencia = null;
                   this.idAreaTransferencia = null;
                   this.ingresoBody = null;
-                  this.egresoBody = null;
+                  // Reinicializar egresoBody en lugar de null para evitar errores en el template
+                  this.egresoBody = {
+                    pk_ciclohosp: 0,
+                    fk_ciclohosp: null,
+                    fecha_ciclohosp: '',
+                    hora_ciclohosp: '',
+                    fk_hcu: 0,
+                    tipo_ciclohosp: '',
+                    motivo_ciclohosp: '',
+                    activo_ciclohosp: true,
+                    fk_usuario: 0,
+                    fk_ubi: 0,
+                    fecha_creacion_ciclo: {},
+                    fecha_modificacion_ciclo: null,
+                    defuncion_48_ciclohosp: 0,
+                    fk_inecespe: null,
+                    fk_cieprincipal: null,
+                    fk_ciesecundaria1: null,
+                    fk_ciesecundaria2: null,
+                    fk_ciecausaext: null,
+                  };
+                  this.inecEspecialidad = null;
+                  this.ciePrincipal = null;
+                  this.listCie10Principal = [];
+                  this.cieSecundaria1 = null;
+                  this.listCie10Secundaria1 = [];
+                  this.cieSecundaria2 = null;
+                  this.listCie10Secundaria2 = [];
+                  this.cieCausaExt = null;
+                  this.listCie10CausaExt = [];
                   $('#transferenciaModal').modal('hide');
                   this.getCicloHospitalizacion(this.area.areas_id_pk);
                 } else {
@@ -575,17 +715,41 @@ export class CensoareasComponent {
       fecha_creacion_ciclo: null,
       fecha_modificacion_ciclo: null,
       defuncion_48_ciclohosp: egreso.defuncion_48_ciclohosp ?? 0,
+      fk_inecespe: egreso.fk_inecespe ?? null,
+      fk_cieprincipal: egreso.fk_cieprincipal ?? null,
+      fk_ciesecundaria1: egreso.fk_ciesecundaria1 ?? null,
+      fk_ciesecundaria2: egreso.fk_ciesecundaria2 ?? null,
+      fk_ciecausaext: egreso.fk_ciecausaext ?? null,
     };
-    this.altaDefuncion=false;
+    this.altaDefuncion = false;
+    this.inecEspecialidad = null;
+    this.ciePrincipal = null;
+    this.listCie10Principal = [];
+    this.cieSecundaria1 = null;
+    this.listCie10Secundaria1 = [];
+    this.cieSecundaria2 = null;
+    this.listCie10Secundaria2 = [];
+    this.cieCausaExt = null;
+    this.listCie10CausaExt = [];
+    // Cargar especialidades INEC si no están cargadas
+    if (this.listInecEspecialidades.length === 0) {
+      this.getInecEspecialidades();
+    }
     $('#egresoModal').modal('show');
   }
 
-  altaXDefuncion(alta: any) {    
-    this.egresoBody.defuncion_48_ciclohosp = 0;
+  altaXDefuncion(alta: any) {
+    if (this.egresoBody) {
+      this.egresoBody.defuncion_48_ciclohosp = 0;
+    }
   }
 
   validarEgreso(){
     if(!this.egresoBody||(this.altaDefuncion && this.egresoBody.defuncion_48_ciclohosp === 0)){
+      return false;
+    }
+    // Validar campos obligatorios
+    if(!this.egresoBody.fk_inecespe || !this.egresoBody.fk_cieprincipal){
       return false;
     }
     return true;
@@ -624,8 +788,37 @@ export class CensoareasComponent {
                   this.areaTransferencia = null;
                   this.idAreaTransferencia = null;
                   this.ingresoBody = null;
-                  this.egresoBody = null;
-                  this.altaDefuncion=false;
+                  // Reinicializar egresoBody en lugar de null para evitar errores en el template
+                  this.egresoBody = {
+                    pk_ciclohosp: 0,
+                    fk_ciclohosp: null,
+                    fecha_ciclohosp: '',
+                    hora_ciclohosp: '',
+                    fk_hcu: 0,
+                    tipo_ciclohosp: '',
+                    motivo_ciclohosp: '',
+                    activo_ciclohosp: true,
+                    fk_usuario: 0,
+                    fk_ubi: 0,
+                    fecha_creacion_ciclo: {},
+                    fecha_modificacion_ciclo: null,
+                    defuncion_48_ciclohosp: 0,
+                    fk_inecespe: null,
+                    fk_cieprincipal: null,
+                    fk_ciesecundaria1: null,
+                    fk_ciesecundaria2: null,
+                    fk_ciecausaext: null,
+                  };
+                  this.altaDefuncion = false;
+                  this.inecEspecialidad = null;
+                  this.ciePrincipal = null;
+                  this.listCie10Principal = [];
+                  this.cieSecundaria1 = null;
+                  this.listCie10Secundaria1 = [];
+                  this.cieSecundaria2 = null;
+                  this.listCie10Secundaria2 = [];
+                  this.cieCausaExt = null;
+                  this.listCie10CausaExt = [];
                   $('#egresoModal').modal('hide');
                   this.getCicloHospitalizacion(this.area.areas_id_pk);
                 } else {
@@ -644,5 +837,179 @@ export class CensoareasComponent {
     this._loginService.setHcuLocalStorage(hcu);
     this._routerService.navigate(['/hospitalizacion_inicio']);
   }
+
+  /* ------------ INEC Especialidades ------------------ */
+  
+  getInecEspecialidades() {
+    this._inecEspecialidadesService.getAllInecEspecialidades(null, true).subscribe({
+      next: (resp) => {
+        if (resp.status === 'ok') {
+          this.listInecEspecialidades = resp.rows || [];
+        }
+      },
+      error: (err) => {
+        Swal.fire({
+          title: '¡Error!',
+          icon: 'error',
+          text: `INEC Especialidades Médicas - ${err.message}`,
+          confirmButtonText: 'Aceptar',
+        });
+      },
+    });
+  }
+
+  seleccionInecEspecialidad(especialidad: any): void {
+    this.inecEspecialidad = especialidad;
+    this.egresoBody.fk_inecespe = especialidad?.pk_inecespe ?? null;
+  }
+
+  /* ------------ CIE10 Principal ------------------ */
+
+  onSearchCiePrincipal(term: any): void {
+    if (!term || !term.term) {
+      this.listCie10Principal = [];
+      return;
+    }
+    
+    const bsq = term.term.trim();
+    if (bsq.length < 3) {
+      this.listCie10Principal = [];
+      return;
+    }
+
+    this.isLoadingCiePrincipal = true;
+    this._cieService.getBsqCie(bsq).subscribe({
+      next: (resp) => {
+        this.isLoadingCiePrincipal = false;
+        this.listCie10Principal =
+          resp?.status === 'ok' && resp?.rows?.length > 0 ? resp.rows : [];
+      },
+      error: (err) => {
+        this.isLoadingCiePrincipal = false;
+        this.listCie10Principal = [];
+        // Silenciar errores de consola que pueden ser de extensiones del navegador
+        if (err?.message && !err.message.includes('message channel')) {
+          console.error('Error en búsqueda CIE Principal:', err);
+        }
+      },
+    });
+  }
+
+  seleccionCiePrincipal(cie: any): void {
+    this.ciePrincipal = cie;
+    this.egresoBody.fk_cieprincipal = cie?.pk_cie ?? null;
+  }
+
+  /* ------------ CIE10 Secundaria 1 ------------------ */
+
+  onSearchCieSecundaria1(term: any): void {
+    if (!term || !term.term) {
+      this.listCie10Secundaria1 = [];
+      return;
+    }
+    
+    const bsq = term.term.trim();
+    if (bsq.length < 3) {
+      this.listCie10Secundaria1 = [];
+      return;
+    }
+
+    this.isLoadingCieSecundaria1 = true;
+    this._cieService.getBsqCie(bsq).subscribe({
+      next: (resp) => {
+        this.isLoadingCieSecundaria1 = false;
+        this.listCie10Secundaria1 =
+          resp?.status === 'ok' && resp?.rows?.length > 0 ? resp.rows : [];
+      },
+      error: (err) => {
+        this.isLoadingCieSecundaria1 = false;
+        this.listCie10Secundaria1 = [];
+        // Silenciar errores de consola que pueden ser de extensiones del navegador
+        if (err?.message && !err.message.includes('message channel')) {
+          console.error('Error en búsqueda CIE Secundaria 1:', err);
+        }
+      },
+    });
+  }
+
+  seleccionCieSecundaria1(cie: any): void {
+    this.cieSecundaria1 = cie;
+    this.egresoBody.fk_ciesecundaria1 = cie?.pk_cie ?? null;
+  }
+
+  /* ------------ CIE10 Secundaria 2 ------------------ */
+
+  onSearchCieSecundaria2(term: any): void {
+    if (!term || !term.term) {
+      this.listCie10Secundaria2 = [];
+      return;
+    }
+    
+    const bsq = term.term.trim();
+    if (bsq.length < 3) {
+      this.listCie10Secundaria2 = [];
+      return;
+    }
+
+    this.isLoadingCieSecundaria2 = true;
+    this._cieService.getBsqCie(bsq).subscribe({
+      next: (resp) => {
+        this.isLoadingCieSecundaria2 = false;
+        this.listCie10Secundaria2 =
+          resp?.status === 'ok' && resp?.rows?.length > 0 ? resp.rows : [];
+      },
+      error: (err) => {
+        this.isLoadingCieSecundaria2 = false;
+        this.listCie10Secundaria2 = [];
+        // Silenciar errores de consola que pueden ser de extensiones del navegador
+        if (err?.message && !err.message.includes('message channel')) {
+          console.error('Error en búsqueda CIE Secundaria 2:', err);
+        }
+      },
+    });
+  }
+
+  seleccionCieSecundaria2(cie: any): void {
+    this.cieSecundaria2 = cie;
+    this.egresoBody.fk_ciesecundaria2 = cie?.pk_cie ?? null;
+  }
+
+  /* ------------ CIE10 Causa Externa ------------------ */
+
+  onSearchCieCausaExt(term: any): void {
+    if (!term || !term.term) {
+      this.listCie10CausaExt = [];
+      return;
+    }
+    
+    const bsq = term.term.trim();
+    if (bsq.length < 3) {
+      this.listCie10CausaExt = [];
+      return;
+    }
+
+    this.isLoadingCieCausaExt = true;
+    this._cieService.getBsqCie(bsq).subscribe({
+      next: (resp) => {
+        this.isLoadingCieCausaExt = false;
+        this.listCie10CausaExt =
+          resp?.status === 'ok' && resp?.rows?.length > 0 ? resp.rows : [];
+      },
+      error: (err) => {
+        this.isLoadingCieCausaExt = false;
+        this.listCie10CausaExt = [];
+        // Silenciar errores de consola que pueden ser de extensiones del navegador
+        if (err?.message && !err.message.includes('message channel')) {
+          console.error('Error en búsqueda CIE Causa Externa:', err);
+        }
+      },
+    });
+  }
+
+  seleccionCieCausaExt(cie: any): void {
+    this.cieCausaExt = cie;
+    this.egresoBody.fk_ciecausaext = cie?.pk_cie ?? null;
+  }
+
   /* ----------------------------------------------------------*/
 }
