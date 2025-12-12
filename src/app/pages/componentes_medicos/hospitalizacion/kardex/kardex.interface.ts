@@ -28,3 +28,4 @@ export interface KardexDet {
   administrado_kardexdet: boolean;              // bool NOT NULL
 }
 
+

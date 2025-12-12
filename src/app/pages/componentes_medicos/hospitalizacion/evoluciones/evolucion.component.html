@@ -32,8 +32,11 @@
                 <a class="dropdown-item pointer" style="cursor: pointer;" (click)="abrirModalNuevaEvolucion()"
                   >Nuevo</a
                 >
-                <a class="dropdown-item pointer" style="cursor: pointer;" (click)="imprimirEvolucion()"
-                  >Imprimir</a
+                <a class="dropdown-item pointer" style="cursor: pointer;" (click)="imprimirEvolucion('p')"
+                  >Imprimir Periodo</a
+                >
+                <a class="dropdown-item pointer" style="cursor: pointer;" (click)="imprimirEvolucion('t')"
+                  >Imprimir Total</a
                 >
               </div>
             </div>
@@ -61,7 +64,7 @@
                   <!-- FECHA -->
                   <td>
                     <div>
-                      <small>{{ item.fecha_evo }} </small>
+                      <small>{{ item.fecha_evo }} {{item.actual}}</small>
                     </div>
                     <div>
                       <small>{{ item.hora_evo }}</small>
@@ -230,11 +233,13 @@
       <div class="modal-body">
         <!-- <pre>{{accionBloqueoEditarSuperUsuario(evolucionBody)}}</pre>
         <pre>{{ evolucionBody | json }}</pre> -->
+        @if(evolucionBody) {
         <form class="form" (ngSubmit)="guardarEvolucion()">
           <!-- Fila 1 -->
           <div class="row">
             <div class="col-md-6 form-group">
               <label class="control-label">Tipo Evolución (*)</label>
+              <!-- <pre>{{opcion}}</pre> -->
               <ng-select
                 [items]="tiposEvolucion"
                 bindLabel="desc_catdetalle"
@@ -257,14 +262,14 @@
             <div class="col-md-3 form-group">
               <div class="text-center">Adm. Medicamentos</div>
               <div class="text-center">
-                {{ evolucionBody.admin_medica_evo ? "✔️" : "❌" }}
+                {{ evolucionBody?.admin_medica_evo ? "✔️" : "❌" }}
               </div>
             </div>
 
             <div class="col-md-3 form-group">
               <div class="text-center">Aprobado</div>
               <div class="text-center">
-                {{ evolucionBody.aprobado_evo ? "✔️" : "❌" }}
+                {{ evolucionBody?.aprobado_evo ? "✔️" : "❌" }}
               </div>
             </div>
           </div>
@@ -320,6 +325,7 @@
             </button>
           </div>
         </form>
+        }
       </div>
       <!-- /.modal-body -->
     </div>
@@ -347,12 +353,14 @@
       </div>
 
       <div class="modal-body">
+        @if(evolucionBody) {
         <!-- Fila 1 -->
         <div class="row">
           <div class="col-md-6 form-group">
             <h4>
               <u><b>Creación</b></u>
             </h4>
+            @if(evolucionBody.fecha_creacion_evo) {
             <div>
               <b>Nombres: </b
               >{{ evolucionBody.fecha_creacion_evo?.apellidopat_persona }}
@@ -368,6 +376,9 @@
               <b>Fecha: </b>{{ evolucionBody.fecha_creacion_evo?.fecha }}
             </div>
             <div><b>Hora: </b>{{ evolucionBody.fecha_creacion_evo?.hora }}</div>
+            } @else {
+            <div>--- Sin Información ---</div>
+            }
           </div>
           <div class="col-md-6 form-group">
             <h4>
@@ -470,6 +481,7 @@
             Cerrar
           </button>
         </div>
+        }
       </div>
       <!-- /.modal-body -->
     </div>

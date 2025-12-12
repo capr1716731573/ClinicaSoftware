@@ -95,8 +95,8 @@ export class SignosService {
   }
 
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  impresionSignos(hcu: number, fecha_desde: string) {
-    const url = `${this._baseUrl}/sigvita/signos/reporte_frame/${hcu}/${fecha_desde}`;
+  impresionSignos(hcu: number, fecha_desde: any,fecha_hasta: any) {
+    const url = `${this._baseUrl}/sigvita/signos/reporte_frame/${hcu}/${fecha_desde}/${fecha_hasta}`;
     return this._http.get(url).pipe(
       map((resp: any) => {
         return resp;

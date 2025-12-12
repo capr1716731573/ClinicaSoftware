@@ -37,6 +37,9 @@ import { FormAnamnesisComponent } from './componentes_medicos/hospitalizacion/an
 import { SignosComponent } from './componentes_medicos/hospitalizacion/signos/signos.component';
 import { KardexComponent } from './componentes_medicos/hospitalizacion/kardex/kardex.component';
 import { KardexDetComponent } from './componentes_medicos/hospitalizacion/kardex/kardex-det.component';
+import { EgresosComponent } from './componentes_medicos/ciclo_hospitalizacion/egresos.component';
+import { AnexosComponent } from './componentes_medicos/hospitalizacion/anexos/anexos.component';
+import { ReportesComponent } from './componentes_medicos/reportes/reportes.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -65,6 +68,7 @@ export const pagesChildRoutes: Routes = [
             { path: 'hcu', canActivate: [JwtGuard],component: HistoriasComponent ,data:{titulo: 'Historias Clínicas'}},
             { path: 'hcu/:id', canActivate: [JwtGuard],component: HistoriaClinicaComponent ,data:{titulo: 'Historia Clínica'}},
             { path: 'censo', canActivate: [JwtGuard],component: CensoareasComponent ,data:{titulo: 'Hospitalizaciones (Censo)'}},
+            { path: 'egresos', canActivate: [JwtGuard],component: EgresosComponent ,data:{titulo: 'Egresos Hospitalarios'}},
             { path: 'emergencia', canActivate: [JwtGuard],component: Lista008Component ,data:{titulo: 'Emergencia'}},
             { path: 'emergencia/:id', canActivate: [JwtGuard],component: Formulario008Component ,data:{titulo: 'Formulario 008'}},
 
@@ -83,6 +87,10 @@ export const pagesChildRoutes: Routes = [
             { path: 'signos', canActivate: [JwtGuard],component: SignosComponent ,data:{titulo: 'Signos Vitales'}},
             { path: 'kardex', canActivate: [JwtGuard],component: KardexComponent ,data:{titulo: 'Administración Medicamentos'}},
             { path: 'kardex_detalle/:id/:accion', canActivate: [JwtGuard],component: KardexDetComponent ,data:{titulo: 'Administración Medicamentos - Detalle'}},
+            { path: 'anexos/:hcu', canActivate: [JwtGuard],component: AnexosComponent ,data:{titulo: 'Anexos'}},
+
+            //Reportes
+            { path: 'reportes', canActivate: [JwtGuard],component: ReportesComponent ,data:{titulo: 'Reportes'}},
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
       },

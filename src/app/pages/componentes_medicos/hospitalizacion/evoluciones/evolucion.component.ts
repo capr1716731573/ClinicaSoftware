@@ -52,7 +52,24 @@ export class EvolucionComponent {
   private _detalleService = inject(CabeceraDetalleService);
 
   evolucionList: any[] = [];
-  evolucionBody: Evolucion;
+  evolucionBody: Evolucion = {
+    pk_evo: 0,
+    fecha_creacion_evo: null,
+    fecha_modificacion_evo: null,
+    fk_hcu: 0,
+    fk_tipo_nota_evo: null as any, // Puede ser null inicialmente
+    fecha_evo: '',
+    hora_evo: '',
+    evolucion_evo: '',
+    prescripcion_evo: null,
+    admin_medica_evo: false,
+    aprobado_evo: false,
+    casalud_id_fk: null,
+    user_admin_medica_evo: null,
+    user_aprobado_evo: null,
+    pk_usuario: null,
+    actual: true,
+  };
   casaSaludBody: any = {};
   tiposEvolucion: any[] = [];
   hcu: any = {};
@@ -66,11 +83,11 @@ export class EvolucionComponent {
   sig: boolean;
 
   constructor() {
-    this.getCasaSalud();
     this.hcu = this._loginService.getHcuLocalStorage();
+    this.nuevaEvolucion(); // Inicializar evolucionBody primero
+    this.getCasaSalud();
     this.getAllEvoluciones();
     this.getDetalle();
-    this.nuevaEvolucion();
   }
 
   getCasaSalud() {
@@ -78,6 +95,10 @@ export class EvolucionComponent {
       next: (resp) => {
         if (resp.status === 'ok') {
           this.casaSaludBody = resp.rows;
+          // Actualizar evolucionBody si existe y no tiene casalud_id_fk
+          if (this.evolucionBody && !this.evolucionBody.casalud_id_fk) {
+            this.evolucionBody.casalud_id_fk = this.casaSaludBody?.casalud_id_pk || null;
+          }
         }
       },
       error: (err) => {
@@ -189,12 +210,13 @@ export class EvolucionComponent {
   nuevaEvolucion() {
     const ahora = new Date();
     this.opcion = 'I';
+    console.log(`opcion nuevo ===> ${this.opcion}`)
 
     this.evolucionBody = {
       pk_evo: 0,
       fecha_creacion_evo: null,
       fecha_modificacion_evo: null,
-      fk_hcu: this.hcu.fk_hcu,
+      fk_hcu: this.hcu?.fk_hcu || 0,
       fk_tipo_nota_evo: null,
       fecha_evo: format(ahora, 'YYYY-MM-DD'),
       hora_evo: format(ahora, 'HH:mm:ss'),
@@ -202,7 +224,7 @@ export class EvolucionComponent {
       prescripcion_evo: null,
       admin_medica_evo: false,
       aprobado_evo: false,
-      casalud_id_fk: this.casaSaludBody?.casalud_id_pk,
+      casalud_id_fk: this.casaSaludBody?.casalud_id_pk || null,
       user_admin_medica_evo: null,
       user_aprobado_evo: null,
       pk_usuario: null,
@@ -277,13 +299,17 @@ export class EvolucionComponent {
           this._loginService.reemplazarComillasSimples(
             this.evolucionBody.prescripcion_evo
           );
+          console.log(`opcion ===> ${this.opcion}`)
 
         this._evolucionService
           .guardarEvolucion(this.evolucionBody, this.opcion)
           .subscribe({
             next: (resp) => {
-              this.opcion = `U`;
               if (resp.status && resp.status === 'ok') {
+                // Solo cambiar a 'U' si fue una inserción exitosa
+                if (this.opcion === 'I') {
+                  this.opcion = 'U';
+                }
                 this.evolucionBody = resp.data;
                 toastr.success('Éxito', `Evolución Guardada`);
                 $('#evolucionModal').modal('hide');
@@ -551,7 +577,12 @@ export class EvolucionComponent {
   accionBloqueoEditarSuperUsuario(evolucion: any) {
     let respuesta = false;
 
-    if ((this.opcion = 'U')) {
+    // Protección contra null o undefined
+    if (!evolucion) {
+      return false;
+    }
+
+    if (this.opcion === 'U') {
       if (this._loginService.getSuperUsuario()) {
         respuesta = false;
       } else {
@@ -568,12 +599,15 @@ export class EvolucionComponent {
     return respuesta;
   }
 
-  imprimirEvolucion() {
+  imprimirEvolucion(tipo:string) {
     const id = this.hcu.fk_hcu;
     if (!id) {
       toastr.error('Sin ID', 'No hay pk_emerg para imprimir.');
       return;
     }
+
+    const fecha1 = tipo === 'p' ? this._loginService.getHcuLocalStorage().fecha_ciclohosp : null;
+    
 
     // Mostrar Loading con SweetAlert
     Swal.fire({
@@ -585,7 +619,7 @@ export class EvolucionComponent {
       },
     });
 
-    this._evolucionService.impresionEvolucionId(id).subscribe({
+    this._evolucionService.impresionEvolucionId(id,fecha1,null).subscribe({
       next: (resp: any) => {
         const b64 = resp?.message;
         if (!b64 || typeof b64 !== 'string') {

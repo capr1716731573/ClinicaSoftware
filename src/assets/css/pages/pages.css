@@ -3068,7 +3068,8 @@ Table Cell
   font-weight: 500; }
 
 .table-hover tbody tr:hover {
-  background: #e9edf2; }
+  background: #28a745;
+  color: #ffffff; }
 
 .nowrap {
   white-space: nowrap; }
@@ -3223,7 +3224,7 @@ Table-Layout
   .full-color-table.full-info-table tbody td {
     border: 0; }
   .full-color-table.full-info-table tr:hover {
-    background-color: #398bf7;
+    background-color: #28a745;
     color: #ffffff; }
 
 .full-color-table.full-warning-table {

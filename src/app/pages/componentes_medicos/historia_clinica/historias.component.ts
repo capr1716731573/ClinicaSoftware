@@ -120,4 +120,8 @@ export class HistoriasComponent {
   editarHistoriaClinica(pk_historia: number) {
     this._routerService.navigate(['/hcu', pk_historia]);
   }
+
+  anexosHistoriaClinica(pk_historia: number) {
+    this._routerService.navigate(['/anexos', pk_historia]);
+  }
 }

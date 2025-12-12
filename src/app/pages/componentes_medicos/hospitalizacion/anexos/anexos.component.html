@@ -1,0 +1,305 @@
+@if (showMenu) {
+  <app-menu-hospitalizacion></app-menu-hospitalizacion>
+} @else {
+  <div class="card mb-3 border border-info shadow-sm">
+    <div class="card-body bg-info text-white">
+      @if (headerLoading) {
+        <div class="d-flex align-items-center">
+          <i class="fa fa-spinner fa-spin fa-lg text-white mr-2"></i>
+          <span class="text-white">Cargando información del paciente...</span>
+        </div>
+      } @else {
+        @if (pacienteInfo) {
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <div class="p-3 bg-white text-info rounded shadow-sm">
+                <small class="d-block text-uppercase font-weight-bold">HCU</small>
+                <h4 class="mb-0 font-weight-bold">
+                  <i class="fa fa-id-badge mr-2"></i>{{ pacienteInfo.pk_hcu || hcuParam }}
+                </h4>
+              </div>
+            </div>
+            <div class="col-md-4 mt-2 mt-md-0">
+              <div class="p-3 bg-white text-info rounded shadow-sm">
+                <small class="d-block text-uppercase font-weight-bold">Identificación</small>
+                <h5 class="mb-0">
+                  <i class="fa fa-address-card mr-2"></i>{{ pacienteInfo.numidentificacion_persona || 'N/A' }}
+                </h5>
+              </div>
+            </div>
+            <div class="col-md-4 mt-2 mt-md-0">
+              <div class="p-3 bg-white text-info rounded shadow-sm">
+                <small class="d-block text-uppercase font-weight-bold">Paciente</small>
+                <h5 class="mb-0">
+                  <i class="fa fa-user mr-2"></i>
+                  {{ pacienteInfo.apellidopat_persona || '' }}
+                  {{ pacienteInfo.apellidomat_persona || '' }}
+                  {{ pacienteInfo.nombre_primario_persona || '' }}
+                  {{ pacienteInfo.nombre_secundario_persona || '' }}
+                </h5>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div class="alert alert-warning mb-0 bg-white text-info">
+            No se encontró información del paciente para el HCU
+            <b>{{ hcuParam }}</b>.
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="card-title">Anexos</h4>
+            <small class="text-muted">Listado de archivos anexados</small>
+          </div>
+          <button type="button" class="btn btn-success" (click)="abrirModalNuevo()">
+            <i class="fa fa-plus"></i> Nuevo
+          </button>
+        </div>
+
+        @if (loading) {
+          <app-skeleton-table></app-skeleton-table>
+        } @else {
+          <div class="table-responsive pointer m-t-20">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th class="text-center">CÓDIGO</th>
+                  <th>ARCHIVO</th>
+                  <th class="text-center">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (listAnexos.length === 0) {
+                  <tr>
+                    <td colspan="3" class="text-center text-muted">
+                      Sin registros disponibles
+                    </td>
+                  </tr>
+                } @else {
+                  @for (item of listAnexos; track item.pk_anexos) {
+                    <tr>
+                      <td data-label="CÓDIGO" class="text-center">
+                        {{ item.pk_anexos }}
+                      </td>
+                      <td data-label="ARCHIVO">
+                        {{ getNombreArchivo(item.ruta_anexos) }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="btn-group d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-success dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            <i class="ti-settings"></i>
+                          </button>
+                          <div class="dropdown-menu pointer">
+                            <a
+                              class="dropdown-item pointer"
+                              style="cursor: pointer;"
+                              (click)="verArchivo(item)"
+                              >Ver</a
+                            >
+                            <a
+                              class="dropdown-item pointer"
+                              style="cursor: pointer;"
+                              (click)="eliminarAnexo(item)"
+                              >Eliminar</a
+                            >
+                            <a
+                              class="dropdown-item pointer"
+                              style="cursor: pointer;"
+                              (click)="verAuditoria(item)"
+                              >Auditoría</a
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-right">
+            <div class="btn-group" role="group" aria-label="Paginación">
+              <button
+                type="button"
+                class="btn btn-info"
+                [disabled]="numeracion === 1"
+                (click)="retroceder()"
+              >
+                <i class="fa fa-fast-backward"></i>
+              </button>
+              <button type="button" class="btn btn-info">
+                {{ numeracion }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-info"
+                [disabled]="!puedeAvanzar()"
+                (click)="avanzar()"
+              >
+                <i class="fa fa-fast-forward"></i>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Anexo -->
+<div
+  id="modalNuevoAnexo"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalNuevoAnexoLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modalNuevoAnexoLabel">Nuevo Anexo</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Archivo</label>
+            <input #fileInput type="file" class="form-control" (change)="onFileSelected($event)" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-info waves-effect"
+          (click)="guardarNuevoAnexo()"
+          [disabled]="saving || !selectedFile || !fkHcu"
+        >
+          <i class="fa" [ngClass]="{ 'fa-save': !saving, 'fa-spinner fa-spin': saving }"></i>
+          {{ saving ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal Nuevo Anexo -->
+
+<!-- Modal Auditoría -->
+<div
+  id="auditoriaAnexoModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="auditoriaAnexoModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h4 class="modal-title text-white" id="auditoriaAnexoModalLabel">
+          <i class="fa fa-history"></i> Información de Auditoría
+        </h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-plus-circle"></i> Fecha de Creación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData) {
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-calendar text-success"></i> <b>Fecha:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-clock-o text-success"></i> <b>Hora:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.hora || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-id-card text-success"></i> <b>Identificación:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.numidentificacion_persona || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <div class="mb-0 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-user text-success"></i> <b>Nombres:</b>
+                    </label>
+                    <h6 class="text-success mb-0">
+                      {{ auditoriaData.apellidopat_persona || '' }}
+                      {{ auditoriaData.apellidomat_persona || '' }}
+                      {{ auditoriaData.nombre_primario_persona || '' }}
+                      {{ auditoriaData.nombre_secundario_persona || '' }}
+                    </h6>
+                  </div>
+                } @else {
+                  <div class="text-center p-4">
+                    <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Sin información de creación</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Auditoría -->

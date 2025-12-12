@@ -122,7 +122,7 @@ export class SignosComponent implements AfterViewInit {
     });
 
     // Llamar al servicio de impresión
-    this._signosService.impresionSignos(fk_hcu, fecha_desde).subscribe({
+    this._signosService.impresionSignos(fk_hcu, fecha_desde,null).subscribe({
       next: (resp: any) => {
         const b64 = resp?.message;
         if (!b64 || typeof b64 !== 'string') {

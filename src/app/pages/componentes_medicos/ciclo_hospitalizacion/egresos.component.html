@@ -1,0 +1,571 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Egresos Hospitalarios</h4>
+        <h6 class="card-subtitle">
+          Lista de todos los egresos hospitalarios
+        </h6>
+
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqEgreso"
+              (ngModelChange)="bsqEgreso = $event.toUpperCase()"
+              (keyup)="buscarEgreso()"
+            />
+          </div>
+
+          <br />
+          
+          @if (loading) {
+            <app-skeleton-table></app-skeleton-table>
+          }
+          
+          @if (!loading) {
+            <div class="table-responsive pointer">
+              <table class="table full-color-table full-info-table hover-table">
+                <thead>
+                  <tr>
+                    <th scope="col">IDENTIFICACIÓN</th>
+                    <th scope="col">PACIENTE</th>
+                    <th scope="col">EDAD</th>
+                    <th scope="col">MOTIVO</th>
+                    <th scope="col">FECHA</th>
+                    <th scope="col">HORA</th>
+                    <th scope="col">ESPECIALIDAD INEC</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of listEgresos; track item.pk_ciclohosp) {
+                    <tr>
+                      <td data-label="IDENTIFICACIÓN">
+                        {{ item.numidentificacion_persona }}
+                        <p>
+                          <small>
+                            [{{ item.pk_ciclohosp }}]
+                          </small>
+                        </p>
+                      </td>
+                      <td data-label="PACIENTE">
+                        {{ item.apellidopat_persona }} {{ item.apellidomat_persona }}
+                        {{ item.nombres_persona }}
+                      </td>
+                      <td data-label="EDAD">
+                        {{ item.edad?.valor }} {{ item.edad?.tipo }}
+                      </td>
+                      <td data-label="MOTIVO">
+                        <span [class]="getMotivoBadgeClass(item.motivo_ciclohosp)">
+                          {{ getMotivoTexto(item.motivo_ciclohosp) }}
+                        </span>
+                      </td>
+                      <td data-label="FECHA">
+                        {{ item.fecha_ciclohosp }}
+                      </td>
+                      <td data-label="HORA">
+                        {{ item.hora_ciclohosp }}
+                      </td>
+                      <td data-label="ESPECIALIDAD INEC">
+                        {{ item.nombre_inecespe }}
+                      </td>
+                      <td data-label="ACCIÓN">
+                        <div class="btn-group d-flex justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-success dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            <i class="ti-settings"></i>
+                          </button>
+                          <div class="dropdown-menu pointer">
+                            <a
+                              class="dropdown-item pointer"
+                              style="cursor: pointer;"
+                              (click)="editarEgreso(item)"
+                              >Editar</a
+                            >
+                            <a
+                              class="dropdown-item pointer"
+                              style="cursor: pointer;"
+                              (click)="verAuditoria(item)"
+                              >Auditoría</a
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+              <br />
+              
+              @if (!bsqEgreso || bsqEgreso.length === 0) {
+                <div class="text-right">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <button
+                      type="button"
+                      class="btn btn-info"
+                      [disabled]="numeracion === 1"
+                      (click)="retroceder()"
+                    >
+                      <i class="fa fa-fast-backward"></i>
+                    </button>
+                    <button type="button" class="btn btn-info">
+                      {{ numeracion }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-info"
+                      [disabled]="!puedeAvanzar()"
+                      (click)="avanzar()"
+                    >
+                      <i class="fa fa-fast-forward"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Egreso -->
+<div
+  id="editarEgresoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Editar Egreso</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarEgreso()">
+          @if (egresoData) {
+            <div class="row">
+              <div class="col-md-12 form-group">
+                <div class="card bg-info">
+                  <div class="card-body">
+                    <div class="d-flex no-block">
+                      <div class="m-r-20 align-self-center">
+                        <img
+                          src="../assets/images/icon/staff-w.png"
+                          alt="Income"
+                        />
+                      </div>
+                      <div class="align-self-center">
+                        <h5 class="text-white m-t-10 m-b-0">
+                          <b>Datos del Paciente:</b>
+                        </h5>
+                        <h6 class="text-white m-t-10 m-b-0">
+                          <b>Nombres:</b> {{ egresoData.apellidopat_persona }}
+                          {{ egresoData.apellidomat_persona }}
+                          {{ egresoData.nombres_persona }}
+                        </h6>
+                        <h6 class="text-white m-t-10 m-b-0">
+                          <b>Identificación:</b>
+                          {{ egresoData.numidentificacion_persona }}
+                        </h6>
+                        <h6 class="text-white m-t-10 m-b-0">
+                          <b>Edad:</b> {{ egresoData.edad?.valor }}
+                          {{ egresoData.edad?.tipo }} / <b>Sexo:</b>
+                          {{ egresoData.sexo }}
+                        </h6>
+                        <h6 class="text-white m-t-10 m-b-0">
+                          <b>Fecha/Hora Egreso:</b>
+                          {{ egresoData.fecha_ciclohosp }} /
+                          {{ egresoData.hora_ciclohosp }}
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="form-group row">
+            <div class="col-md-4 form-group">
+              <div class="form-group">
+                <label>* Alta por Defunción</label>
+                <div class="switch">
+                  <label>
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="altaDefuncion"
+                      name="altaDefuncion"
+                      (ngModelChange)="
+                        this.egresoBody.defuncion_48_ciclohosp = 0
+                      "
+                    />
+                    <span class="lever switch-col-red"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            @if(altaDefuncion){
+            <div class="col-md-8 form-group">
+              <div class="form-group">
+                <label for="tipo">48 Horas</label>
+
+                <select
+                  id="tipo"
+                  class="custom-select col-12"
+                  [(ngModel)]="this.egresoBody.defuncion_48_ciclohosp"
+                  name="defuncion_48_ciclohosp"
+                >
+                  <option [ngValue]="0" disabled>Seleccione...</option>
+                  <option value="1">Mayor a 48 h</option>
+                  <option value="2">Menor a 48 h</option>
+                </select>
+              </div>
+            </div>
+
+            }
+          </div>
+
+          <h5 class="card-title m-b-20">Información INEC</h5>
+
+          <!-- INEC Especialidad Médica -->
+          <div class="form-group row">
+            <label class="control-label col-md-3"
+              >Especialidad Médica INEC: <span class="text-danger">*</span></label
+            >
+            <div class="col-md-9">
+              <ng-select
+                [items]="listInecEspecialidades"
+                bindLabel="nombre_inecespe"
+                placeholder="Seleccionar especialidad médica INEC..."
+                [(ngModel)]="inecEspecialidad"
+                name="inecEspecialidad"
+                (change)="seleccionInecEspecialidad($event)"
+                [clearable]="false"
+                [class.is-invalid]="!egresoBody?.fk_inecespe"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.nombre_inecespe }}</b></small><br />
+                    <small>Código: {{ item.codigo_inecespe }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Principal CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3"
+              >Diagnóstico Principal CIE10: <span class="text-danger">*</span></label
+            >
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Principal"
+                [typeahead]="typeaheadCiePrincipal"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico principal CIE10..."
+                [(ngModel)]="ciePrincipal"
+                name="ciePrincipal"
+                (search)="onSearchCiePrincipal($event)"
+                [loading]="isLoadingCiePrincipal"
+                (change)="seleccionCiePrincipal($event)"
+                [clearable]="true"
+                (clear)="ciePrincipal = null; egresoBody.fk_cieprincipal = null"
+                [class.is-invalid]="!egresoBody?.fk_cieprincipal"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 1 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3"
+              >Diagnóstico Secundario 1 CIE10:</label
+            >
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria1"
+                [typeahead]="typeaheadCieSecundaria1"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 1 CIE10..."
+                [(ngModel)]="cieSecundaria1"
+                name="cieSecundaria1"
+                (search)="onSearchCieSecundaria1($event)"
+                [loading]="isLoadingCieSecundaria1"
+                (change)="seleccionCieSecundaria1($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria1 = null; egresoBody.fk_ciesecundaria1 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Secundario 2 CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3"
+              >Diagnóstico Secundario 2 CIE10:</label
+            >
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10Secundaria2"
+                [typeahead]="typeaheadCieSecundaria2"
+                bindLabel="cie_completo"
+                placeholder="Buscar diagnóstico secundario 2 CIE10..."
+                [(ngModel)]="cieSecundaria2"
+                name="cieSecundaria2"
+                (search)="onSearchCieSecundaria2($event)"
+                [loading]="isLoadingCieSecundaria2"
+                (change)="seleccionCieSecundaria2($event)"
+                [clearable]="true"
+                (clear)="cieSecundaria2 = null; egresoBody.fk_ciesecundaria2 = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Causa Externa CIE10 -->
+          <div class="form-group row">
+            <label class="control-label col-md-3">Causa Externa CIE10:</label>
+            <div class="col-md-9">
+              <ng-select
+                [items]="listCie10CausaExt"
+                [typeahead]="typeaheadCieCausaExt"
+                bindLabel="cie_completo"
+                placeholder="Buscar causa externa CIE10..."
+                [(ngModel)]="cieCausaExt"
+                name="cieCausaExt"
+                (search)="onSearchCieCausaExt($event)"
+                [loading]="isLoadingCieCausaExt"
+                (change)="seleccionCieCausaExt($event)"
+                [clearable]="true"
+                (clear)="cieCausaExt = null; egresoBody.fk_ciecausaext = null"
+                [typeToSearchText]="'Empieza a escribir...'"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <small><b>{{ item.desc_cie }}</b></small><br />
+                    <small>Código: {{ item.codigo_cie }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarEgreso()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Auditoría -->
+<div
+  id="auditoriaModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="auditoriaModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h4 class="modal-title text-white" id="auditoriaModalLabel">
+          <i class="fa fa-history"></i> Información de Auditoría
+        </h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Fecha de Creación -->
+          <div class="col-md-6">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-plus-circle"></i> Fecha de Creación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_creacion_ciclo) {
+                  <!-- Fecha -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-calendar text-success"></i> <b>Fecha:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_ciclo.fecha || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Hora -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-clock-o text-success"></i> <b>Hora:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_ciclo.hora || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Identificación -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-id-card text-success"></i> <b>Identificación:</b>
+                    </label>
+                    <h5 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_ciclo.numidentificacion_persona || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="mb-0 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-user text-success"></i> <b>Nombres:</b>
+                    </label>
+                    <h6 class="text-success mb-0">
+                      {{ auditoriaData.fecha_creacion_ciclo.apellidopat_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_ciclo.apellidomat_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_ciclo.nombre_primario_persona || '' }}
+                      {{ auditoriaData.fecha_creacion_ciclo.nombre_secundario_persona || '' }}
+                    </h6>
+                  </div>
+                } @else {
+                  <div class="text-center p-4">
+                    <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Sin información de creación</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Fecha de Modificación -->
+          <div class="col-md-6">
+            <div class="card border-danger">
+              <div class="card-header bg-danger text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-edit"></i> Última Modificación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.fecha_modificacion_ciclo) {
+                  <!-- Fecha -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-calendar text-danger"></i> <b>Fecha:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_ciclo.fecha || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Hora -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-clock-o text-danger"></i> <b>Hora:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_ciclo.hora || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Identificación -->
+                  <div class="mb-3 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-id-card text-danger"></i> <b>Identificación:</b>
+                    </label>
+                    <h5 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_ciclo.numidentificacion_persona || 'N/A' }}
+                    </h5>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="mb-0 p-2 bg-light rounded">
+                    <label class="text-muted mb-1 d-block">
+                      <i class="fa fa-user text-danger"></i> <b>Nombres:</b>
+                    </label>
+                    <h6 class="text-danger mb-0">
+                      {{ auditoriaData.fecha_modificacion_ciclo.apellidopat_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_ciclo.apellidomat_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_ciclo.nombre_primario_persona || '' }}
+                      {{ auditoriaData.fecha_modificacion_ciclo.nombre_secundario_persona || '' }}
+                    </h6>
+                  </div>
+                } @else {
+                  <div class="text-center p-4">
+                    <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">Sin modificaciones registradas</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Auditoría -->

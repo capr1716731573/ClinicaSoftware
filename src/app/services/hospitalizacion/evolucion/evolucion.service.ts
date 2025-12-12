@@ -94,8 +94,8 @@ export class EvolucionService {
     );
   }
 
-  impresionEvolucionId(hcu: number) {
-    const url = `${this._baseUrl}/evolucion/rep_frame/${hcu}`;
+  impresionEvolucionId(hcu: number,fecha_desde:any,fecha_hasta:any) {
+    const url = `${this._baseUrl}/evolucion/rep_frame/${hcu}/${fecha_desde}/${fecha_hasta}`;
     return this._http.get(url).pipe(
       map((resp: any) => {
         return resp;

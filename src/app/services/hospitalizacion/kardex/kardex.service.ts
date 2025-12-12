@@ -157,8 +157,8 @@ export class KardexService {
   }
 
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  impresionKardex(hcu: number, fecha_desde: string) {
-    const url = `${this._baseUrl}/kardex/cab/reporte_frame/${hcu}/${fecha_desde}`;
+  impresionKardex(hcu: number, fecha_desde: any, fecha_hasta: any) {
+    const url = `${this._baseUrl}/kardex/cab/reporte_frame/${hcu}/${fecha_desde}/${fecha_hasta}`;
     return this._http.get(url).pipe(
       map((resp: any) => {
         return resp;

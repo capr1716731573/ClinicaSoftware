@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><b>1.- Reporte INEC</b></h4>
+        <h6 class="card-subtitle">
+          <b>Lista de egresos por mes/año en formato de la matriz del INEC</b>
+        </h6>
+        <div class="row">
+                <div class="col-md-4 form-group">
+                  <label><b>Mes</b></label>
+                  <select
+                    class="form-control"
+                    name="mes"
+                    [(ngModel)]="mes1"
+                    required
+                  >
+                    <option [ngValue]="null">Seleccione un mes</option>
+                    <option [ngValue]="1">Enero</option>
+                    <option [ngValue]="2">Febrero</option>
+                    <option [ngValue]="3">Marzo</option>
+                    <option [ngValue]="4">Abril</option>
+                    <option [ngValue]="5">Mayo</option>
+                    <option [ngValue]="6">Junio</option>
+                    <option [ngValue]="7">Julio</option>
+                    <option [ngValue]="8">Agosto</option>
+                    <option [ngValue]="9">Septiembre</option>
+                    <option [ngValue]="10">Octubre</option>
+                    <option [ngValue]="11">Noviembre</option>
+                    <option [ngValue]="12">Diciembre</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label><b>Año</b></label>
+                  <select
+                    class="form-control"
+                    name="anio"
+                    [(ngModel)]="anio1"
+                    required
+                  >
+                    <option [ngValue]="null">Seleccione un año</option>
+                    @for (year of anios; track year) {
+                      <option [ngValue]="year">{{ year }}</option>
+                    }
+                  </select>
+                </div>
+                <div class="col-md-2 form-group">
+                  <label><b>Acción</b></label>
+                  <button
+                    type="button"
+                    class="btn btn-primary waves-effect waves-light w-100"
+                    (click)="generarReporte()"
+                    [disabled]="!mes1 || !anio1"
+                  >
+                    <i class="fa fa-download mr-2"></i>
+                    Generar
+                  </button>
+                </div>
+              </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center position-relative mb-3">
+          <h4 class="card-title mb-0"><b>2.- Censo Actual</b></h4>
+          
+        </div>
+        <h6 class="card-subtitle">
+          <b>Lista de pacientes actualmente registrados en el censo de hospitalizacion, emergencia y otros</b>
+        </h6>
+         <div class="row">
+            <div class="col-md-4 form-group">
+            <button
+              type="button"
+              class="btn btn-primary waves-effect waves-light"
+              (click)="generarCensoActual()"
+            >
+              <i class="fa fa-download mr-2"></i>
+              Generar
+            </button>
+            </div>
+         </div>
+        </div>
+    </div>
+  </div>
+</div>

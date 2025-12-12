@@ -76,9 +76,14 @@
                       </button>
                       <div class="dropdown-menu pointer">
                         <a
-                          class="dropdown-item"
+                          class="dropdown-item pointer"
                           (click)="editarHistoriaClinica(item.pk_hcu)"
                           >Editar</a
+                        >
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="anexosHistoriaClinica(item.pk_hcu)"
+                          >Anexos</a
                         >
                        
                       </div>
