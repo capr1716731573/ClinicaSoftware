@@ -1,5 +1,135 @@
+/* Cursor pointer para items de dropdown/tablas */
+.dropdown-item.pointer,
+.pointer {
+  cursor: pointer;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
+/* Reducir tamaño de fuente base en todo el proyecto */
+html {
+    font-size: 14px; /* Reducido de 16px (por defecto) a 14px */
+}
+
+body {
+    font-size: 0.875rem; /* 14px - tamaño base más pequeño */
+}
+
+/* Reducir proporcionalmente los headings */
+h1 {
+    font-size: 1.75rem !important; /* ~28px, reducido de 36px */
+    line-height: 1.2 !important;
+}
+
+h2 {
+    font-size: 1.5rem !important; /* ~24px, reducido de 24px (se mantiene) */
+    line-height: 1.3 !important;
+}
+
+h3 {
+    font-size: 1.25rem !important; /* ~20px, reducido de 21px */
+    line-height: 1.4 !important;
+}
+
+h4 {
+    font-size: 1.125rem !important; /* ~18px, reducido de 18px (se mantiene) */
+    line-height: 1.4 !important;
+}
+
+h5 {
+    font-size: 1rem !important; /* ~16px, reducido de 16px (se mantiene) */
+    line-height: 1.5 !important;
+}
+
+h6 {
+    font-size: 0.875rem !important; /* ~14px, reducido de 14px (se mantiene) */
+    line-height: 1.5 !important;
+}
+
+/* Reducir tamaño de texto en elementos comunes */
+p, span, div, label, input, select, textarea, button, a {
+    font-size: 0.875rem; /* 14px base */
+}
+
+/* Reducir tamaño en cards y títulos de cards */
+.card-title {
+    font-size: 1.125rem !important; /* ~18px */
+}
+
+.card-subtitle {
+    font-size: 0.875rem !important; /* ~14px */
+}
+
+/* Reducir tamaño en botones */
+.btn {
+    font-size: 0.875rem !important; /* 14px */
+    padding: 0.5rem 1rem !important;
+}
+
+.btn-sm {
+    font-size: 0.75rem !important; /* 12px */
+    padding: 0.25rem 0.5rem !important;
+}
+
+.btn-lg {
+    font-size: 1rem !important; /* 16px */
+    padding: 0.75rem 1.5rem !important;
+}
+
+/* Reducir tamaño en formularios */
+.form-control {
+    font-size: 0.875rem !important; /* 14px */
+}
+
+.form-control-sm {
+    font-size: 0.75rem !important; /* 12px */
+}
+
+.form-control-lg {
+    font-size: 1rem !important; /* 16px */
+}
+
+/* Reducir tamaño en navegación y menús */
+.nav-link, .dropdown-item {
+    font-size: 0.875rem !important; /* 14px */
+}
+
+/* Reducir tamaño en badges y labels */
+.badge, .label {
+    font-size: 0.75rem !important; /* 12px */
+}
+
+/* Reducir tamaño de las cabeceras de submenús (has-arrow) */
+.sidebar-nav ul li > a.has-arrow {
+    font-size: 0.8125rem !important; /* ~13px - reducido de 14px */
+    padding: 5px 35px 5px 15px !important; /* Padding reducido verticalmente */
+}
+
+.sidebar-nav ul li > a.has-arrow .hide-menu {
+    font-size: 0.8125rem !important; /* ~13px para el texto dentro */
+}
+
+/* Reducir espaciado entre items del menú principal */
+.sidebar-nav > ul > li {
+    margin-bottom: 2px !important; /* Reducido de 5px a 2px */
+}
+
+/* Reducir padding de todos los items del menú principal */
+.sidebar-nav > ul > li > a {
+    padding: 5px 35px 5px 15px !important; /* Padding reducido verticalmente */
+}
+
+/* Aumentar un poco el tamaño de los submenús anidados para uniformidad */
+.sidebar-nav ul li ul li a {
+    font-size: 0.8125rem !important; /* ~13px - aumentado para uniformidad con las cabeceras */
+    padding: 5px 35px 5px 15px !important; /* Padding reducido */
+}
+
+/* Asegurar que los submenús de tercer nivel también tengan uniformidad */
+.sidebar-nav ul li ul ul li a {
+    font-size: 0.8125rem !important; /* ~13px para uniformidad */
+    padding: 4px 35px 4px 15px !important;
+}
 
 #themecolors .selector{
     cursor:pointer;
@@ -37,6 +167,7 @@ table th {
     text-transform: uppercase;
 }
 
+/* Asegurar que en pantallas pequeñas el comportamiento responsivo funcione correctamente */
 @media screen and (max-width: 600px) {
     table {
         border: 0;
@@ -78,8 +209,55 @@ table th {
     table td:last-child {
         border-bottom: 0;
     }
+    /* El CSS global maneja el comportamiento responsivo (display: block en tr y td) */
+}
 
+/* Scroll horizontal para tablas en pantallas medianas y grandes */
+/* Solo aplica cuando la pantalla es mayor a 600px para no interferir con el comportamiento responsivo */
+@media screen and (min-width: 601px) {
+    .table-responsive {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
 
+    .table-responsive table,
+    .table-responsive .table {
+        width: auto;
+        min-width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+    }
+
+    /* Mantener nowrap solo en columnas que no tienen text-start */
+    .table-responsive table th:not(.text-start),
+    .table-responsive table td:not(.text-start),
+    .table-responsive .table th:not(.text-start),
+    .table-responsive .table td:not(.text-start) {
+        white-space: nowrap;
+    }
+
+    /* Las columnas con text-start mantienen su comportamiento normal */
+    .table-responsive table td.text-start,
+    .table-responsive .table td.text-start {
+        white-space: normal;
+        min-width: 200px; /* Ancho mínimo para columnas de texto largo */
+    }
+
+    /* Estilos base para pantallas grandes */
+    .table-responsive table td,
+    .table-responsive table th,
+    .table-responsive .table td,
+    .table-responsive .table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table-responsive table td.text-start,
+    .table-responsive .table td.text-start {
+        text-align: left;
+    }
 }
 
 .table td.text-start {

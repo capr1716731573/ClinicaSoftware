@@ -40,6 +40,8 @@ import { KardexDetComponent } from './componentes_medicos/hospitalizacion/kardex
 import { EgresosComponent } from './componentes_medicos/ciclo_hospitalizacion/egresos.component';
 import { AnexosComponent } from './componentes_medicos/hospitalizacion/anexos/anexos.component';
 import { ReportesComponent } from './componentes_medicos/reportes/reportes.component';
+import { ListaTriageComponent } from './componentes_medicos/emergencia/lista-triage.component';
+import { FormTriageComponent } from './componentes_medicos/emergencia/form-triage.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
@@ -71,6 +73,8 @@ export const pagesChildRoutes: Routes = [
             { path: 'egresos', canActivate: [JwtGuard],component: EgresosComponent ,data:{titulo: 'Egresos Hospitalarios'}},
             { path: 'emergencia', canActivate: [JwtGuard],component: Lista008Component ,data:{titulo: 'Emergencia'}},
             { path: 'emergencia/:id', canActivate: [JwtGuard],component: Formulario008Component ,data:{titulo: 'Formulario 008'}},
+            { path: 'triage', canActivate: [JwtGuard],component: ListaTriageComponent ,data:{titulo: 'Triage de Manchester'}},
+            { path: 'triage/:id', canActivate: [JwtGuard],component: FormTriageComponent ,data:{titulo: 'Formulario Triage'}},
 
             //Hospitalizacion
             { path: 'hospitalizacion_inicio', canActivate: [JwtGuard],component: InicioComponent ,data:{titulo: 'Hospitalización'}},

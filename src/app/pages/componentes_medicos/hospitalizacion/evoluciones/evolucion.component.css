@@ -1,12 +1,63 @@
-.table td,
-.table th {
-  vertical-align: middle;
-  text-align: center;
-  white-space: nowrap;
+/* Asegurar que en pantallas pequeñas el comportamiento responsivo funcione correctamente */
+@media screen and (max-width: 600px) {
+  .table-responsive .table {
+    table-layout: auto;
+  }
+  /* El CSS global maneja el comportamiento responsivo (display: block en tr y td) */
 }
 
-.table td.text-start {
-  white-space: normal;
+/* Scroll horizontal para tablas en pantallas medianas y grandes */
+/* Solo aplica cuando la pantalla es mayor a 600px para no interferir con el comportamiento responsivo */
+@media screen and (min-width: 601px) {
+  .table-responsive {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  .table-responsive .table {
+    width: auto;
+    min-width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+  }
+
+  /* Mantener nowrap solo en columnas que no tienen text-start */
+  .table-responsive .table th:not(.text-start),
+  .table-responsive .table td:not(.text-start) {
+    white-space: nowrap;
+  }
+
+  /* Las columnas con text-start mantienen su comportamiento normal */
+  .table-responsive .table td.text-start {
+    white-space: normal;
+    min-width: 200px; /* Ancho mínimo para columnas de texto largo */
+  }
+
+  /* Estilos base para pantallas grandes */
+  .table-responsive .table td,
+  .table-responsive .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .table-responsive .table td.text-start {
+    text-align: left;
+  }
+}
+
+/* Estilos que aplican siempre pero no interfieren con el comportamiento responsivo */
+@media screen and (min-width: 601px) {
+  .table td,
+  .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .table td.text-start {
+    text-align: left;
+  }
 }
 
 .texto-limitado {
@@ -15,6 +66,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 5;
+  line-clamp: 5;
   -webkit-box-orient: vertical;
   font-size: 0.9rem;
 }

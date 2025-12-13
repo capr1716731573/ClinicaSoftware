@@ -229,3 +229,29 @@ export interface EmergenciaPlanTratamiento {
   posologia_plantra: string;              // text NOT NULL
   dias: number;                           // int8 NOT NULL
 }
+
+export interface EmergenciaTriage {
+  pk_triage: number;
+
+  fk_persona: number;
+  casalud_id_fk: number;
+  tip_seg_fk: number;
+
+  fecha_triage: string;          // YYYY-MM-DD
+  hora_triage: string;           // HH:mm:ss o HH:mm
+
+  fk_usuario: number;
+
+  signos_vitales_triage: any;    // JSON (PA, FC, FR, T°, SatO2, etc.)
+  atencion_triage: any;          // JSON (motivo, nivel dolor, etc.)
+
+  clasificacion_triage: string;  // Ej: ROJO, AMARILLO, VERDE, AZUL
+  observacion_triage: string | null;
+
+  datos_auxiliares_triage: any | null;
+
+  estado_triage: boolean;
+
+  fecha_creacion: any;           // JSON auditoría
+  fecha_modificacion: any | null;
+}

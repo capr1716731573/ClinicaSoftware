@@ -1,0 +1,352 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Triage</h4>
+        <h6 class="card-subtitle">Lista de registros de Triage.</h6>
+
+        <div class="col-lg-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Búsqueda..."
+              [(ngModel)]="bsqTriage"
+              (ngModelChange)="bsqTriage = $event.toUpperCase()"
+              (keyup)="buscarTriage()"
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-info" type="button" (click)="nuevoTriage()">
+                Nuevo
+              </button>
+            </span>
+          </div>
+
+          <br />
+
+          @if (loading) {
+          <app-skeleton-table></app-skeleton-table>
+          } @else {
+          <div class="table-responsive pointer">
+            <table class="table full-color-table full-info-table hover-table">
+              <thead>
+                <tr>
+                  <th scope="col">#CÓDIGO</th>
+                  <th scope="col">FECHA/HORA</th>
+                  <th scope="col">#IDENTIFICACIÓN</th>
+                  <th scope="col">NOMBRES</th>
+                  <th scope="col">APELLIDOS</th>
+                  <th scope="col">MANCHESTER</th>
+                  <th scope="col">APROBADO</th>
+                  <th scope="col">ACCIÓN</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (item of triageList; track item.triage_pk_triage) {
+                <tr>
+                  <td data-label="#CÓDIGO">{{ item.triage_pk_triage }}</td>
+                  <td data-label="FECHA/HORA">
+                    {{ item.triage_fecha_triage }}/{{ item.triage_hora_triage }}
+                  </td>
+                  <td data-label="#IDENTIFICACIÓN">
+                    {{ item.paciente_numidentificacion }}
+                  </td>
+                  <td data-label="NOMBRES">
+                    {{ item.paciente_nombre_primario }}
+                    {{ item.paciente_nombre_secundario ?? item.pacienteo_nombre_secundario }}
+                  </td>
+                  <td data-label="APELLIDOS">
+                    {{ item.paciente_apellido1 }}
+                    {{ item.paciente_apellido2 }}
+                  </td>
+                  <td data-label="MANCHESTER">
+                    <span
+                      class="manchester-sphere"
+                      [ngClass]="getManchesterClass(item.triage_clasificacion_triage)"
+                    >
+                      {{ getManchesterLabel(item.triage_clasificacion_triage) }}
+                    </span>
+                  </td>
+
+                  <td data-label="APROBADO">
+                    @if (item.triage_estado_triage) {
+                    <button
+                      type="button"
+                      class="btn btn-success btn-circle"
+                      (click)="desaprobarTriage(item)"
+                      title="Desaprobar (solo superusuario)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    } @else{
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-circle"
+                      (click)="aprobarTriage(item)"
+                      title="Aprobar"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                    }
+                  </td>
+
+                  <td data-label="ACCIÓN">
+                    <div class="btn-group d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ti-settings"></i>
+                      </button>
+                      <div class="dropdown-menu pointer">
+                        <a class="dropdown-item pointer" (click)="editarTriage(item)"
+                          >Ver/Editar</a
+                        >
+                        <a
+                          class="dropdown-item pointer"
+                          (click)="imprimirTriage(item.triage_pk_triage)"
+                          >Imprimir</a
+                        >
+                        <a class="dropdown-item pointer" (click)="verAuditoria(item)"
+                          >Auditoria</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+
+            <br />
+            <div class="text-right">
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="Navegación de páginas"
+              >
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  [disabled]="isSearching || numeracion === 1"
+                  (click)="retroceder()"
+                >
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+
+                <button type="button" class="btn btn-info" disabled>
+                  {{ numeracion }}
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="isSearching || triageList?.length < intervalo"
+                >
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Auditoría -->
+<div
+  id="auditoriaModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="auditoriaModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h4 class="modal-title text-white" id="auditoriaModalLabel">
+          <i class="fa fa-history"></i> Información de Auditoría
+        </h4>
+        <button
+          type="button"
+          class="close text-white"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Fecha de Creación -->
+          <div class="col-md-6">
+            <div class="card border-success">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-plus-circle"></i> Fecha de Creación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.triage_fecha_creacion) {
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-calendar text-success"></i> <b>Fecha:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{ auditoriaData.triage_fecha_creacion.fecha || 'N/A' }}
+                  </h5>
+                </div>
+
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-clock-o text-success"></i> <b>Hora:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{ auditoriaData.triage_fecha_creacion.hora || 'N/A' }}
+                  </h5>
+                </div>
+
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-id-card text-success"></i>
+                    <b>Identificación:</b>
+                  </label>
+                  <h5 class="text-success mb-0">
+                    {{
+                      auditoriaData.triage_fecha_creacion
+                        .numidentificacion_persona || 'N/A'
+                    }}
+                  </h5>
+                </div>
+
+                <div class="mb-0 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-user text-success"></i> <b>Nombres:</b>
+                  </label>
+                  <h6 class="text-success mb-0">
+                    {{
+                      auditoriaData.triage_fecha_creacion.apellidopat_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_creacion.apellidomat_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_creacion.nombre_primario_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_creacion.nombre_secundario_persona ||
+                        ''
+                    }}
+                  </h6>
+                </div>
+                } @else {
+                <div class="text-center p-4">
+                  <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                  <p class="text-muted mb-0">Sin información de creación</p>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Fecha de Modificación -->
+          <div class="col-md-6">
+            <div class="card border-danger">
+              <div class="card-header bg-danger text-white">
+                <h5 class="mb-0 text-white">
+                  <i class="fa fa-edit"></i> Última Modificación
+                </h5>
+              </div>
+              <div class="card-body">
+                @if (auditoriaData?.triage_fecha_modificacion) {
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-calendar text-danger"></i> <b>Fecha:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{ auditoriaData.triage_fecha_modificacion.fecha || 'N/A' }}
+                  </h5>
+                </div>
+
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-clock-o text-danger"></i> <b>Hora:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{ auditoriaData.triage_fecha_modificacion.hora || 'N/A' }}
+                  </h5>
+                </div>
+
+                <div class="mb-3 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-id-card text-danger"></i>
+                    <b>Identificación:</b>
+                  </label>
+                  <h5 class="text-danger mb-0">
+                    {{
+                      auditoriaData.triage_fecha_modificacion
+                        .numidentificacion_persona || 'N/A'
+                    }}
+                  </h5>
+                </div>
+
+                <div class="mb-0 p-2 bg-light rounded">
+                  <label class="text-muted mb-1 d-block">
+                    <i class="fa fa-user text-danger"></i> <b>Nombres:</b>
+                  </label>
+                  <h6 class="text-danger mb-0">
+                    {{
+                      auditoriaData.triage_fecha_modificacion.apellidopat_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_modificacion.apellidomat_persona ||
+                        ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_modificacion
+                        .nombre_primario_persona || ''
+                    }}
+                    {{
+                      auditoriaData.triage_fecha_modificacion
+                        .nombre_secundario_persona || ''
+                    }}
+                  </h6>
+                </div>
+                } @else {
+                <div class="text-center p-4">
+                  <i class="fa fa-info-circle fa-3x text-muted mb-3"></i>
+                  <p class="text-muted mb-0">Sin modificaciones registradas</p>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger waves-effect"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal de Auditoría -->

@@ -62,7 +62,7 @@
                 @for (item of evolucionList; track item.pk_evo) {
                 <tr [class.bg-fila]="!item.actual">
                   <!-- FECHA -->
-                  <td>
+                  <td data-label="FECHA/HORA">
                     <div>
                       <small>{{ item.fecha_evo }} {{item.actual}}</small>
                     </div>
@@ -73,10 +73,10 @@
                   </td>
 
                   <!-- PROFESIONAL -->
-                  <td>{{ item.desc_catdetalle }}</td>
+                  <td data-label="ASUNTO">{{ item.desc_catdetalle }}</td>
 
                   <!-- NOTA DE EVOLUCIÓN -->
-                  <td class="text-start">
+                  <td class="text-start" data-label="NOTA DE EVOLUCIÓN">
                     @if (item.evolucion_evo?.length < 200) {
                     <textarea
                       class="form-control form-control-sm"
@@ -93,7 +93,7 @@
                   </td>
 
                   <!-- PRESCRIPCIONES -->
-                  <td class="text-start">
+                  <td class="text-start" data-label="PRESCRIPCIONES">
                     @if (item.prescripcion_evo?.length < 200) {
                     <textarea
                       class="form-control form-control-sm"
@@ -110,7 +110,7 @@
                   </td>
 
                   <!-- ADM. MÉDICA -->
-                  <td>
+                  <td data-label="ADM. MÉDICA">
                     @if (item.admin_medica_evo) {
                     <button
                       type="button"
@@ -131,7 +131,7 @@
                   </td>
 
                   <!-- APROBADO -->
-                  <td>
+                  <td data-label="APROBADO">
                     @if (item.aprobado_evo) {
                     <button
                       type="button"
@@ -152,7 +152,7 @@
                   </td>
 
                   <!-- ACCIONES -->
-                  <td>
+                  <td data-label="ACCIONES">
                     <div class="btn-group d-flex justify-content-center">
                       <button
                         type="button"

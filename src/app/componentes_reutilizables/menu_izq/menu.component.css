@@ -74,3 +74,23 @@
     }
   }
 
+  /* Botón flotante (engranaje) - mejorar tamaño del ícono y centrado */
+  button.right-side-toggle.btn-circle.btn-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+  }
+
+  button.right-side-toggle.btn-circle.btn-sm > i {
+    font-size: 18px;
+    line-height: 1;
+    display: block;
+    /* override del css global que posiciona el ícono absolute (top/left) */
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+  }
+

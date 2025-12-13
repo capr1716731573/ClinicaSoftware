@@ -1,0 +1,702 @@
+@if (loading) {
+<app-skeleton-crud></app-skeleton-crud>
+} @else {
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Encabezado: búsqueda de paciente + info -->
+        <div class="row">
+          <div class="col-md-5 form-group">
+            <label>* Identificación</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control form-control-line"
+                [(ngModel)]="identificacion"
+                name="identificacion"
+                placeholder="Ingrese Identificación"
+                (ngModelChange)="identificacion = $event.toUpperCase()"
+                (keyup.enter)="consultarPaciente(identificacion)"
+                [disabled]="opcion === 'U'"
+              />
+              <span class="input-group-btn">
+                <button
+                  class="btn btn-info"
+                  type="button"
+                  (click)="consultarPaciente(identificacion)"
+                  [disabled]="opcion === 'U'"
+                >
+                  Buscar
+                </button>
+              </span>
+            </div>
+
+            <div class="m-t-15 d-flex align-items-center">
+              <div class="m-r-10">
+                <span class="text-muted"><b>Manchester:</b></span>
+              </div>
+              <span
+                class="manchester-sphere manchester-sphere-lg"
+                [ngClass]="getManchesterClass(triageBody?.clasificacion_triage)"
+                title="Clasificación Manchester"
+              >
+                {{ getManchesterLabel(triageBody?.clasificacion_triage) }}
+              </span>
+            </div>
+        
+          </div>
+
+          <div class="col-md-7 form-group">
+            @if (triageBody?.fk_persona) {
+            <div class="card bg-primary">
+              <div class="card-body">
+                <div class="d-flex no-block">
+                  <div class="m-r-20 align-self-center">
+                    <img src="../assets/images/icon/staff-w.png" alt="Paciente" />
+                  </div>
+                  <div class="align-self-center">
+                    <h5 class="text-white m-t-10 m-b-0">
+                      <b>Paciente Seleccionado:</b>
+                    </h5>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Nombres:</b>
+                      {{
+                        (hcu?.apellidopat_persona ?? pacienteInfo?.apellidopat_persona ??
+                          triageBody?.fecha_creacion?.apellidopat_persona ??
+                          '') +
+                          ' ' +
+                          (hcu?.apellidomat_persona ?? pacienteInfo?.apellidomat_persona ??
+                            triageBody?.fecha_creacion?.apellidomat_persona ??
+                            '') +
+                          ' ' +
+                          (hcu?.nombre_primario_persona ?? pacienteInfo?.nombre_primario_persona ??
+                            triageBody?.fecha_creacion?.nombre_primario_persona ??
+                            '') +
+                          ' ' +
+                          (hcu?.nombre_secundario_persona ?? pacienteInfo?.nombre_secundario_persona ??
+                            triageBody?.fecha_creacion?.nombre_secundario_persona ??
+                            '')
+                      }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Identificación:</b>
+                      {{
+                        hcu?.numidentificacion_persona ??
+                          pacienteInfo?.numidentificacion_persona ??
+                          triageBody?.fecha_creacion?.numidentificacion_persona ??
+                          identificacion
+                      }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Sexo:</b>
+                      {{
+                        hcu?.sexo ??
+                          pacienteInfo?.sexo ??
+                          triageBody?.fecha_creacion?.sexo ??
+                          '—'
+                      }}
+                    </h6>
+                    <h6 class="text-white m-t-10 m-b-0">
+                      <b>Edad:</b>
+                      @if (hcu?.edad?.valor) {
+                      {{ hcu?.edad?.valor }} {{ hcu?.edad?.tipo }}
+                      } @else {
+                      —
+                      }
+                    </h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            } @else {
+            <h3>Paciente no seleccionado</h3>
+            }
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="triageTab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="tab-datos-paciente"
+              data-toggle="tab"
+              href="#panel-datos-paciente"
+              role="tab"
+              aria-controls="panel-datos-paciente"
+              aria-expanded="true"
+              >Datos Paciente</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="tab-signos"
+              data-toggle="tab"
+              href="#panel-signos"
+              role="tab"
+              aria-controls="panel-signos"
+              >Signos Vitales</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="tab-triage"
+              data-toggle="tab"
+              href="#panel-triage"
+              role="tab"
+              aria-controls="panel-triage"
+              >Datos triage</a
+            >
+          </li>
+        </ul>
+
+        <form class="form" (ngSubmit)="guardarTriage()">
+          <div class="tab-content tabcontent-border p-20" id="triageTabContent">
+            <!-- TAB 1 -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade show active"
+              id="panel-datos-paciente"
+              aria-labelledby="tab-datos-paciente"
+            >
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Casa de Salud <span style="color: red">(*)</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [value]="
+                      casaSaludBody?.casalud_descripcion ??
+                      casaSaludBody?.casalud_nombre ??
+                      '—'
+                    "
+                    [disabled]="true"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Tipo de Seguro <span style="color: red">(*)</span></label>
+                  <ng-select
+                    [items]="tipoSeguroList"
+                    bindLabel="desc_catdetalle"
+                    bindValue="pk_catdetalle"
+                    placeholder="Seleccione"
+                    [(ngModel)]="triageBody.tip_seg_fk"
+                    name="tip_seg_fk"
+                    [clearable]="true"
+                    (clear)="triageBody.tip_seg_fk = 0"
+                    [typeToSearchText]="'Empieza a escribir...'"
+                  >
+                    <ng-template ng-option-tmp let-item="item">
+                      <div>
+                        <b>{{ item.desc_catdetalle }}</b
+                        ><br />
+                        <small>ID: {{ item.pk_catdetalle }}</small>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label>Fecha <span style="color: red">(*)</span></label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="triageBody.fecha_triage"
+                    name="fecha_triage"
+                    [disabled]="true"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Hora <span style="color: red">(*)</span></label>
+                  <input
+                    class="form-control"
+                    type="time"
+                    [(ngModel)]="triageBody.hora_triage"
+                    name="hora_triage"
+                    [disabled]="true"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: Signos Vitales (igual al 008, adaptado) -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              id="panel-signos"
+              aria-labelledby="tab-signos"
+            >
+              
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>¿Sin Constantes Vitales?</label>
+                  <div class="demo-checkbox">
+                    <input
+                      type="checkbox"
+                      id="chk_sc_vitales"
+                      class="chk-col-red"
+                      [(ngModel)]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                      name="sin_constantes_vitales"
+                      (ngModelChange)="
+                        $event
+                          ? [
+                              (triageBody.signos_vitales_triage.presion_arterial_mmhg = null),
+                              (triageBody.signos_vitales_triage.presion_arterial_sistolica = null),
+                              (triageBody.signos_vitales_triage.presion_arterial_diastolica = null),
+                              (triageBody.signos_vitales_triage.pulso_por_min = null),
+                              (triageBody.signos_vitales_triage.frecuencia_respiratoria_por_min = null),
+                              (triageBody.signos_vitales_triage.pulsioximetria_porcentaje = null),
+                              (triageBody.signos_vitales_triage.temperatura = null),
+                              (triageBody.signos_vitales_triage.estado_conciencia = null),
+                              (triageBody.signos_vitales_triage.proteinuria = null),
+                              (triageBody.signos_vitales_triage.score_mama = null),
+                              (triageBody.signos_vitales_triage.peso_kg = null),
+                              (triageBody.signos_vitales_triage.talla_cm = null),
+                              (triageBody.signos_vitales_triage.glicemia_capilar_mg_dl = null),
+                              (triageBody.signos_vitales_triage.glasgow = null),
+                              (triageBody.signos_vitales_triage.ocular = null),
+                              (triageBody.signos_vitales_triage.verbal = null),
+                              (triageBody.signos_vitales_triage.motora = null),
+                              (triageBody.signos_vitales_triage.perimetro_cefalico = null),
+                              (triageBody.signos_vitales_triage.eva = null),
+                              (triageBody.signos_vitales_triage.pupila_izq = null),
+                              (triageBody.signos_vitales_triage.pupila_der = null),
+                              (triageBody.signos_vitales_triage.llenado_capilar = null)
+                            ]
+                          : null
+                      "
+                    />
+                    <label for="chk_sc_vitales">Activar</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Presión Arterial (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="triageBody.signos_vitales_triage.presion_arterial_mmhg"
+                    name="presion_arterial_mmhg"
+                    [disabled]="true"
+                    placeholder="S/D"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Presión Sistólica (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.presion_arterial_sistolica"
+                    name="presion_arterial_sistolica"
+                    (ngModelChange)="
+                      triageBody.signos_vitales_triage.presion_arterial_mmhg =
+                        (triageBody.signos_vitales_triage.presion_arterial_sistolica ?? '') +
+                        '/' +
+                        (triageBody.signos_vitales_triage.presion_arterial_diastolica ?? '');
+                      variablesScoreMama(2, $event)
+                    "
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Presión Diastólica (mmHg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.presion_arterial_diastolica"
+                    name="presion_arterial_diastolica"
+                    (ngModelChange)="
+                      triageBody.signos_vitales_triage.presion_arterial_mmhg =
+                        (triageBody.signos_vitales_triage.presion_arterial_sistolica ?? '') +
+                        '/' +
+                        (triageBody.signos_vitales_triage.presion_arterial_diastolica ?? '');
+                      variablesScoreMama(3, $event)
+                    "
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Frecuencia Respiratoria / min</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.frecuencia_respiratoria_por_min"
+                    (ngModelChange)="variablesScoreMama(4, $event)"
+                    name="frecuencia_respiratoria_por_min"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>Pulso / min</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.pulso_por_min"
+                    name="pulso_por_min"
+                    (ngModelChange)="variablesScoreMama(1, $event)"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+
+                <div class="col-md-2 form-group">
+                  <label>Pulsioximetría %</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.pulsioximetria_porcentaje"
+                    name="pulsioximetria_porcentaje"
+                    (ngModelChange)="variablesScoreMama(6, $event)"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+
+                <div class="col-md-2 form-group">
+                  <label>Temperatura (°C)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.temperatura"
+                    name="temperatura"
+                    (ngModelChange)="variablesScoreMama(5, $event)"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    placeholder="--"
+                  />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="estado_conciencia">Estado de Conciencia</label>
+                  <select
+                    id="estado_conciencia"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.estado_conciencia"
+                    (ngModelChange)="variablesScoreMama(7, $event)"
+                    name="estado_conciencia"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione una opción...</option>
+                    <option value="alerta">Alerta</option>
+                    <option value="voz">Responde a la voz / Somnolienta</option>
+                    <option value="dolor">Responde al dolor / Estuporosa</option>
+                    <option value="agitada">Confusa / Agitada</option>
+                    <option value="nores">No Responde</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2 form-group">
+                  <label for="proteinuria">Proteinuria</label>
+                  <select
+                    id="proteinuria"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.proteinuria"
+                    (ngModelChange)="variablesScoreMama(8, $event)"
+                    name="proteinuria"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    <option value="1">Positivo (+)</option>
+                    <option value="0">Negativo (-)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Acciones</label>
+                  <button
+                    class="btn btn-success btn-block"
+                    type="button"
+                    (click)="limpiarSignosVitalesSegunGenero()"
+                    title="Solo informativo"
+                  >
+                    Limpiar Proteinuria / Score Mamá
+                  </button>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Score Mamá</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.score_mama"
+                    name="score_mama"
+                    [disabled]="true"
+                    placeholder="—"
+                  />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label>Recomendación</label>
+                  <p>{{ leyenda_scoremama }}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label for="ocular">Ocular (4)</label>
+                  <select
+                    id="ocular"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.ocular"
+                    name="ocular"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    (ngModelChange)="
+                      triageBody.signos_vitales_triage.glasgow =
+                        (+triageBody.signos_vitales_triage.ocular || 0) +
+                        (+triageBody.signos_vitales_triage.verbal || 0) +
+                        (+triageBody.signos_vitales_triage.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label for="verbal">Verbal (5)</label>
+                  <select
+                    id="verbal"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.verbal"
+                    name="verbal"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    (ngModelChange)="
+                      triageBody.signos_vitales_triage.glasgow =
+                        (+triageBody.signos_vitales_triage.ocular || 0) +
+                        (+triageBody.signos_vitales_triage.verbal || 0) +
+                        (+triageBody.signos_vitales_triage.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4,5]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label for="motora">Motora (6)</label>
+                  <select
+                    id="motora"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.motora"
+                    name="motora"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                    (ngModelChange)="
+                      triageBody.signos_vitales_triage.glasgow =
+                        (+triageBody.signos_vitales_triage.ocular || 0) +
+                        (+triageBody.signos_vitales_triage.verbal || 0) +
+                        (+triageBody.signos_vitales_triage.motora || 0)
+                    "
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [1,2,3,4,5,6]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label for="glasgow">Glasgow</label>
+                  <input
+                    id="glasgow"
+                    class="form-control"
+                    type="number"
+                    [value]="
+                      (+triageBody.signos_vitales_triage.ocular || 0) +
+                      (+triageBody.signos_vitales_triage.verbal || 0) +
+                      (+triageBody.signos_vitales_triage.motora || 0)
+                    "
+                    [disabled]="true"
+                    name="glasgow"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Perímetro Cefálico (cm)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.perimetro_cefalico"
+                    name="perimetro_cefalico"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Talla (cm)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.talla_cm"
+                    name="talla_cm"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Peso (kg)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.peso_kg"
+                    name="peso_kg"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label for="eva">EVA /10</label>
+                  <select
+                    id="eva"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.eva"
+                    name="eva"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione…</option>
+                    @for (n of [0,1,2,3,4,5,6,7,8,9,10]; track n) {
+                    <option [ngValue]="n">{{ n }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 form-group">
+                  <label>Reacción Pupila Der.</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.pupila_der"
+                    name="pupila_der"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Reacción Pupila Izq.</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.pupila_izq"
+                    name="pupila_izq"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>T. Llenado Capilar</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.llenado_capilar"
+                    name="llenado_capilar"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label>Glicemia Capilar (mg/dl)</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    [(ngModel)]="triageBody.signos_vitales_triage.glicemia_capilar_mg_dl"
+                    name="glicemia_capilar_mg_dl"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: Datos Triage -->
+            <div
+              role="tabpanel"
+              class="tab-pane fade"
+              id="panel-triage"
+              aria-labelledby="tab-triage"
+            >
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label>Clasificación <span style="color: red">(*)</span></label>
+                  <select
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.clasificacion_triage"
+                    name="clasificacion_triage"
+                    (ngModelChange)="triageBody.clasificacion_triage = ($event ?? '').toString().toUpperCase()"
+                  >
+                    <option [ngValue]="''" disabled>Seleccione…</option>
+                    @for (c of clasificaciones; track c.code) {
+                    <option [ngValue]="c.code">{{ c.label }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label>Observaciones</label>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    [(ngModel)]="triageBody.observacion_triage"
+                    name="observacion_triage"
+                    placeholder="Ingrese observaciones..."
+                    (ngModelChange)="triageBody.observacion_triage = ($event ?? '').toString().toUpperCase()"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div class="row">
+            <div class="col-md-12 d-flex justify-content-end">
+              <button
+                type="submit"
+                class="btn btn-success waves-effect  waves-effect m-r-10"
+                [disabled]="!validarGuardar()"
+                title="Guardar"
+              >
+                Guardar
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="cancelar()"
+              >
+                Cancelar
+              </button>
+              
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}
