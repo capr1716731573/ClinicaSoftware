@@ -85,6 +85,8 @@ export class FormTriageComponent {
   sm_temperatura: any = null;
   sm_saturacion: any = null;
   sm_estado_conciencia: any = null;
+  sm_oxigeno: any = null;
+  sm_gastoUrinario: any = null;
   sm_proteinuria: any = null;
   leyenda_scoremama = '';
 
@@ -145,6 +147,8 @@ export class FormTriageComponent {
         estado_conciencia: null,
         proteinuria: null,
         score_mama: null,
+        oxigeno_terapia: null,
+        gasto_urinario: null,
         peso_kg: null,
         talla_cm: null,
         glicemia_capilar_mg_dl: null,
@@ -286,7 +290,7 @@ export class FormTriageComponent {
 
         // fk_persona del triage corresponde a persona.pk_persona (en HCU viene como fk_persona)
         if (actualizarFkPersona) {
-          this.triageBody.fk_persona = Number(this.hcu?.fk_persona ?? 0);
+          this.triageBody.fk_persona = Number(this.hcu?.pk_hcu ?? 0);
         }
         this.triageBody.fk_usuario =
           this._loginService.getUserLocalStorage()?.pk_usuario ?? this.triageBody.fk_usuario;
@@ -382,6 +386,46 @@ export class FormTriageComponent {
       item?.datos_auxiliares_triage ?? item?.triage_datos_auxiliares_triage ?? null
     );
 
+    // Normalizar/asegurar estructura de signos vitales (para que el cálculo Score Mamá funcione)
+    const baseSignos = this.triageBody?.signos_vitales_triage ?? {
+      sin_constantes_vitales: false,
+      presion_arterial_mmhg: null,
+      presion_arterial_sistolica: null,
+      presion_arterial_diastolica: null,
+      pulso_por_min: null,
+      frecuencia_respiratoria_por_min: null,
+      pulsioximetria_porcentaje: null,
+      temperatura: null,
+      estado_conciencia: null,
+      proteinuria: null,
+      score_mama: null,
+      oxigeno_terapia: null,
+      gasto_urinario: null,
+      peso_kg: null,
+      talla_cm: null,
+      glicemia_capilar_mg_dl: null,
+      glasgow: null,
+      ocular: null,
+      verbal: null,
+      motora: null,
+      perimetro_cefalico: null,
+      eva: null,
+      pupila_izq: null,
+      pupila_der: null,
+      llenado_capilar: null,
+    } as any;
+
+    const mergedSignos: any = { ...baseSignos, ...(signos ?? {}) };
+    // sin_constantes_vitales puede venir como boolean o como 'SI'/'NO'
+    if (mergedSignos.sin_constantes_vitales === 'SI') mergedSignos.sin_constantes_vitales = true;
+    else if (mergedSignos.sin_constantes_vitales === 'NO')
+      mergedSignos.sin_constantes_vitales = false;
+    else mergedSignos.sin_constantes_vitales = !!mergedSignos.sin_constantes_vitales;
+
+    // Asegurar llaves nuevas
+    if (mergedSignos.oxigeno_terapia === undefined) mergedSignos.oxigeno_terapia = null;
+    if (mergedSignos.gasto_urinario === undefined) mergedSignos.gasto_urinario = null;
+
     return {
       pk_triage: item?.pk_triage ?? item?.triage_pk_triage ?? 0,
       fk_persona: item?.fk_persona ?? item?.triage_fk_persona ?? 0,
@@ -390,7 +434,7 @@ export class FormTriageComponent {
       fecha_triage: item?.fecha_triage ?? item?.triage_fecha_triage ?? '',
       hora_triage: item?.hora_triage ?? item?.triage_hora_triage ?? '',
       fk_usuario: item?.fk_usuario ?? item?.triage_fk_usuario ?? 0,
-      signos_vitales_triage: signos ?? this.triageBody?.signos_vitales_triage ?? {},
+      signos_vitales_triage: mergedSignos,
       atencion_triage: atencion ?? this.triageBody?.atencion_triage ?? {},
       clasificacion_triage:
         (item?.clasificacion_triage ?? item?.triage_clasificacion_triage ?? '').toString(),
@@ -510,9 +554,71 @@ export class FormTriageComponent {
   // -----------------------------
   // Score MAMÁ (adaptado a triageBody.signos_vitales_triage)
   // -----------------------------
+  setSinConstantesVitales(checked: boolean): void {
+    const g = this.triageBody?.signos_vitales_triage;
+    if (!g) return;
+
+    g.sin_constantes_vitales = checked;
+
+    if (!checked) return;
+
+    g.presion_arterial_mmhg = null;
+    g.presion_arterial_sistolica = null;
+    g.presion_arterial_diastolica = null;
+    g.pulso_por_min = null;
+    g.frecuencia_respiratoria_por_min = null;
+    g.pulsioximetria_porcentaje = null;
+    g.temperatura = null;
+    g.estado_conciencia = null;
+    g.proteinuria = null; // legacy/back
+    g.oxigeno_terapia = null;
+    g.gasto_urinario = null;
+    g.score_mama = null;
+
+    g.peso_kg = null;
+    g.talla_cm = null;
+    g.glicemia_capilar_mg_dl = null;
+    g.glasgow = null;
+    g.ocular = null;
+    g.verbal = null;
+    g.motora = null;
+    g.perimetro_cefalico = null;
+    g.eva = null;
+    g.pupila_izq = null;
+    g.pupila_der = null;
+    g.llenado_capilar = null;
+
+    this.sm_frecuencia_cardiaca = null;
+    this.sm_sistolica = null;
+    this.sm_diastolica = null;
+    this.sm_frecuencia_respiratoria = null;
+    this.sm_temperatura = null;
+    this.sm_saturacion = null;
+    this.sm_estado_conciencia = null;
+    this.sm_oxigeno = null;
+    this.sm_gastoUrinario = null;
+    this.sm_proteinuria = null;
+    this.leyenda_scoremama = '';
+  }
+
   limpiarSignosVitalesSegunGenero(): void {
-    this.triageBody.signos_vitales_triage.proteinuria = null;
-    this.triageBody.signos_vitales_triage.score_mama = null;
+    const g = this.triageBody?.signos_vitales_triage;
+    if (!g) return;
+
+    g.proteinuria = null; // legacy/back
+    g.oxigeno_terapia = null;
+    g.gasto_urinario = null;
+    g.score_mama = null;
+
+    this.sm_frecuencia_cardiaca = null;
+    this.sm_sistolica = null;
+    this.sm_diastolica = null;
+    this.sm_frecuencia_respiratoria = null;
+    this.sm_temperatura = null;
+    this.sm_saturacion = null;
+    this.sm_estado_conciencia = null;
+    this.sm_oxigeno = null;
+    this.sm_gastoUrinario = null;
     this.sm_proteinuria = null;
     this.leyenda_scoremama = '';
   }
@@ -527,7 +633,9 @@ export class FormTriageComponent {
       g.temperatura != null &&
       g.pulsioximetria_porcentaje != null &&
       g.estado_conciencia != null &&
-      g.proteinuria != null
+      g.oxigeno_terapia != null &&
+      g.gasto_urinario != null
+      
     ) {
       this.loadCalculosSignosVitales();
     }
@@ -542,7 +650,8 @@ export class FormTriageComponent {
     this.variablesScoreMama(5, g.temperatura);
     this.variablesScoreMama(6, g.pulsioximetria_porcentaje);
     this.variablesScoreMama(7, g.estado_conciencia);
-    this.variablesScoreMama(8, g.proteinuria);
+    this.variablesScoreMama(8, g.oxigeno_terapia);
+    this.variablesScoreMama(9, g.gasto_urinario);
   }
 
   variablesScoreMama(opcion: number, valor_param: any): void {
@@ -589,18 +698,54 @@ export class FormTriageComponent {
       this.sm_estado_conciencia =
         valorString ? this._scoreMamaService.calc_estado_conciencia(valorString) : null;
     } else if (opcion === 8) {
-      valor = parseFloat(valor_param);
-      this.sm_proteinuria =
-        valor != null && Number.isFinite(valor)
-          ? this._scoreMamaService.calc_proteinuria(valor)
-          : null;
+      const valorString: string = String(valor_param ?? '');
+      this.sm_oxigeno =
+        valorString ? this._scoreMamaService.calc_oxigeno_terapia(valorString) : null;
+    }else if (opcion === 9) {
+      const valorString: string = String(valor_param ?? '');
+      this.sm_gastoUrinario =
+        valorString ? this._scoreMamaService.calc_gastoUrinario(valorString) : null;
     }
 
     this.calculoScoreMama();
   }
 
   private calculoScoreMama(): void {
-    const g = this.triageBody?.signos_vitales_triage ?? {};
+    // Recalcula SIEMPRE desde los valores actuales del formulario
+    const g = this.triageBody?.signos_vitales_triage;
+    if (!g) return;
+
+    const num = (v: any): number | null => {
+      if (v === null || v === undefined || v === '') return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+    const str = (v: any): string | null =>
+      v === null || v === undefined || v === '' ? null : String(v);
+
+    const fc = num(g.pulso_por_min);
+    const sis = num(g.presion_arterial_sistolica);
+    const dia = num(g.presion_arterial_diastolica);
+    const fr = num(g.frecuencia_respiratoria_por_min);
+    const temp = num(g.temperatura);
+    const sat = num(g.pulsioximetria_porcentaje);
+    const conc = str(g.estado_conciencia);
+    const ox = str(g.oxigeno_terapia);
+    const gu = str(g.gasto_urinario);
+
+    this.sm_frecuencia_cardiaca =
+      fc === null ? null : this._scoreMamaService.calc_frecuencia_cardiaca(fc);
+    this.sm_sistolica = sis === null ? null : this._scoreMamaService.calc_sistolica(sis);
+    this.sm_diastolica = dia === null ? null : this._scoreMamaService.calc_diastolica(dia);
+    this.sm_frecuencia_respiratoria =
+      fr === null ? null : this._scoreMamaService.calc_frecuencia_respiratoria(fr);
+    this.sm_temperatura = temp === null ? null : this._scoreMamaService.calc_temperatura(temp);
+    this.sm_saturacion = sat === null ? null : this._scoreMamaService.calc_saturacion(sat);
+    this.sm_estado_conciencia =
+      conc === null ? null : this._scoreMamaService.calc_estado_conciencia(conc);
+    this.sm_oxigeno = ox === null ? null : this._scoreMamaService.calc_oxigeno_terapia(ox);
+    this.sm_gastoUrinario = gu === null ? null : this._scoreMamaService.calc_gastoUrinario(gu);
+
     if (
       this.sm_frecuencia_cardiaca != null &&
       this.sm_sistolica != null &&
@@ -609,7 +754,8 @@ export class FormTriageComponent {
       this.sm_temperatura != null &&
       this.sm_saturacion != null &&
       this.sm_estado_conciencia != null &&
-      this.sm_proteinuria != null
+      this.sm_oxigeno != null &&
+      this.sm_gastoUrinario != null
     ) {
       g.score_mama =
         this.sm_frecuencia_cardiaca +
@@ -619,7 +765,8 @@ export class FormTriageComponent {
         this.sm_temperatura +
         this.sm_saturacion +
         this.sm_estado_conciencia +
-        this.sm_proteinuria;
+        this.sm_oxigeno +
+        this.sm_gastoUrinario;
       this.colocarLeyenda(g.score_mama);
     } else {
       g.score_mama = null;

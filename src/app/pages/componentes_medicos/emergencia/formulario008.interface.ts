@@ -93,6 +93,8 @@ export interface Emergencia {
     pulsioximetria_porcentaje: string | null;
     temperatura: string | null;
     estado_conciencia: string | null;
+    oxigeno_terapia: string | null;
+    gasto_urinario: string | null;
     proteinuria: string | null;
     score_mama: number | null;
     peso_kg: string | null;

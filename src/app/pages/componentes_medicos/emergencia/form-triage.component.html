@@ -5,6 +5,7 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">
+        <!-- <pre>{{triageBody | json}}</pre> -->
         <!-- Encabezado: búsqueda de paciente + info -->
         <div class="row">
           <div class="col-md-5 form-group">
@@ -243,36 +244,8 @@
                       type="checkbox"
                       id="chk_sc_vitales"
                       class="chk-col-red"
-                      [(ngModel)]="triageBody.signos_vitales_triage.sin_constantes_vitales"
-                      name="sin_constantes_vitales"
-                      (ngModelChange)="
-                        $event
-                          ? [
-                              (triageBody.signos_vitales_triage.presion_arterial_mmhg = null),
-                              (triageBody.signos_vitales_triage.presion_arterial_sistolica = null),
-                              (triageBody.signos_vitales_triage.presion_arterial_diastolica = null),
-                              (triageBody.signos_vitales_triage.pulso_por_min = null),
-                              (triageBody.signos_vitales_triage.frecuencia_respiratoria_por_min = null),
-                              (triageBody.signos_vitales_triage.pulsioximetria_porcentaje = null),
-                              (triageBody.signos_vitales_triage.temperatura = null),
-                              (triageBody.signos_vitales_triage.estado_conciencia = null),
-                              (triageBody.signos_vitales_triage.proteinuria = null),
-                              (triageBody.signos_vitales_triage.score_mama = null),
-                              (triageBody.signos_vitales_triage.peso_kg = null),
-                              (triageBody.signos_vitales_triage.talla_cm = null),
-                              (triageBody.signos_vitales_triage.glicemia_capilar_mg_dl = null),
-                              (triageBody.signos_vitales_triage.glasgow = null),
-                              (triageBody.signos_vitales_triage.ocular = null),
-                              (triageBody.signos_vitales_triage.verbal = null),
-                              (triageBody.signos_vitales_triage.motora = null),
-                              (triageBody.signos_vitales_triage.perimetro_cefalico = null),
-                              (triageBody.signos_vitales_triage.eva = null),
-                              (triageBody.signos_vitales_triage.pupila_izq = null),
-                              (triageBody.signos_vitales_triage.pupila_der = null),
-                              (triageBody.signos_vitales_triage.llenado_capilar = null)
-                            ]
-                          : null
-                      "
+                      [checked]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                      (change)="setSinConstantesVitales($any($event.target).checked)"
                     />
                     <label for="chk_sc_vitales">Activar</label>
                   </div>
@@ -403,22 +376,53 @@
                   </select>
                 </div>
 
-                <div class="col-md-2 form-group">
-                  <label for="proteinuria">Proteinuria</label>
+              </div>
+
+                <!-- Nuevos campos -->
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="oxigeno_terapia">Oxígeno Terapia</label>
                   <select
-                    id="proteinuria"
+                    id="oxigeno_terapia"
                     class="custom-select col-12"
-                    [(ngModel)]="triageBody.signos_vitales_triage.proteinuria"
+                    [(ngModel)]="triageBody.signos_vitales_triage.oxigeno_terapia"
                     (ngModelChange)="variablesScoreMama(8, $event)"
-                    name="proteinuria"
+                    name="oxigeno_terapia"
                     [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
                   >
-                    <option [ngValue]="null" disabled>Seleccione…</option>
-                    <option value="1">Positivo (+)</option>
-                    <option value="0">Negativo (-)</option>
+                    <option [ngValue]="null" disabled>
+                      Seleccione una opción...
+                    </option>
+                    <option value="aire">Aire a Ambiente</option>
+                    <option value="cateter">Catéter Nasal</option>
+                    <option value="mascara">
+                      Máscara o Superior
+                    </option>
+                    
+                  </select>
+                </div>
+                <div class="col-md-2 form-group">
+                  <label for="gasto_urinario">Gasto Urinario</label>
+                  <select
+                    id="gasto_urinario"
+                    class="custom-select col-12"
+                    [(ngModel)]="triageBody.signos_vitales_triage.gasto_urinario"
+                    (ngModelChange)="variablesScoreMama(9, $event)"
+                    name="gasto_urinario"
+                    [disabled]="triageBody.signos_vitales_triage.sin_constantes_vitales"
+                  >
+                    <option [ngValue]="null" disabled>
+                      Seleccione una opción...
+                    </option>
+                    <option value="nocuantificable">No Cuantificable</option>
+                    <option value="30">Menor o igual a 30</option>
+                    <option value="10">
+                      Menor o igual a 10
+                    </option>
                   </select>
                 </div>
               </div>
+              <!-- Fin Nuevos Campos -->
 
               <div class="row">
                 <div class="col-md-3 form-group">
@@ -429,7 +433,7 @@
                     (click)="limpiarSignosVitalesSegunGenero()"
                     title="Solo informativo"
                   >
-                    Limpiar Proteinuria / Score Mamá
+                    Limpiar Score Mamá
                   </button>
                 </div>
 
@@ -438,9 +442,8 @@
                   <input
                     class="form-control"
                     type="number"
-                    [(ngModel)]="triageBody.signos_vitales_triage.score_mama"
-                    name="score_mama"
-                    [disabled]="true"
+                    [value]="triageBody.signos_vitales_triage.score_mama ?? ''"
+                    disabled
                     placeholder="—"
                   />
                 </div>

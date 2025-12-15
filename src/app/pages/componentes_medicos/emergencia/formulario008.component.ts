@@ -7,15 +7,11 @@ import {
 } from '@angular/core';
 import { Subject, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PersonaService } from '../../../services/persona/persona.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PersonaComponent } from '../../administrador/persona/persona.component';
 import Swal from 'sweetalert2';
 import { HistoriaClinicaService } from '../../../services/historia_clinica/historia_clinica.service';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
-import { LoaderBookComponent } from '../../../componentes_reutilizables/loader-book/loader-book.component';
-import { HistoriaClinica } from '../historia_clinica/historia_clinica.interface';
 import {
   Emergencia,
   EmergenciaDiagnostico,
@@ -53,6 +49,8 @@ export class Formulario008Component {
   sm_temperatura: any = null;
   sm_saturacion: any = null;
   sm_estado_conciencia: any = null;
+  sm_oxigeno: any = null;
+  sm_gastoUrinario: any = null;
   sm_proteinuria: any = null;
   leyenda_scoremama = '';
 
@@ -225,6 +223,8 @@ export class Formulario008Component {
         estado_conciencia: null,
         proteinuria: null,
         score_mama: null,
+        oxigeno_terapia:null,
+        gasto_urinario:null,
         peso_kg: null,
         talla_cm: null,
         glicemia_capilar_mg_dl: null,
@@ -368,11 +368,77 @@ export class Formulario008Component {
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //@@@@@@@@@@@ Calculos ScoreMama @@@@@@@@@@@@@@@
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  limpiarSignosVitalesSegunGenero() {
+  /**
+   * `sin_constantes_vitales` en este módulo se maneja como string 'SI'/null
+   * (por compatibilidad con el backend). El UI usa checkbox booleano, así que
+   * aquí hacemos el puente y limpiamos los campos cuando se activa.
+   */
+  setSinConstantesVitales(checked: boolean): void {
+    this.emergenciaBody._g.sin_constantes_vitales = checked ? 'SI' : null;
+
+    if (!checked) return;
+
+    // Limpia todos los signos vitales (incluye score mamá y campos relacionados)
+    this.emergenciaBody._g.presion_arterial_mmhg = null;
+    this.emergenciaBody._g.presion_arterial_sistolica = null;
+    this.emergenciaBody._g.presion_arterial_diastolica = null;
+    this.emergenciaBody._g.pulso_por_min = null;
+    this.emergenciaBody._g.frecuencia_respiratoria_por_min = null;
+    this.emergenciaBody._g.pulsioximetria_porcentaje = null;
+    this.emergenciaBody._g.temperatura = null;
+    this.emergenciaBody._g.estado_conciencia = null;
     this.emergenciaBody._g.proteinuria = null;
+    this.emergenciaBody._g.oxigeno_terapia = null;
+    this.emergenciaBody._g.gasto_urinario = null;
     this.emergenciaBody._g.score_mama = null;
     this.emergenciaBody._j.score_mama = null;
+
+    this.emergenciaBody._g.peso_kg = null;
+    this.emergenciaBody._g.talla_cm = null;
+    this.emergenciaBody._g.glicemia_capilar_mg_dl = null;
+    this.emergenciaBody._g.glasgow = null;
+    this.emergenciaBody._g.ocular = null;
+    this.emergenciaBody._g.verbal = null;
+    this.emergenciaBody._g.motora = null;
+    this.emergenciaBody._g.perimetro_cefalico = null;
+    this.emergenciaBody._g.eva = null;
+    this.emergenciaBody._g.pupila_izq = null;
+    this.emergenciaBody._g.pupila_der = null;
+    this.emergenciaBody._g.llenado_capilar = null;
+
+    // Limpia variables internas de score
+    this.sm_frecuencia_cardiaca = null;
+    this.sm_sistolica = null;
+    this.sm_diastolica = null;
+    this.sm_frecuencia_respiratoria = null;
+    this.sm_temperatura = null;
+    this.sm_saturacion = null;
+    this.sm_estado_conciencia = null;
+    this.sm_oxigeno = null;
+    this.sm_gastoUrinario = null;
     this.sm_proteinuria = null;
+    this.leyenda_scoremama = '';
+  }
+
+  limpiarSignosVitalesSegunGenero() {
+    // Nota: el score mamá actual usa Oxígeno Terapia + Gasto urinario (no proteinuria).
+    this.emergenciaBody._g.proteinuria = null; // se deja por compatibilidad del modelo/back
+    this.emergenciaBody._g.oxigeno_terapia = null;
+    this.emergenciaBody._g.gasto_urinario = null;
+    this.emergenciaBody._g.score_mama = null;
+    this.emergenciaBody._j.score_mama = null;
+
+    // Variables internas del cálculo
+    this.sm_frecuencia_cardiaca = null;
+    this.sm_sistolica = null;
+    this.sm_diastolica = null;
+    this.sm_frecuencia_respiratoria = null;
+    this.sm_temperatura = null;
+    this.sm_saturacion = null;
+    this.sm_estado_conciencia = null;
+    this.sm_oxigeno = null;
+    this.sm_gastoUrinario = null;
+    this.sm_proteinuria = null; // legacy
     this.leyenda_scoremama = '';
   }
 
@@ -385,7 +451,8 @@ export class Formulario008Component {
       this.emergenciaBody._g.temperatura != null &&
       this.emergenciaBody._g.pulsioximetria_porcentaje != null &&
       this.emergenciaBody._g.estado_conciencia != null &&
-      this.emergenciaBody._g.proteinuria != null
+      this.emergenciaBody._g.oxigeno_terapia != null &&
+      this.emergenciaBody._g.gasto_urinario != null 
     ) {
       this.loadCalculosSignosVitales();
     }
@@ -411,7 +478,8 @@ export class Formulario008Component {
       this.emergenciaBody._g.pulsioximetria_porcentaje
     );
     this.variablesScoreMama(7, this.emergenciaBody._g.estado_conciencia);
-    this.variablesScoreMama(8, this.emergenciaBody._g.proteinuria);
+    this.variablesScoreMama(8, this.emergenciaBody._g.oxigeno_terapia);
+    this.variablesScoreMama(9, this.emergenciaBody._g.gasto_urinario);
   }
 
   variablesScoreMama(opcion: number, valor_param: any) {
@@ -423,7 +491,8 @@ export class Formulario008Component {
     //5 Puntuacion: T (°C) (Temperatura Corporal)
     //6 Puntuacion: Sat (Saturación de Oxígeno)
     //7 Puntuacion: Estado de Conciencia
-    //8 Puntuacion: Sat (Saturación de Oxígeno)
+    //8 Puntuacion: Oxígeno terapia
+    //9 Puntuacion: Gasto urinario
 
     /**
      *   sm_frecuencia_cardiaca:any=null;
@@ -496,11 +565,20 @@ export class Formulario008Component {
         this.sm_estado_conciencia = null;
       }
     } else if (opcion === 8) {
-      valor = parseFloat(valor_param);
-      if (valor != null && typeof valor === 'number') {
-        this.sm_proteinuria = this.scoreMamaService.calc_proteinuria(valor);
+      let valorString: string = String(valor_param);
+      if (valorString != null && typeof valorString === 'string') {
+        this.sm_oxigeno =
+          this.scoreMamaService.calc_oxigeno_terapia(valorString);
       } else {
-        this.sm_proteinuria = null;
+        this.sm_oxigeno = null;
+      }
+    } else if (opcion === 9) {
+      let valorString: string = String(valor_param);
+      if (valorString != null && typeof valorString === 'string') {
+        this.sm_gastoUrinario =
+          this.scoreMamaService.calc_gastoUrinario(valorString);
+      } else {
+        this.sm_gastoUrinario = null;
       }
     }
 
@@ -509,6 +587,44 @@ export class Formulario008Component {
   }
 
   calculoScoreMama() {
+    // Recalcula SIEMPRE desde los valores actuales del formulario.
+    // Esto evita el problema típico: se presiona "Limpiar Score Mamá" (solo se limpian
+    // algunos campos) y al volver a seleccionar solo oxígeno/gasto no se recalculan
+    // los otros componentes porque no dispararon (ngModelChange).
+    const g = this.emergenciaBody?._g;
+    if (!g) return;
+
+    const num = (v: any): number | null => {
+      if (v === null || v === undefined || v === '') return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+    const str = (v: any): string | null =>
+      v === null || v === undefined || v === '' ? null : String(v);
+
+    const fc = num(g.pulso_por_min);
+    const sis = num(g.presion_arterial_sistolica);
+    const dia = num(g.presion_arterial_diastolica);
+    const fr = num(g.frecuencia_respiratoria_por_min);
+    const temp = num(g.temperatura);
+    const sat = num(g.pulsioximetria_porcentaje);
+    const conc = str(g.estado_conciencia);
+    const ox = str(g.oxigeno_terapia);
+    const gu = str(g.gasto_urinario);
+
+    this.sm_frecuencia_cardiaca =
+      fc === null ? null : this.scoreMamaService.calc_frecuencia_cardiaca(fc);
+    this.sm_sistolica = sis === null ? null : this.scoreMamaService.calc_sistolica(sis);
+    this.sm_diastolica = dia === null ? null : this.scoreMamaService.calc_diastolica(dia);
+    this.sm_frecuencia_respiratoria =
+      fr === null ? null : this.scoreMamaService.calc_frecuencia_respiratoria(fr);
+    this.sm_temperatura = temp === null ? null : this.scoreMamaService.calc_temperatura(temp);
+    this.sm_saturacion = sat === null ? null : this.scoreMamaService.calc_saturacion(sat);
+    this.sm_estado_conciencia =
+      conc === null ? null : this.scoreMamaService.calc_estado_conciencia(conc);
+    this.sm_oxigeno = ox === null ? null : this.scoreMamaService.calc_oxigeno_terapia(ox);
+    this.sm_gastoUrinario = gu === null ? null : this.scoreMamaService.calc_gastoUrinario(gu);
+
     if (
       this.sm_frecuencia_cardiaca != null &&
       this.sm_sistolica != null &&
@@ -517,7 +633,8 @@ export class Formulario008Component {
       this.sm_temperatura != null &&
       this.sm_saturacion != null &&
       this.sm_estado_conciencia != null &&
-      this.sm_proteinuria != null
+      this.sm_oxigeno != null &&
+      this.sm_gastoUrinario != null
     ) {
       this.emergenciaBody._g.score_mama =
         this.sm_frecuencia_cardiaca +
@@ -527,7 +644,8 @@ export class Formulario008Component {
         this.sm_temperatura +
         this.sm_saturacion +
         this.sm_estado_conciencia +
-        this.sm_proteinuria;
+        this.sm_oxigeno +
+        this.sm_gastoUrinario;
       this.colocarleyenda();
     } else {
       this.emergenciaBody._g.score_mama = null;
@@ -541,7 +659,7 @@ export class Formulario008Component {
     if (this.emergenciaBody._g.score_mama != null) {
       if (this.emergenciaBody._g.score_mama == 0) {
         this.leyenda_scoremama =
-          'Evaluar y analizar factores de riesgo, bienestar maternofetal y signos de alarma!!';
+          'Evaluar y analizar factores de riesgo, bienestar materno-fetal y signos de alarma.';
       } else if (this.emergenciaBody._g.score_mama == 1) {
         this.leyenda_scoremama = 'Aplique Score MAMÁ c/4 horas y registre.';
       } else if (
@@ -563,6 +681,8 @@ export class Formulario008Component {
   // Si decides habilitar el botón de acciones, esto limpia los dos campos:
   limpiarProteinuriaYScore(): void {
     this.emergenciaBody._g.proteinuria = null;
+    this.emergenciaBody._g.oxigeno_terapia = null;
+    this.emergenciaBody._g.gasto_urinario = null;
     this.emergenciaBody._g.score_mama = null;
   }
 
@@ -750,6 +870,8 @@ export class Formulario008Component {
         pulsioximetria_porcentaje: str(g.pulsioximetria_porcentaje),
         temperatura: str(g.temperatura),
         estado_conciencia: str(g.estado_conciencia),
+        oxigeno_terapia: str(g.oxigeno_terapia),
+        gasto_urinario: str(g.gasto_urinario),
         proteinuria: str(g.proteinuria),
         score_mama: num(g.score_mama), // number | null
         peso_kg: str(g.peso_kg),
@@ -871,6 +993,9 @@ export class Formulario008Component {
     this.getListaDiagnosticos();
 
     //Cagar Plan de Tratamiento
+
+    // Recalcula Score Mamá al cargar un registro (si ya vienen completos los signos vitales)
+    this.accionCalculoScoreMama();
   }
 
   editar008(id_008: number) {

@@ -40,7 +40,7 @@
                   Cerrar Formulario
                 </button>
                 }@else {
-                    <h3><span class="badge badge-danger">CERRADA</span></h3>
+                <h3><span class="badge badge-danger">CERRADA</span></h3>
                 }
               </div>
             </div>
@@ -1131,41 +1131,8 @@
                       type="checkbox"
                       id="chk_sc_vitales"
                       class="chk-col-red"
-                      [(ngModel)]="emergenciaBody._g.sin_constantes_vitales"
-                      name="sin_constantes_vitales"
-                      (ngModelChange)="
-                        $event
-                          ? [
-                              (emergenciaBody._g.presion_arterial_mmhg = null),
-                              (emergenciaBody._g.presion_arterial_sistolica =
-                                null),
-                              (emergenciaBody._g.presion_arterial_diastolica =
-                                null),
-                              (emergenciaBody._g.pulso_por_min = null),
-                              (emergenciaBody._g.frecuencia_respiratoria_por_min =
-                                null),
-                              (emergenciaBody._g.pulsioximetria_porcentaje =
-                                null),
-                              (emergenciaBody._g.temperatura = null),
-                              (emergenciaBody._g.estado_conciencia = null),
-                              (emergenciaBody._g.proteinuria = null),
-                              (emergenciaBody._g.score_mama = null),
-                              (emergenciaBody._g.peso_kg = null),
-                              (emergenciaBody._g.talla_cm = null),
-                              (emergenciaBody._g.glicemia_capilar_mg_dl = null),
-                              (emergenciaBody._g.glasgow = null),
-                              (emergenciaBody._g.ocular = null),
-                              (emergenciaBody._g.verbal = null),
-                              (emergenciaBody._g.motora = null),
-                              (emergenciaBody._g.perimetro_cefalico = null),
-                              (emergenciaBody._g.eva = null),
-                              (emergenciaBody._g.pupila_izq = null),
-                              (emergenciaBody._g.pupila_der = null),
-                              (emergenciaBody._g.llenado_capilar = null),
-                              (emergenciaBody._j.score_mama = null)
-                            ]
-                          : null
-                      "
+                      [checked]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
+                      (change)="setSinConstantesVitales($any($event.target).checked)"
                     />
                     <label for="chk_sc_vitales">Activar</label>
                   </div>
@@ -1200,7 +1167,7 @@
                         (emergenciaBody._g.presion_arterial_diastolica ?? '');
                       variablesScoreMama(2, $event)
                     "
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 120"
                   />
                 </div>
@@ -1219,7 +1186,7 @@
                         (emergenciaBody._g.presion_arterial_diastolica ?? '');
                       variablesScoreMama(3, $event)
                     "
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 80"
                   />
                 </div>
@@ -1234,7 +1201,7 @@
                     "
                     (ngModelChange)="variablesScoreMama(4, $event)"
                     name="frecuencia_respiratoria_por_min"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 16"
                   />
                 </div>
@@ -1250,7 +1217,7 @@
                     [(ngModel)]="emergenciaBody._g.pulso_por_min"
                     name="pulso_por_min"
                     (ngModelChange)="variablesScoreMama(1, $event)"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 72"
                   />
                 </div>
@@ -1263,7 +1230,7 @@
                     [(ngModel)]="emergenciaBody._g.pulsioximetria_porcentaje"
                     name="pulsioximetria_porcentaje"
                     (ngModelChange)="variablesScoreMama(6, $event)"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 98"
                   />
                 </div>
@@ -1276,7 +1243,7 @@
                     [(ngModel)]="emergenciaBody._g.temperatura"
                     name="temperatura"
                     (ngModelChange)="variablesScoreMama(5, $event)"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     placeholder="Ej. 36.8"
                   />
                 </div>
@@ -1289,7 +1256,7 @@
                     [(ngModel)]="emergenciaBody._g.estado_conciencia"
                     (ngModelChange)="variablesScoreMama(7, $event)"
                     name="estado_conciencia"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   >
                     <option [ngValue]="null" disabled>
                       Seleccione una opción...
@@ -1303,22 +1270,52 @@
                     <option value="nores">No Responde</option>
                   </select>
                 </div>
-                <div class="col-md-2 form-group">
-                  <label for="proteinuria">Proteinuria</label>
+              </div>
+              <!-- Nuevos campos -->
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="oxigeno_terapia">Oxígeno Terapia</label>
                   <select
-                    id="proteinuria"
+                    id="oxigeno_terapia"
                     class="custom-select col-12"
-                    [(ngModel)]="emergenciaBody._g.proteinuria"
+                    [(ngModel)]="emergenciaBody._g.oxigeno_terapia"
                     (ngModelChange)="variablesScoreMama(8, $event)"
-                    name="proteinuria"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    name="oxigeno_terapia"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   >
-                    <option [ngValue]="null" disabled>Seleccione…</option>
-                    <option value="1">Positivo (+)</option>
-                    <option value="0">Negativo (-)</option>
+                    <option [ngValue]="null" disabled>
+                      Seleccione una opción...
+                    </option>
+                    <option value="aire">Aire a Ambiente</option>
+                    <option value="cateter">Catéter Nasal</option>
+                    <option value="mascara">
+                      Máscara o Superior
+                    </option>
+                    
+                  </select>
+                </div>
+                <div class="col-md-2 form-group">
+                  <label for="gasto_urinario">Gasto Urinario</label>
+                  <select
+                    id="gasto_urinario"
+                    class="custom-select col-12"
+                    [(ngModel)]="emergenciaBody._g.gasto_urinario"
+                    (ngModelChange)="variablesScoreMama(9, $event)"
+                    name="gasto_urinario"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
+                  >
+                    <option [ngValue]="null" disabled>
+                      Seleccione una opción...
+                    </option>
+                    <option value="nocuantificable">No Cuantificable</option>
+                    <option value="30">Menor o igual a 30</option>
+                    <option value="10">
+                      Menor o igual a 10
+                    </option>
                   </select>
                 </div>
               </div>
+              <!-- Fin Nuevos Campos -->
 
               <!-- FILA 4 -->
               <div class="row">
@@ -1330,7 +1327,7 @@
                     (click)="limpiarSignosVitalesSegunGenero()"
                     title="Solo informativo"
                   >
-                    Limpiar Proteinuria / Score Mamá
+                    Limpiar Score Mamá
                   </button>
                 </div>
 
@@ -1339,9 +1336,8 @@
                   <input
                     class="form-control"
                     type="number"
-                    [(ngModel)]="emergenciaBody._g.score_mama"
-                    name="score_mama"
-                    [disabled]="true"
+                    [value]="emergenciaBody._g.score_mama ?? ''"
+                    disabled
                     placeholder="—"
                   />
                 </div>
@@ -1362,7 +1358,7 @@
                     class="custom-select col-12"
                     [(ngModel)]="emergenciaBody._g.ocular"
                     name="ocular"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     (ngModelChange)="
                       emergenciaBody._g.glasgow =
                         (+emergenciaBody._g.ocular || 0) +
@@ -1385,7 +1381,7 @@
                     class="custom-select col-12"
                     [(ngModel)]="emergenciaBody._g.verbal"
                     name="verbal"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     (ngModelChange)="
                       emergenciaBody._g.glasgow =
                         (+emergenciaBody._g.ocular || 0) +
@@ -1408,7 +1404,7 @@
                     class="custom-select col-12"
                     [(ngModel)]="emergenciaBody._g.motora"
                     name="motora"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                     (ngModelChange)="
                       emergenciaBody._g.glasgow =
                         (+emergenciaBody._g.ocular || 0) +
@@ -1450,7 +1446,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.perimetro_cefalico"
                     name="perimetro_cefalico"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1461,7 +1457,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.talla_cm"
                     name="talla_cm"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1472,7 +1468,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.peso_kg"
                     name="peso_kg"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1483,7 +1479,7 @@
                     class="custom-select col-12"
                     [(ngModel)]="emergenciaBody._g.eva"
                     name="eva"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   >
                     <option [ngValue]="null" disabled>Seleccione…</option>
                     @for (n of [0,1,2,3,4,5,6,7,8,9,10]; track n) {
@@ -1502,7 +1498,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.pupila_der"
                     name="pupila_der"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1513,7 +1509,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.pupila_izq"
                     name="pupila_izq"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1524,7 +1520,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.llenado_capilar"
                     name="llenado_capilar"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
 
@@ -1535,7 +1531,7 @@
                     type="number"
                     [(ngModel)]="emergenciaBody._g.glicemia_capilar_mg_dl"
                     name="glicemia_capilar_mg_dl"
-                    [disabled]="emergenciaBody._g.sin_constantes_vitales"
+                    [disabled]="emergenciaBody._g.sin_constantes_vitales === 'SI'"
                   />
                 </div>
               </div>
@@ -2124,15 +2120,10 @@
                   <input
                     type="text"
                     class="form-control form-control-line"
-                    [(ngModel)]="emergenciaBody._j.score_mama"
                     name="j_score_mama"
                     placeholder="Ingrese"
                     disabled
-                    (ngModelChange)="
-                      emergenciaBody._j.score_mama = (
-                        $event || ''
-                      ).toUpperCase()
-                    "
+                    [value]="emergenciaBody._j.score_mama ?? ''"
                   />
                 </div>
               </div>
@@ -2828,8 +2819,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- Modal -->
 <!-- diagnostico -->
