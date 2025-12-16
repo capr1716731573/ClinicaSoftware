@@ -124,4 +124,66 @@ export class HistoriasComponent {
   anexosHistoriaClinica(pk_historia: number) {
     this._routerService.navigate(['/anexos', pk_historia]);
   }
+
+  historialClinico(pk_historia:number){
+    const id = pk_historia;
+    if (!id) {
+      toastr.error('Sin ID', 'No hay pk_historia para imprimir.');
+      return;
+    }
+
+    // Mostrar Loading con SweetAlert
+    Swal.fire({
+      title: 'Generando reporte..',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    this._historiaClinicaService.impresionHistorialClinico(id).subscribe({
+      next: (resp: any) => {
+        // La API suele devolver { message: base64 }, pero soportamos string directo por seguridad
+        const b64 =
+          resp?.message ?? resp?.data ?? resp?.base64 ?? (typeof resp === 'string' ? resp : null);
+
+        if (!b64 || typeof b64 !== 'string') {
+          Swal.close();
+          toastr.error('Respuesta inválida', 'No se recibió el PDF.');
+          return;
+        }
+
+        // Convertir Base64 a Blob
+        const byteChars = atob(b64);
+        const byteNumbers = new Array(byteChars.length);
+        for (let i = 0; i < byteChars.length; i++) {
+          byteNumbers[i] = byteChars.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        Swal.close(); // Cerrar loading antes de abrir el PDF
+
+        // Abrir en nueva pestaña
+        const win = window.open(url, '_blank');
+        if (!win) {
+          // Si bloquea el popup -> descargar
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `historial_clinico_${id}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      },
+      error: (err) => {
+        Swal.close();
+        toastr.error('Error', `${err} - No se pudo imprimir el Historial Clínico`);
+      },
+    });
+  }
 }

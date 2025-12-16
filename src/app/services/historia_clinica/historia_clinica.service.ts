@@ -93,4 +93,23 @@ export class HistoriaClinicaService {
       })
     );
   }
+
+  impresionHistorialClinico(id: number) {
+    const url = `${this._baseUrl}/censo/hcucomplete/${id}`;
+    return this._http.get(url).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Operación incompleta al generar Historial Clínico',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error no controlado:', err);
+        return of(err);
+      })
+    );
+  }
 }
