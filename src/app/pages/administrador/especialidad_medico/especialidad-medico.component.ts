@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { EspecialidadMedicoService } from '../../../services/especilidades_medicos/especialidad_medico.service';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { CabeceraDetalleService } from '../../../services/cabecera_detalle/cabecera-detalle.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -21,7 +22,7 @@ export interface EspecialidadMedica {
 
 @Component({
   selector: 'app-especialidad-medico',
-  imports: [CommonModule, FormsModule, NgSelectComponent],
+  imports: [CommonModule, FormsModule, NgSelectComponent, SkeletonTableComponent],
   templateUrl: './especialidad-medico.component.html',
   styles: ``,
 })
@@ -46,6 +47,7 @@ export class EspecialidadMedicoComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor() {
     this.getEspecialidadesMedicos();
@@ -54,16 +56,19 @@ export class EspecialidadMedicoComponent {
   }
 
   getEspecialidadesMedicos() {
+    this.loading = true;
     this._especialidadMedicoService
       .getAllEspecialidadMedico(this.desde)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             this.listEspecialidadesMedicos = resp.rows;
             console.log(JSON.stringify(this.listEspecialidadesMedicos))
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -76,8 +81,10 @@ export class EspecialidadMedicoComponent {
   }
 
   getAllEspecialidadesMedicosBusqueda(bsq: string) {
+    this.loading = true;
     this._especialidadMedicoService.getBsqEspecialidadMedico(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -89,6 +96,7 @@ export class EspecialidadMedicoComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

@@ -6,12 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { Usuario } from './usuario.interface';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
 @Component({
   selector: 'app-usuarios',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './usuarios.component.html',
   styles: ``,
 })
@@ -27,6 +28,7 @@ export class UsuariosComponent {
   };
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
   private _usuarioService = inject(UsuarioService);
   private _routerService = inject(Router);
 
@@ -35,8 +37,10 @@ export class UsuariosComponent {
   }
 
   getAllUsuarios() {
+    this.loading = true;
     this._usuarioService.getAllUsuario(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -49,6 +53,7 @@ export class UsuariosComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -61,8 +66,10 @@ export class UsuariosComponent {
   }
 
   getAllUsuarioBusqueda(bsq: string) {
+    this.loading = true;
     this._usuarioService.getBsqUsuario(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -74,6 +81,7 @@ export class UsuariosComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

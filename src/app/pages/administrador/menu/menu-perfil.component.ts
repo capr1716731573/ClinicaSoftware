@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { MenuService } from '../../../services/menu/menu.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 interface MenuBody {
@@ -17,7 +18,7 @@ interface MenuBody {
 
 @Component({
   selector: 'app-menu-perfil',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './menu-perfil.component.html',
   styles: ``,
 })
@@ -42,6 +43,8 @@ export class MenuPerfilComponent {
   };
 
   opcion: string = 'I';
+  loadingPadres: boolean = false;
+  loadingHijos: boolean = false;
 
   constructor() {}
 
@@ -58,13 +61,16 @@ export class MenuPerfilComponent {
   }
 
   getMenuPadres() {
+    this.loadingPadres = true;
     this._menuService.getMenuByPadre(0).subscribe({
       next: (resp) => {
+        this.loadingPadres = false;
         if (resp.status === 'ok') {
           this.listMenuPadres = resp.rows;
         }
       },
       error: (err) => {
+        this.loadingPadres = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -78,13 +84,16 @@ export class MenuPerfilComponent {
 
   getMenuHijos(padre: any) {
     this.menuCabeceraBody = padre;
+    this.loadingHijos = true;
     this._menuService.getMenuByPadre(this.menuCabeceraBody.pk_menu).subscribe({
       next: (resp) => {
+        this.loadingHijos = false;
         if (resp.status === 'ok') {
           this.listMenuHijos = resp.rows;
         }
       },
       error: (err) => {
+        this.loadingHijos = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

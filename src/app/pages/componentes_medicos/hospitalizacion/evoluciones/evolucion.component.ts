@@ -11,6 +11,7 @@ import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.
 import { LoginService } from '../../../../services/login.service';
 import { CabeceraDetalleService } from '../../../../services/cabecera_detalle/cabecera-detalle.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
@@ -41,6 +42,7 @@ export interface Evolucion {
     RouterModule,
     MenuHospitalizacionComponent,
     NgSelectModule,
+    SkeletonTableComponent,
   ],
   templateUrl: './evolucion.component.html',
   styleUrl: `evolucion.component.css`,
@@ -79,6 +81,7 @@ export class EvolucionComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
   ant: boolean;
   sig: boolean;
 
@@ -133,10 +136,12 @@ export class EvolucionComponent {
   }
 
   getAllEvoluciones() {
+    this.loading = true;
     this._evolucionService
       .getAllEvolucion(this.desde, this.hcu.fk_hcu)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             //Validacion para numeracion y parametro desde
             //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -151,6 +156,7 @@ export class EvolucionComponent {
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -174,8 +180,10 @@ export class EvolucionComponent {
   }
 
   getAllEvolucionBusqueda(bsq: string) {
+    this.loading = true;
     this._evolucionService.getBsqEvolucion(bsq, this.hcu.fk_hcu).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -191,6 +199,7 @@ export class EvolucionComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

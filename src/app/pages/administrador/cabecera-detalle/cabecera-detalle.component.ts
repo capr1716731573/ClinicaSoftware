@@ -13,6 +13,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 // ✅ Aquí declaras la interfaz
@@ -25,7 +26,7 @@ interface CabeceraDetalleBody {
 
 @Component({
   selector: 'app-cabecera-detalle',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './cabecera-detalle.component.html',
   styles: ``,
 })
@@ -36,6 +37,7 @@ export class CabeceraDetalleComponent {
   cabeceraSelect: any = {};
   typeahead = new Subject<string>();
   isLoading = false;
+  loadingDetalle = false;
 
   cabeceraDetalleList: any[] = [];
   cabeceraDetalleBody: CabeceraDetalleBody = {
@@ -118,10 +120,12 @@ export class CabeceraDetalleComponent {
 
   /** Seccion Detalles */
   cargarDetalle(cabecera: any) {
+    this.loadingDetalle = true;
     this._cabeceraService
       .getAllCabecerasDetalle(cabecera.codigo_catcab, false, this.desde)
       .subscribe({
         next: (resp) => {
+          this.loadingDetalle = false;
           if (resp.status === 'ok') {
             //Validacion para numeracion y parametro desde
             //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -138,6 +142,7 @@ export class CabeceraDetalleComponent {
           }
         },
         error: (err) => {
+          this.loadingDetalle = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -151,6 +156,7 @@ export class CabeceraDetalleComponent {
 
   buscarCabeceraDetalle() {
     if (this.bsqCabeceraDetalle.length >= 4) {
+      this.loadingDetalle = true;
       this._cabeceraService
         .getBsqCabeceraDetalle(
           this.cabeceraSelect.codigo_catcab,
@@ -159,6 +165,7 @@ export class CabeceraDetalleComponent {
         )
         .subscribe({
           next: (resp) => {
+            this.loadingDetalle = false;
             if (resp.status === 'ok') {
               //Validacion para numeracion y parametro desde
               //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -168,6 +175,7 @@ export class CabeceraDetalleComponent {
             }
           },
           error: (err) => {
+            this.loadingDetalle = false;
             // manejo de error
             Swal.fire({
               title: '¡Error!',

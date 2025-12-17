@@ -10,6 +10,7 @@ import { CabeceraDetalleService } from '../../../services/cabecera_detalle/cabec
 import { UbicacionService } from '../../../services/ubicaciones_camas/ubicacion.service';
 import { AreasService } from '../../../services/ubicaciones_camas/areas.service';
 import { CasasSaludService } from '../../../services/casas_salud/casas_salud.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -32,7 +33,7 @@ export interface Ubicacion {
 
 @Component({
   selector: 'app-ubicacion',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './ubicacion.component.html',
   styles: ``,
 })
@@ -77,6 +78,7 @@ export class UbicacionComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor() {
     this.inicializar();
@@ -96,13 +98,16 @@ export class UbicacionComponent {
   }
 
   getAllUbicacion(estado: string, area: number) {
+    this.loading = true;
     this._ubicacionService.getAllUbicacion(this.desde, estado, area).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listUbicaciones = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -115,10 +120,12 @@ export class UbicacionComponent {
   }
 
   getUbicacionBusqueda(bsq: string) {
+    this.loading = true;
     this._ubicacionService
       .getBsqUbicacion(bsq, this.idEstado, this.idArea)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             //Validacion para numeracion y parametro desde
             //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -130,6 +137,7 @@ export class UbicacionComponent {
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',

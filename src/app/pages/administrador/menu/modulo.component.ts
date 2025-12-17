@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { ModuloService } from '../../../services/modulo.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -18,7 +19,7 @@ interface moduloBody {
 
 @Component({
   selector: 'app-modulo',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './modulo.component.html',
   styles: ``,
 })
@@ -37,19 +38,23 @@ export class ModuloComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
   
   constructor() {
     this.getModulos();
   }
 
   getModulos() {
+    this.loading = true;
     this._modulosService.getAllModulos().subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listModulos = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -63,8 +68,10 @@ export class ModuloComponent {
 
   getAllModuloBusqueda(bsq: string) {
     console.log(bsq);
+    this.loading = true;
     this._modulosService.getBsqModulo(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -74,6 +81,7 @@ export class ModuloComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

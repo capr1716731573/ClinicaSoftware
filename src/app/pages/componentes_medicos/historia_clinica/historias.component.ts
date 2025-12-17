@@ -6,12 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { HistoriaClinicaService } from '../../../services/historia_clinica/historia_clinica.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
 @Component({
   selector: 'app-historias',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './historias.component.html',
   styles: ``,
 })
@@ -25,6 +26,7 @@ export class HistoriasComponent {
 
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor() {
     this.getAllHistoriaClinica();
@@ -41,8 +43,10 @@ export class HistoriasComponent {
   }
 
   getAllHistoriaClinica() {
+    this.loading = true;
     this._historiaClinicaService.getAllHistoriaClinica(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -54,6 +58,7 @@ export class HistoriasComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -66,8 +71,10 @@ export class HistoriasComponent {
   }
 
   getAllHistoriaClinicaBusqueda(bsq: string) {
+    this.loading = true;
     this._historiaClinicaService.getBsqHistoriaClinica(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -79,6 +86,7 @@ export class HistoriasComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

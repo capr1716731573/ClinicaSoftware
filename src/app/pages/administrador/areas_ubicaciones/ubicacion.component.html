@@ -72,7 +72,10 @@
 
           <!-- Aqui Table -->
           <br />
-          <div class="table-responsive pointer">
+        @if (loading) {
+        <app-skeleton-table [cols]="9"></app-skeleton-table>
+        } @else {
+        <div class="table-responsive pointer">
             <table class="table full-color-table full-info-table hover-table">
               <thead>
                 <tr>
@@ -159,6 +162,7 @@
               </div>
             </div>
           </div>
+        }
         </div>
       </div>
     </div>

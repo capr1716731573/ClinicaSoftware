@@ -13,6 +13,7 @@ import {
   tap,
 } from 'rxjs';
 import { GeografiaService } from '../../../services/geografia/geografia.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
@@ -25,7 +26,7 @@ interface GeografiaBody {
 
 @Component({
   selector: 'app-geografia',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './geografia.component.html',
   styles: ``,
 })
@@ -62,6 +63,7 @@ export class GeografiaComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = false;
 
   constructor() {
     this.getGeografia_Paises();
@@ -210,10 +212,12 @@ export class GeografiaComponent {
 
     this.padreGeografiaGlobal = id_padre;
     /******** Carga de Informacion ************ */
+    this.loading = true;
     this._geografiaService
       .getAllGeografia(this.desde, tipoLista, id_padre)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             //Validacion para numeracion y parametro desde
             //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -231,6 +235,7 @@ export class GeografiaComponent {
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',

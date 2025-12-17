@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AreasService } from '../../../services/ubicaciones_camas/areas.service';
 import { CasasSaludService } from '../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../services/login.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -24,7 +25,7 @@ export interface Area {
 
 @Component({
   selector: 'app-areas',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './areas.component.html',
   styles: ``,
 })
@@ -49,6 +50,7 @@ export class AreasComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor() {
     this.getCasaSalud();
@@ -59,6 +61,7 @@ export class AreasComponent {
   }
 
   getCasaSalud() {
+    this.loading = true;
     this._casaSaludService.getCasaSaludPrincipal().subscribe({
       next: (resp) => {
         if (resp.status === 'ok') {
@@ -67,6 +70,7 @@ export class AreasComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -79,13 +83,16 @@ export class AreasComponent {
   }
 
   getAreas(idCasaSalud: number) {
+    this.loading = true;
     this._areaService.getAllAreas(this.desde, false, idCasaSalud).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listAreas = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -98,10 +105,12 @@ export class AreasComponent {
   }
 
   getAllAreasBusqueda(bsq: string) {
+    this.loading = true;
     this._areaService
       .getBsqAreas(bsq, null, this.casaSaludBody.casalud_id_pk)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             //Validacion para numeracion y parametro desde
             //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -113,6 +122,7 @@ export class AreasComponent {
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',

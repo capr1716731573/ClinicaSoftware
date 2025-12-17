@@ -6,6 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../../services/login.service';
 import { TipoUbicacionService } from '../../../services/ubicaciones_camas/tipo_ubicacion.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -22,7 +23,7 @@ export interface TipoUbicacion {
 
 @Component({
   selector: 'app-tipo-ubicacion',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './tipo-ubicacion.component.html',
   styles: ``,
 })
@@ -48,6 +49,7 @@ export class TipoUbicacionComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor() {
     this.getTipoUbicacion(this.tipo);
@@ -69,15 +71,18 @@ export class TipoUbicacionComponent {
 
   getTipoUbicacion(tipo: string) {
     /* console.log(tipo) */
+    this.loading = true;
     this._tipoUbicacionService
       .getAllTipoUbicacion(this.desde, false, tipo)
       .subscribe({
         next: (resp) => {
+          this.loading = false;
           if (resp.status === 'ok') {
             this.listTipoUbicacion = resp.rows;
           }
         },
         error: (err) => {
+          this.loading = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -90,8 +95,10 @@ export class TipoUbicacionComponent {
   }
 
   getTipoUbicacionBusqueda(bsq: string, tipo: string) {
+    this.loading = true;
     this._tipoUbicacionService.getBsqTipoUbicacion(bsq, false, tipo).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -103,6 +110,7 @@ export class TipoUbicacionComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

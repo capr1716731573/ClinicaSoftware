@@ -7,12 +7,13 @@ import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { EmergenciaService } from '../../../services/emergencia/emergencia.service';
 import { LoginService } from '../../../services/login.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
 @Component({
   selector: 'app-lista008',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './lista008.component.html',
   styles: ``,
 })
@@ -31,6 +32,7 @@ export class Lista008Component {
   numeracion: number = 1;
   private prevDesde = 0;
   private prevNumeracion = 1;
+  loading: boolean = true;
 
   constructor() {
     this.getAllEmergencia();
@@ -68,8 +70,10 @@ export class Lista008Component {
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
   getAllEmergencia() {
+    this.loading = true;
     this._lista008Service.getAllEmergencia(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           if (resp.data && resp.data.length > 0) {
             this.emergenciaList = resp.data;
@@ -80,6 +84,7 @@ export class Lista008Component {
         }
       },
       error: (err) => {
+        this.loading = false;
         // Si hay error, también conviene revertir
         this.revertirPaginacion();
         Swal.fire({
@@ -93,8 +98,10 @@ export class Lista008Component {
   }
 
   getEmergenciaBusqueda(bsq: string) {
+    this.loading = true;
     this._lista008Service.getBsqEmergencia(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -106,6 +113,7 @@ export class Lista008Component {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

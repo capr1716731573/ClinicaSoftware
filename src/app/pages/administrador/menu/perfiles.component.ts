@@ -6,6 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { ModuloService } from '../../../services/modulo.service';
 import { PerfilService } from '../../../services/perfil.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -18,7 +19,7 @@ interface PerfilBody {
 
 @Component({
   selector: 'app-perfiles',
-  imports: [CommonModule, FormsModule,NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './perfiles.component.html',
   styles: ``,
 })
@@ -38,6 +39,7 @@ export class PerfilesComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = false;
 
   inicializacion(){
     this.getModulos();
@@ -65,13 +67,16 @@ export class PerfilesComponent {
   }
 
   getPerfiles(idMod: number) {
+    this.loading = true;
     this._perfilService.getPerfilByModulo(idMod).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listPerfiles = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

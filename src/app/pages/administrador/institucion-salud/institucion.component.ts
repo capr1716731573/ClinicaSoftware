@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { InstitucionService } from '../../../services/casas_salud/instituciones.service';
 import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -19,7 +20,7 @@ export interface InstitucionBody {
 @Component({
   selector: 'app-institucion',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './institucion.component.html',
   styles: ``,
 })
@@ -38,19 +39,23 @@ export class InstitucionComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
 
   constructor(){
     this.getInstitucion();
   }
 
   getInstitucion() {
+    this.loading = true;
     this._institucionService.getAllInstitucion(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listInstituciones = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -63,8 +68,10 @@ export class InstitucionComponent {
   }
 
   getAllInstitucionessBusqueda(bsq: string) {
+    this.loading = true;
     this._institucionService.getBsqInstitucion(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -76,6 +83,7 @@ export class InstitucionComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

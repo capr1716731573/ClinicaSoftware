@@ -5,6 +5,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CieService } from '../../../services/cie/cie.service';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 
@@ -23,7 +24,7 @@ export interface Cie {
 
 @Component({
   selector: 'app-cie',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './cie.component.html',
   styles: ``,
 })
@@ -49,6 +50,7 @@ export class CieComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
   private _cieService = inject(CieService);
 
   constructor() {
@@ -57,8 +59,10 @@ export class CieComponent {
   }
 
   getAllCie() {
+    this.loading = true;
     this._cieService.getAllCie(this.desde, false).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -71,6 +75,7 @@ export class CieComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -106,8 +111,10 @@ export class CieComponent {
   }
 
   getAllCieBusqueda(bsq: string) {
+    this.loading = true;
     this._cieService.getBsqCie(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -117,6 +124,7 @@ export class CieComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

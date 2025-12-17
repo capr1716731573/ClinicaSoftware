@@ -17,6 +17,9 @@
               </button>
             </div>
 
+            @if (loadingPadres) {
+            <app-skeleton-table [cols]="2"></app-skeleton-table>
+            } @else {
             <div class="table-responsive pointer">
               <table
                 class="table full-color-table full-danger-table hover-table"
@@ -61,6 +64,7 @@
                 </tbody>
               </table>
             </div>
+            }
           </div>
 
           <!-- Tabla 2 -->
@@ -78,6 +82,9 @@
               </button>
             </div>
 
+            @if (loadingHijos) {
+            <app-skeleton-table [cols]="2"></app-skeleton-table>
+            } @else {
             <div class="table-responsive pointer">
               <table class="table full-color-table full-info-table hover-table">
                 <thead>
@@ -115,6 +122,7 @@
                 </tbody>
               </table>
             </div>
+            }
           </div>
         </div>
         <!-- End row -->

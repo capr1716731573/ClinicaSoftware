@@ -4,6 +4,7 @@ import { CabeceraDetalleService } from '../../../services/cabecera_detalle/cabec
 import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 declare var toastr: any;
 declare var $: any;
 // ✅ Aquí declaras la interfaz
@@ -15,7 +16,7 @@ interface CabeceraBody {
 
 @Component({
   selector: 'app-cabecera',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonTableComponent],
   templateUrl: './cabecera.component.html',
   styles: ``,
 })
@@ -31,6 +32,7 @@ export class CabeceraComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = true;
   private _cabeceraService = inject(CabeceraDetalleService);
 
   constructor() {
@@ -38,8 +40,10 @@ export class CabeceraComponent {
   }
 
   getAllCabeceras() {
+    this.loading = true;
     this._cabeceraService.getAllCabeceras(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -52,6 +56,7 @@ export class CabeceraComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -64,8 +69,10 @@ export class CabeceraComponent {
   }
 
   getAllCabecerasBusqueda(bsq:string) {
+    this.loading = true;
     this._cabeceraService.getBsqCabecera(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
@@ -75,6 +82,7 @@ export class CabeceraComponent {
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',

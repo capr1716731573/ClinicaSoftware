@@ -8,6 +8,7 @@ import { GeografiaService } from '../../../services/geografia/geografia.service'
 import { environment } from '../../../../enviroments/enviroments';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
+import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 
 declare var toastr: any;
 declare var $: any;
@@ -29,7 +30,7 @@ interface CasaSalud {
 @Component({
   standalone: true,
   selector: 'app-casa-salud',
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, SkeletonTableComponent],
   templateUrl: './casa-salud.component.html',
   styles: ``,
 })
@@ -59,6 +60,7 @@ export class CasaSaludComponent {
   desde: number = 0;
   intervalo = environment.filas;
   numeracion: number = 1;
+  loading: boolean = false;
 
   constructor() {}
 
@@ -110,14 +112,17 @@ export class CasaSaludComponent {
   }
 
   getCasasSalud() {
+    this.loading = true;
     this._casaSaludService.getAllCasaSalud(this.desde).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           console.log(JSON.stringify(this.listCasasSalud));
           this.listCasasSalud = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -130,13 +135,16 @@ export class CasaSaludComponent {
   }
 
   getAllCasasSaludBusqueda(bsq: string) {
+    this.loading = true;
     this._casaSaludService.getBsqCasaSalud(bsq).subscribe({
       next: (resp) => {
+        this.loading = false;
         if (resp.status === 'ok') {
           this.listCasasSalud = resp.rows;
         }
       },
       error: (err) => {
+        this.loading = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
