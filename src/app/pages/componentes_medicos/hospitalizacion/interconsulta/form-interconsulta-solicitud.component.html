@@ -1,5 +1,7 @@
-<app-menu-hospitalizacion></app-menu-hospitalizacion>
-<!-- <pre>{{interconsultaBody | json}}</pre> -->
+
+@if(cabecera){
+  <app-menu-hospitalizacion></app-menu-hospitalizacion>
+}<!-- <pre>{{interconsultaBody | json}}</pre> -->
 
 @if (loading) {
 <app-skeleton-crud></app-skeleton-crud>

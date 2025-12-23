@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+
 /* Cursor pointer para items de dropdown/tablas */
 .dropdown-item.pointer,
 .pointer {
@@ -167,6 +169,30 @@ table th {
     text-transform: uppercase;
 }
 
+/* ============================================================
+   Tablas de reportes: scroll horizontal + vertical (global)
+   Uso: <div class="table-responsive report-scroll">...</div>
+   ============================================================ */
+.table-responsive.report-scroll {
+    max-height: 55vh;
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    touch-action: pan-x pan-y;
+}
+
+.table-responsive.report-scroll table,
+.table-responsive.report-scroll .table {
+    margin-bottom: 0;
+    width: auto;
+    min-width: 100%;
+    table-layout: auto;
+}
+
 /* Asegurar que en pantallas pequeñas el comportamiento responsivo funcione correctamente */
 @media screen and (max-width: 600px) {
     table {
@@ -210,6 +236,49 @@ table th {
         border-bottom: 0;
     }
     /* El CSS global maneja el comportamiento responsivo (display: block en tr y td) */
+
+    /* ==============================
+       EXCEPCIÓN: tablas de reportes
+       Mantener formato tabla + scroll (no modo "cards")
+       ============================== */
+    .table-responsive.report-scroll table {
+        border: 1px solid #ccc;
+        table-layout: auto;
+    }
+
+    .table-responsive.report-scroll thead {
+        border: initial;
+        clip: auto;
+        height: auto;
+        margin: 0;
+        overflow: visible;
+        padding: 0;
+        position: static;
+        width: auto;
+        display: table-header-group;
+    }
+
+    .table-responsive.report-scroll tr {
+        display: table-row;
+        border: 1px solid #ddd;
+        margin-bottom: 0;
+    }
+
+    .table-responsive.report-scroll td,
+    .table-responsive.report-scroll th {
+        display: table-cell;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table-responsive.report-scroll td::before {
+        content: none !important;
+    }
+
+    /* En móvil, el scroll interno suele ser más corto: damos un poco más de alto */
+    .table-responsive.report-scroll {
+        max-height: 65vh;
+    }
 }
 
 /* Scroll horizontal para tablas en pantallas medianas y grandes */

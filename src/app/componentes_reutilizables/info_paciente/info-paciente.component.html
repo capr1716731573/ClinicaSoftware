@@ -1,58 +1,70 @@
-<div class="row m-t-40">
+<div class="row" [class.m-t-40]="!compact" [class.mt-2]="compact" [class.mb-2]="compact">
      <!-- Column -->
-  <div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showArea) {
+  <div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-info text-center">
-        <h5 class="font-light text-white">{{hcu.area}}</h5>
+        <h5 class="font-light text-white" [class.h4]="bigText">{{hcu.area}}</h5>
         <h6 class="text-white">Área</h6>
       </div>
     </div>
   </div>
+  }
    <!-- Column -->
-  <div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showCama) {
+  <div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-info text-center">
-        <h5 class="font-light text-white">{{hcu.ubicacion}}</h5>
+        <h5 class="font-light text-white" [class.h4]="bigText">{{hcu.ubicacion}}</h5>
         <h6 class="text-white">Cama</h6>
       </div>
     </div>
   </div>
+  }
   <!-- Column -->
-  <div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showIdentificacion) {
+  <div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-info text-center">
-        <h5 class="font-light text-white">{{hcu.numidentificacion_persona}}</h5>
+        <h5 class="font-light text-white" [class.h4]="bigText">{{hcu.numidentificacion_persona}}</h5>
         <h6 class="text-white">Identificación</h6>
       </div>
     </div>
   </div>
+  }
   <!-- Column -->
-<div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showNombreCompleto) {
+<div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-primary text-center">
-        <h6 class="font-light text-white">{{hcu.apellidopat_persona}} {{hcu.apellidomat_persona}} {{hcu.nombres_persona}}</h6>
+        <h6 class="font-light text-white" [class.h5]="bigText">{{ nombreCompleto }}</h6>
         <h6 class="text-white">Nombres Apellidos</h6>
       </div>
     </div>
   </div>
+  }
   <!-- Column -->
-  <div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showSexo) {
+  <div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-success text-center">
-        <h5 class="font-light text-white">{{hcu.sexo}}</h5>
+        <h5 class="font-light text-white" [class.h4]="bigText">{{hcu.sexo}}</h5>
         <h6 class="text-white">Sexo</h6>
       </div>
     </div>
   </div>
+  }
   <!-- Column -->
- <div class="col-md-4 col-lg-2 col-xlg-2">
+  @if (hcu && showEdad) {
+ <div [ngClass]="colClass">
     <div class="card">
       <div class="box bg-dark text-center">
-        <h5 class="font-light text-white">{{hcu.edad.valor}} {{hcu.edad.tipo}}</h5>
+        <h5 class="font-light text-white" [class.h4]="bigText">{{hcu.edad?.valor}} {{hcu.edad?.tipo}}</h5>
         <h6 class="text-white">Edad</h6>
       </div>
     </div>
   </div>
+  }
   <!-- Column -->
 </div>
 <!-- 

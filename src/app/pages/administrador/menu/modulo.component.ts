@@ -27,6 +27,7 @@ export class ModuloComponent {
   /** Variables de Modulo */
   private _modulosService = inject(ModuloService);
   listModulos: any[] = [];
+  private allModulos: any[] = [];
   moduloBody: moduloBody = {
     pk_mod: 0,
     nombre_mod: '',
@@ -39,6 +40,8 @@ export class ModuloComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = true;
+  hasNext: boolean = true;
+  isSearchActive: boolean = false;
   
   constructor() {
     this.getModulos();
@@ -50,7 +53,8 @@ export class ModuloComponent {
       next: (resp) => {
         this.loading = false;
         if (resp.status === 'ok') {
-          this.listModulos = resp.rows;
+          this.allModulos = resp.rows ?? [];
+          this.applyPagination();
         }
       },
       error: (err) => {
@@ -75,10 +79,9 @@ export class ModuloComponent {
         if (resp.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
-          /* if (resp.rows.length > 0) { */
-          this.listModulos = resp.rows;
-          /* } */
+          this.listModulos = resp.rows ?? [];
         }
+        this.hasNext = false; // búsqueda sin paginación
       },
       error: (err) => {
         this.loading = false;
@@ -94,15 +97,26 @@ export class ModuloComponent {
   }
 
   avanzar() {
+    if (this.isSearchActive || !this.hasNext) return;
     this.desde += this.intervalo;
     this.numeracion += 1;
-    this.getModulos();
+    this.applyPagination();
   }
 
   retoceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
-    this.getModulos();
+    if (this.isSearchActive) return;
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.hasNext = true;
+    this.applyPagination();
+  }
+
+  private applyPagination() {
+    // paginación local (endpoint devuelve todo)
+    const start = Math.max(0, this.desde);
+    const end = start + this.intervalo;
+    this.listModulos = (this.allModulos ?? []).slice(start, end);
+    this.hasNext = end < (this.allModulos?.length ?? 0);
   }
 
   validarGuardar() {
@@ -205,9 +219,13 @@ export class ModuloComponent {
 
   buscarModulo() {
     if (this.bsqModulo.length >= 4) {
+      this.isSearchActive = true;
+      this.desde = 0;
+      this.numeracion = 1;
       this.getAllModuloBusqueda(this.bsqModulo);
       // tu lógica aquí
     } else if (this.bsqModulo.length === 0) {
+      this.isSearchActive = false;
       this.desde = 0;
       this.numeracion = 1;
       this.getModulos();

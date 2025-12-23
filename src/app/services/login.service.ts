@@ -77,6 +77,10 @@ export class LoginService {
     return hcu ? JSON.parse(hcu) : null;
   }
 
+  removeHcuLocalStorage() {
+    localStorage.removeItem('_hcu');
+  }
+
   setUserLocalStorage(user: any) {
     localStorage.setItem('_user', JSON.stringify(user));
   }

@@ -42,14 +42,18 @@ import { AnexosComponent } from './componentes_medicos/hospitalizacion/anexos/an
 import { ReportesComponent } from './componentes_medicos/reportes/reportes.component';
 import { ListaTriageComponent } from './componentes_medicos/emergencia/lista-triage.component';
 import { FormTriageComponent } from './componentes_medicos/emergencia/form-triage.component';
+import { HistorialIngresosComponent } from './componentes_medicos/historia_clinica/historial-ingresos.component';
+import { HistorialFormulariosComponent } from './componentes_medicos/historia_clinica/historial-formularios.component';
+import { PerfilComponent } from './account-settings/perfil.component';
 
 export const pagesChildRoutes: Routes = [
     { path:'',
         component:ContenedorComponent,
         children:[
-            { path: 'dashboard', canActivate: [JwtGuard],component: DashboardComponent, data:{titulo: 'Dashboard'} },
+            { path: 'dashboard', canActivate: [JwtGuard],component: DashboardComponent, data:{titulo: 'Inicio'} },
             { path: 'progress', canActivate: [JwtGuard],component: ProgressComponent ,data:{titulo: 'ProgressBar'}},
             { path: 'grafica1', canActivate: [JwtGuard],component: Grafica1Component ,data:{titulo: 'Graficas JS ChartsJS'}},
+            { path: 'perfil', canActivate: [JwtGuard],component: PerfilComponent ,data:{titulo: 'Perfil Usuario'}},
             { path: 'settings', canActivate: [JwtGuard],component: AccountSettingsComponent ,data:{titulo: 'Configuraciones Temas'}},
             { path: 'promesas', canActivate: [JwtGuard],component: PromesasComponent ,data:{titulo: 'Promesas'}},
             { path: 'rxjs', canActivate: [JwtGuard],component: RxjsComponent ,data:{titulo: 'Observable'}},
@@ -69,6 +73,8 @@ export const pagesChildRoutes: Routes = [
             // Componentes Medicos
             { path: 'hcu', canActivate: [JwtGuard],component: HistoriasComponent ,data:{titulo: 'Historias Clínicas'}},
             { path: 'hcu/:id', canActivate: [JwtGuard],component: HistoriaClinicaComponent ,data:{titulo: 'Historia Clínica'}},
+            { path: 'ingresos/:hcu', canActivate: [JwtGuard],component: HistorialIngresosComponent ,data:{titulo: 'Historia Clínica - Ingresos'}},
+            { path: 'historial_forms/:id', canActivate: [JwtGuard],component: HistorialFormulariosComponent ,data:{titulo: 'Historia Clínica - Reportes'}},
             { path: 'censo', canActivate: [JwtGuard],component: CensoareasComponent ,data:{titulo: 'Hospitalizaciones (Censo)'}},
             { path: 'egresos', canActivate: [JwtGuard],component: EgresosComponent ,data:{titulo: 'Egresos Hospitalarios'}},
             { path: 'emergencia', canActivate: [JwtGuard],component: Lista008Component ,data:{titulo: 'Emergencia'}},
@@ -80,14 +86,14 @@ export const pagesChildRoutes: Routes = [
             { path: 'hospitalizacion_inicio', canActivate: [JwtGuard],component: InicioComponent ,data:{titulo: 'Hospitalización'}},
             { path: 'evolucion', canActivate: [JwtGuard],component: EvolucionComponent ,data:{titulo: 'Evoluciones'}},
             { path: 'epicrisis', canActivate: [JwtGuard],component: EpicrisisComponent ,data:{titulo: 'Epicrisis'}},
-            { path: 'form_epicrisis/:id/:accion', canActivate: [JwtGuard],component: FormEpicrisisComponent ,data:{titulo: 'Epicrisis'}},
+            { path: 'form_epicrisis/:id/:accion/:cab', canActivate: [JwtGuard],component: FormEpicrisisComponent ,data:{titulo: 'Epicrisis'}},
             { path: 'protocolo', canActivate: [JwtGuard],component: PostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
-            { path: 'form_protocolo/:id/:accion', canActivate: [JwtGuard],component: FormPostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
+            { path: 'form_protocolo/:id/:accion/:cab', canActivate: [JwtGuard],component: FormPostoperatorioComponent ,data:{titulo: 'Protocolo Quirúrgico'}},
             { path: 'interconsultas', canActivate: [JwtGuard],component: InterconsultasComponent ,data:{titulo: 'Interconsultas'}},
-            { path: 'form_interconsulta_solicitud/:id/:accion', canActivate: [JwtGuard],component: FormInterconsultaSolicitudComponent ,data:{titulo: 'Interconsulta-Solicitud'}},
-            { path: 'form_interconsulta_informe/:id_sol/:id_inf/:accion', canActivate: [JwtGuard],component: FormInterconsultaInformeComponent ,data:{titulo: 'Interconsulta-Informe'}},
+            { path: 'form_interconsulta_solicitud/:id/:accion/:cab', canActivate: [JwtGuard],component: FormInterconsultaSolicitudComponent ,data:{titulo: 'Interconsulta-Solicitud'}},
+            { path: 'form_interconsulta_informe/:id_sol/:id_inf/:accion/:cab', canActivate: [JwtGuard],component: FormInterconsultaInformeComponent ,data:{titulo: 'Interconsulta-Informe'}},
             { path: 'anamnesis', canActivate: [JwtGuard],component: AnamnesisComponent ,data:{titulo: 'Anamnesis'}},
-            { path: 'form_anamnesis/:id/:accion', canActivate: [JwtGuard],component: FormAnamnesisComponent ,data:{titulo: 'Anamnesis'}},
+            { path: 'form_anamnesis/:id/:accion/:cab', canActivate: [JwtGuard],component: FormAnamnesisComponent ,data:{titulo: 'Anamnesis'}},
             { path: 'signos', canActivate: [JwtGuard],component: SignosComponent ,data:{titulo: 'Signos Vitales'}},
             { path: 'kardex', canActivate: [JwtGuard],component: KardexComponent ,data:{titulo: 'Administración Medicamentos'}},
             { path: 'kardex_detalle/:id/:accion', canActivate: [JwtGuard],component: KardexDetComponent ,data:{titulo: 'Administración Medicamentos - Detalle'}},

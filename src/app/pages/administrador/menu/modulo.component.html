@@ -92,7 +92,7 @@
                 <button
                   type="button"
                   class="btn btn-info"
-                  [disabled]="numeracion === 1"
+                  [disabled]="numeracion === 1 || isSearchActive"
                   (click)="retoceder()"
                 >
                   <i class="fa fa-fast-backward"></i>
@@ -100,7 +100,12 @@
                 <button type="button" class="btn btn-info">
                   {{ numeracion }}
                 </button>
-                <button type="button" class="btn btn-info" (click)="avanzar()">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!hasNext || isSearchActive"
+                >
                   <i class="fa fa-fast-forward"></i>
                 </button>
               </div>

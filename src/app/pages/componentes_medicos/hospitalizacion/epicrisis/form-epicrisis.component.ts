@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -42,6 +42,7 @@ export class FormEpicrisisComponent {
   private _casaSaludService = inject(CasasSaludService);
   private _cieService = inject(CieService);
   private _especialidadMedicoService = inject(EspecialidadMedicoService);
+  private location = inject(Location);
 
   tabActivo: 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' = 'B';
   opcion: string = 'I';
@@ -50,6 +51,7 @@ export class FormEpicrisisComponent {
   epicrisisBody: Epicrisis;
   idNum: number = 0;
   accionVer: any;
+  cabecera: any;
 
   //Variables de Diagnosticos
   listDiagnosticos: any[];
@@ -100,6 +102,10 @@ export class FormEpicrisisComponent {
         accion === 'v' ||
         accion === 'true' ||
         accion === '1';
+
+      const cabParam = (pm.get('cab') ?? '').toLowerCase();
+      this.cabecera =
+        cabParam === 'true' || cabParam === '1' || cabParam === 'ver';
 
       if (this.idNum !== 0 && !isNaN(this.idNum)) {
         this.opcion = 'U';
@@ -299,8 +305,11 @@ export class FormEpicrisisComponent {
 
   guardarEpicrisis() {
     this.epicrisisBody._a.casalud_id_fk = this.casaSaludBody.casalud_id_pk;
-    this.epicrisisBody._j.medico_usu_id_fk =
-      this._loginService.getUserLocalStorage().pk_usuario;
+    this.epicrisisBody._j.medico_usu_id_fk = this._loginService.getUserLocalStorage().pk_usuario;
+    if (this.epicrisisBody._a.fk_hcu === 0) {
+      this.epicrisisBody._a.fk_hcu =
+        this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    }
     this.epicrisisBody = this.sanitizeEpicrisisBodyStrings(this.epicrisisBody);
     Swal.fire({
       title: '¿Está seguro?',
@@ -320,11 +329,11 @@ export class FormEpicrisisComponent {
                 console.log(JSON.stringify(resp.data));
                 //this.epicrisisBody = resp.data;
                 //this.parametrizarEpicrisis(this.epicrisisBody);
-                this._routerService2.navigate([
-                  '/form_epicrisis',
-                  resp.data._a.pk_epi,
-                  false,
-                ]);
+                // Evita doble entrada en history al pasar de "crear" a "editar"
+                this._routerService2.navigate(
+                  ['/form_epicrisis', resp.data._a.pk_epi, false, this.cabecera],
+                  { replaceUrl: true }
+                );
 
                 toastr.success('Éxito', `Epicrisis Guardada!`);
               } else {
@@ -345,7 +354,11 @@ export class FormEpicrisisComponent {
   }
 
   cerrarEpicrisis() {
-    this._routerService2.navigate(['/epicrisis']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this._routerService2.navigate(['/epicrisis']);
+    }
   }
 
   validarGuardar() {

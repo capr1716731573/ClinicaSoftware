@@ -1,0 +1,177 @@
+<div class="perfil-shell">
+  @if (user) {
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <!-- Left: profile hero -->
+            <div class="col-lg-4 col-md-5 col-sm-12 m-b-20">
+              <div class="perfil-hero">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center" style="gap: 12px">
+                    <div class="perfil-avatar" [title]="vm.fullName">
+                      {{ vm.initials }}
+                    </div>
+                    <div>
+                      <h4 class="m-0" style="font-weight: 800; letter-spacing: 0.2px">
+                        {{ vm.fullName }}
+                      </h4>
+                      <p class="perfil-sub">
+                        <i class="fa fa-user"></i>
+                        {{ vm.login }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="perfil-badges m-t-15">
+                  <span class="badge" [ngClass]="vm.badges.estadoUsuario.cls">
+                    <i [class]="vm.badges.estadoUsuario.icon"></i>
+                    {{ vm.badges.estadoUsuario.text }}
+                  </span>
+                  <span class="badge" [ngClass]="vm.badges.superUsuario.cls">
+                    <i [class]="vm.badges.superUsuario.icon"></i>
+                    {{ vm.badges.superUsuario.text }}
+                  </span>
+                  <span class="badge" [ngClass]="vm.badges.doctorUsuario.cls">
+                    <i [class]="vm.badges.doctorUsuario.icon"></i>
+                    {{ vm.badges.doctorUsuario.text }}
+                  </span>
+                </div>
+
+                <div class="m-t-15">
+                  <div class="perfil-pill" title="Correo">
+                    <i class="fa fa-envelope"></i>
+                    <span>{{ vm.correo }}</span>
+                  </div>
+                  <div class="perfil-pill" title="Celular">
+                    <i class="fa fa-phone"></i>
+                    <span>{{ vm.celular }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card m-t-15">
+                <div class="card-body">
+                  <h5 class="perfil-section-title">
+                    <i class="fa fa-id-card-o"></i> Identificación
+                  </h5>
+                  <div class="perfil-kv">
+                    <div class="k">Nº Identificación</div>
+                    <div class="v">{{ vm.identificacion }}</div>
+                  </div>
+                  <div class="perfil-kv">
+                    <div class="k">Género</div>
+                    <div class="v">{{ vm.genero }}</div>
+                  </div>
+                  <div class="perfil-kv">
+                    <div class="k">Estado civil</div>
+                    <div class="v">{{ vm.estadoCivil }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: details -->
+            <div class="col-lg-8 col-md-7 col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4 class="card-title m-0">Perfil de Usuario</h4>
+                      <h6 class="card-subtitle m-t-5">
+                        Información principal del usuario autenticado
+                      </h6>
+                    </div>
+                  </div>
+
+                  <div class="row m-t-20">
+                    <div class="col-md-6">
+                      <h5 class="perfil-section-title">
+                        <i class="fa fa-lock"></i> Acceso
+                      </h5>
+                      <div class="perfil-kv">
+                        <div class="k">Login</div>
+                        <div class="v">{{ vm.login }}</div>
+                      </div>
+                      <div class="perfil-kv">
+                        <div class="k">Estado usuario</div>
+                        <div class="v">
+                          <span class="badge" [ngClass]="vm.badges.estadoUsuario.cls">
+                            {{ vm.badges.estadoUsuario.text }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="perfil-kv">
+                        <div class="k">Super usuario</div>
+                        <div class="v">
+                          <span class="badge" [ngClass]="vm.badges.superUsuario.cls">
+                            {{ vm.badges.superUsuario.text }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="perfil-kv">
+                        <div class="k">Es médico</div>
+                        <div class="v">
+                          <span class="badge" [ngClass]="vm.badges.doctorUsuario.cls">
+                            {{ vm.badges.doctorUsuario.text }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <h5 class="perfil-section-title">
+                        <i class="fa fa-address-book"></i> Contacto
+                      </h5>
+                      <div class="perfil-kv">
+                        <div class="k">Correo</div>
+                        <div class="v">{{ vm.correo }}</div>
+                      </div>
+                      <div class="perfil-kv">
+                        <div class="k">Celular</div>
+                        <div class="v">{{ vm.celular }}</div>
+                      </div>
+                      <div class="perfil-kv">
+                        <div class="k">Perfiles</div>
+                        <div class="v">
+                          @for (p of vm.perfiles; track p) {
+                          <span class="badge badge-warning m-r-5">{{ p }}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="m-t-15">
+                    <div class="alert alert-info m-b-0" role="alert">
+                      <i class="fa fa-info-circle"></i>
+                      Si algún campo no existe en el usuario, se muestra como
+                      <b>SIN DATO</b>.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="row">
+    <div class="col-12">
+      <div class="perfil-empty">
+        <h4 class="m-b-10">
+          <i class="fa fa-exclamation-triangle"></i> No hay información de usuario
+        </h4>
+        <p class="m-b-0">
+          No se encontró el objeto <b>_user</b> en el <b>localStorage</b>. Inicia sesión nuevamente para
+          cargar tu perfil.
+        </p>
+      </div>
+    </div>
+  </div>
+  }
+</div>

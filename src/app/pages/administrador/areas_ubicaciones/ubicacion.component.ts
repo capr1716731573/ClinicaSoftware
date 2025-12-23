@@ -79,12 +79,22 @@ export class UbicacionComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = true;
+  hasNext: boolean = true;
+  private prevDesde = 0;
+  private prevNumeracion = 1;
+  isSearchActive: boolean = false;
 
   constructor() {
     this.inicializar();
   }
 
   inicializar() {
+    this.desde = 0;
+    this.numeracion = 1;
+    this.prevDesde = 0;
+    this.prevNumeracion = 1;
+    this.hasNext = true;
+    this.isSearchActive = false;
     this.getCasaSalud();
     this.getAllUbicacion(this.idEstado, this.idArea);
     this.getTipoUbicacion('T');
@@ -93,8 +103,6 @@ export class UbicacionComponent {
     this.getTipoUbicacion('H');
     this.getClaseCama();
     this.opcion = 'I';
-    this.desde = 0;
-    this.numeracion = 1;
   }
 
   getAllUbicacion(estado: string, area: number) {
@@ -103,11 +111,29 @@ export class UbicacionComponent {
       next: (resp) => {
         this.loading = false;
         if (resp.status === 'ok') {
-          this.listUbicaciones = resp.rows;
+          const rows = resp.rows ?? [];
+          if (rows.length > 0) {
+            this.listUbicaciones = rows;
+            this.hasNext = rows.length === this.intervalo;
+          } else {
+            if (this.desde !== this.prevDesde) {
+              this.desde = this.prevDesde ?? 0;
+              this.numeracion = this.prevNumeracion ?? 1;
+              this.hasNext = false;
+            } else {
+              this.listUbicaciones = [];
+              this.hasNext = false;
+            }
+          }
         }
       },
       error: (err) => {
         this.loading = false;
+        if (this.desde !== this.prevDesde) {
+          this.desde = this.prevDesde ?? 0;
+          this.numeracion = this.prevNumeracion ?? 1;
+          this.hasNext = false;
+        }
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -135,9 +161,11 @@ export class UbicacionComponent {
               this.listUbicaciones = [];
             }
           }
+          this.hasNext = false;
         },
         error: (err) => {
           this.loading = false;
+          this.hasNext = false;
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -234,21 +262,32 @@ export class UbicacionComponent {
   }
 
   onEstadoAreaChange() {
-    this.bsqUbicacion='';
-    this.getAllUbicacion(this.idEstado, this.idArea);
+    this.bsqUbicacion = '';
+    this.isSearchActive = false;
     this.desde = 0;
     this.numeracion = 1;
+    this.prevDesde = 0;
+    this.prevNumeracion = 1;
+    this.hasNext = true;
+    this.getAllUbicacion(this.idEstado, this.idArea);
   }
 
   avanzar() {
+    if (this.isSearchActive || !this.hasNext) return;
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
     this.desde += this.intervalo;
     this.numeracion += 1;
     this.getAllUbicacion(this.idEstado, this.idArea);
   }
 
   retroceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
+    if (this.isSearchActive) return;
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
+    this.hasNext = true;
     this.getAllUbicacion(this.idEstado, this.idArea);
   }
 
@@ -312,17 +351,18 @@ export class UbicacionComponent {
 
   buscarUbicacion() {
     if (this.bsqUbicacion.length >= 4) {
+      this.isSearchActive = true;
+      this.desde = 0;
+      this.numeracion = 1;
       this.getUbicacionBusqueda(this.bsqUbicacion);
       // tu lógica aquí
     } else if (this.bsqUbicacion.length === 0) {
-      if ((this.desde -= this.intervalo) < 0 || this.numeracion < 0) {
-        this.desde = 0;
-        this.numeracion = 1;
-      } else {
-        this.desde -= this.intervalo;
-        this.numeracion -= 1;
-      }
-
+      this.isSearchActive = false;
+      this.desde = 0;
+      this.numeracion = 1;
+      this.prevDesde = 0;
+      this.prevNumeracion = 1;
+      this.hasNext = true;
       this.getAllUbicacion(this.idEstado, this.idArea);
     }
   }

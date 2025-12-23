@@ -403,27 +403,27 @@ export class AnamnesisComponent {
       this._routerService.navigate([
         '/form_anamnesis',
         anamnesis.pk_anam,
-        false,
+        false,true
       ]);
     } else {
       if (anamnesis.estado_anam) {
         this._routerService.navigate([
           '/form_anamnesis',
           anamnesis.pk_anam,
-          true,
+          true,true
         ]);
       } else {
         this._routerService.navigate([
           '/form_anamnesis',
           anamnesis.pk_anam,
-          false,
+          false,true
         ]);
       }
     }
   }
 
   nuevoAnamnesis() {
-    this._routerService.navigate(['/form_anamnesis', 0, false]);
+    this._routerService.navigate(['/form_anamnesis', 0, false,true]);
   }
 
   imprimirAnamnesis(anamnesis: any) {

@@ -148,7 +148,7 @@
                 <button
                   type="button"
                   class="btn btn-info"
-                  [disabled]="numeracion === 1"
+                  [disabled]="numeracion === 1 || isSearchActive"
                   (click)="retroceder()"
                 >
                   <i class="fa fa-fast-backward"></i>
@@ -156,7 +156,12 @@
                 <button type="button" class="btn btn-info">
                   {{ numeracion }}
                 </button>
-                <button type="button" class="btn btn-info" (click)="avanzar()">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!hasNext || isSearchActive"
+                >
                   <i class="fa fa-fast-forward"></i>
                 </button>
               </div>
@@ -356,6 +361,7 @@
                 class="custom-select col-12"
                 [(ngModel)]="ubicacionBody.estado_ubicacion"
                 name="estado_ubicacion"
+                [disabled]="ubicacionBody.estado_ubicacion === 'O'"
               >
                 <option [ngValue]="null" disabled>
                   Seleccione una opción...

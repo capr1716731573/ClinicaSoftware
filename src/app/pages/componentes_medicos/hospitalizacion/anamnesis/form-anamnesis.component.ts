@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -185,6 +185,7 @@ export class FormAnamnesisComponent {
   private _casaSaludService = inject(CasasSaludService);
   private _loginService = inject(LoginService);
   private _cieService = inject(CieService);
+  private location = inject(Location);
 
   // Variables principales
   tabActivo: 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' = 'B';
@@ -193,7 +194,7 @@ export class FormAnamnesisComponent {
   idNum = 0;
   casaSaludBody: any = {};
   loading = false;
-
+  cabecera: any;
   anamnesisBody!: AnamnesisBody;
 
   // Variables de Diagnósticos
@@ -209,7 +210,7 @@ export class FormAnamnesisComponent {
   };
   diagnosticoTipos = [
     { value: 'presuntivos', label: 'Presuntivo' },
-    { value: 'definitivos', label: 'Definitivo' }
+    { value: 'definitivos', label: 'Definitivo' },
   ];
   listCie10: any[] = [];
   idCie: any;
@@ -227,6 +228,9 @@ export class FormAnamnesisComponent {
       const accionParam = (pm.get('accion') ?? '').toLowerCase();
       this.accionVer =
         accionParam === 'true' || accionParam === '1' || accionParam === 'ver';
+      const cabParam = (pm.get('cab') ?? '').toLowerCase();
+      this.cabecera =
+        cabParam === 'true' || cabParam === '1' || cabParam === 'ver';
 
       if (this.idNum !== 0 && !isNaN(this.idNum)) {
         this.opcion = 'U';
@@ -383,7 +387,8 @@ export class FormAnamnesisComponent {
         observacion_k: null,
       },
       _l: {
-        medico_usu_id_fk: this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
+        medico_usu_id_fk:
+          this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
         fecha_fin: null,
         hora_fin: null,
       },
@@ -391,7 +396,8 @@ export class FormAnamnesisComponent {
         fecha_creacion_anam: null,
         fecha_modificacion_anam: null,
       },
-      medico_usu_id_fk: this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
+      medico_usu_id_fk:
+        this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
     };
   }
 
@@ -405,7 +411,10 @@ export class FormAnamnesisComponent {
       },
       error: (err) => {
         this.loading = false;
-        toastr.error('Error', `${err} - Datos no cargados de Anamnesis ${pk_anam}`);
+        toastr.error(
+          'Error',
+          `${err} - Datos no cargados de Anamnesis ${pk_anam}`
+        );
       },
     });
   }
@@ -421,8 +430,10 @@ export class FormAnamnesisComponent {
     this.anamnesisBody = {
       _a: {
         pk_anam: src?.pk_anam ?? 0,
-        casalud_id_fk: src?.casalud_id_fk ?? this.casaSaludBody?.casalud_id_pk ?? 0,
-        fk_hcu: src?.fk_hcu ?? this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0,
+        casalud_id_fk:
+          src?.casalud_id_fk ?? this.casaSaludBody?.casalud_id_pk ?? 0,
+        fk_hcu:
+          src?.fk_hcu ?? this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0,
         fecha_inicio: src?.fecha_inicio ?? null,
         hora_inicio: src?.hora_inicio ?? null,
         estado_anam: src?.estado_anam ?? false,
@@ -438,10 +449,12 @@ export class FormAnamnesisComponent {
         medicacion_habitual: antecPersonales?.medicacion_habitual ?? false,
         quirurgicos: antecPersonales?.quirurgicos ?? false,
         habitos: antecPersonales?.habitos ?? false,
-        condicion_socio_economica: antecPersonales?.condicion_socio_economica ?? false,
+        condicion_socio_economica:
+          antecPersonales?.condicion_socio_economica ?? false,
         discapacidad: antecPersonales?.discapacidad ?? false,
         religion: antecPersonales?.religion ?? false,
-        tipificacion_sanguinea: antecPersonales?.tipificacion_sanguinea ?? false,
+        tipificacion_sanguinea:
+          antecPersonales?.tipificacion_sanguinea ?? false,
         gineco_obstetricos: {
           edad_menarquia: ginecoObs?.edad_menarquia ?? null,
           edad_menopausia: ginecoObs?.edad_menopausia ?? null,
@@ -452,22 +465,28 @@ export class FormAnamnesisComponent {
           numero_abortos: ginecoObs?.numero_abortos ?? null,
           numero_cesareas: ginecoObs?.numero_cesareas ?? null,
           numero_hijos_vivos: ginecoObs?.numero_hijos_vivos ?? null,
-          fecha_ultima_menstruacion: ginecoObs?.fecha_ultima_menstruacion ?? null,
+          fecha_ultima_menstruacion:
+            ginecoObs?.fecha_ultima_menstruacion ?? null,
           fecha_ultimo_parto: ginecoObs?.fecha_ultimo_parto ?? null,
-          fecha_ultima_citologia_cervical: ginecoObs?.fecha_ultima_citologia_cervical ?? null,
+          fecha_ultima_citologia_cervical:
+            ginecoObs?.fecha_ultima_citologia_cervical ?? null,
           fecha_ultima_colposcopia: ginecoObs?.fecha_ultima_colposcopia ?? null,
           fecha_ultima_mamografia: ginecoObs?.fecha_ultima_mamografia ?? null,
-          metodo_planificacion_familiar: ginecoObs?.metodo_planificacion_familiar ?? null,
+          metodo_planificacion_familiar:
+            ginecoObs?.metodo_planificacion_familiar ?? null,
           terapia_hormonal: ginecoObs?.terapia_hormonal ?? null,
-          fecha_ultimo_eco_prostatico: ginecoObs?.fecha_ultimo_eco_prostatico ?? null,
-          fecha_ultimo_antigeno_prostatico: ginecoObs?.fecha_ultimo_antigeno_prostatico ?? null,
+          fecha_ultimo_eco_prostatico:
+            ginecoObs?.fecha_ultimo_eco_prostatico ?? null,
+          fecha_ultimo_antigeno_prostatico:
+            ginecoObs?.fecha_ultimo_antigeno_prostatico ?? null,
           gineco_observacion: ginecoObs?.gineco_observacion ?? null,
         },
       },
       _d: {
         cardiopatia: antecFamiliares?.cardiopatia ?? false,
         hipertension: antecFamiliares?.hipertension ?? false,
-        enfermedadCerebrovascular: antecFamiliares?.enfermedadCerebrovascular ?? false,
+        enfermedadCerebrovascular:
+          antecFamiliares?.enfermedadCerebrovascular ?? false,
         endocrinoMetabolico: antecFamiliares?.endocrinoMetabolico ?? false,
         cancer: antecFamiliares?.cancer ?? false,
         tuberculosis: antecFamiliares?.tuberculosis ?? false,
@@ -497,12 +516,14 @@ export class FormAnamnesisComponent {
         temperatura_c: signosVitales?.temperatura_c ?? null,
         presion_arterial_mmHg: signosVitales?.presion_arterial_mmHg ?? null,
         pulso_por_minuto: signosVitales?.pulso_por_minuto ?? null,
-        frecuencia_respiratoria_por_minuto: signosVitales?.frecuencia_respiratoria_por_minuto ?? null,
+        frecuencia_respiratoria_por_minuto:
+          signosVitales?.frecuencia_respiratoria_por_minuto ?? null,
         peso_kg: signosVitales?.peso_kg ?? null,
         talla_cm: signosVitales?.talla_cm ?? null,
         imc_kg_m2: signosVitales?.imc_kg_m2 ?? null,
         perimetro_cefalico_cm: signosVitales?.perimetro_cefalico_cm ?? null,
-        pulsioximetria_porcentaje: signosVitales?.pulsioximetria_porcentaje ?? null,
+        pulsioximetria_porcentaje:
+          signosVitales?.pulsioximetria_porcentaje ?? null,
         score_mama: signosVitales?.score_mama ?? null,
         otros: signosVitales?.otros ?? null,
       },
@@ -541,7 +562,10 @@ export class FormAnamnesisComponent {
         observacion_k: src?.plan_tratamiento_anam ?? null,
       },
       _l: {
-        medico_usu_id_fk: src?.medico_usu_id_fk ?? this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
+        medico_usu_id_fk:
+          src?.medico_usu_id_fk ??
+          this._loginService.getUserLocalStorage()?.pk_usuario ??
+          null,
         fecha_fin: src?.fecha_fin ?? null,
         hora_fin: src?.hora_fin ?? null,
       },
@@ -549,18 +573,31 @@ export class FormAnamnesisComponent {
         fecha_creacion_anam: src?.fecha_creacion_anam ?? null,
         fecha_modificacion_anam: src?.fecha_modificacion_anam ?? null,
       },
-      medico_usu_id_fk: src?.medico_usu_id_fk ?? this._loginService.getUserLocalStorage()?.pk_usuario ?? null,
+      medico_usu_id_fk:
+        src?.medico_usu_id_fk ??
+        this._loginService.getUserLocalStorage()?.pk_usuario ??
+        null,
     };
   }
 
   guardarAnamnesis(): void {
     // Asignar datos del usuario y casa de salud
-    this.anamnesisBody._a.casalud_id_fk = this.casaSaludBody?.casalud_id_pk ?? 0;
-    this.anamnesisBody._a.fk_hcu = this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
-    this.anamnesisBody._l.medico_usu_id_fk = this._loginService.getUserLocalStorage()?.pk_usuario ?? null;
-    this.anamnesisBody.medico_usu_id_fk = this._loginService.getUserLocalStorage()?.pk_usuario ?? null;
+    this.anamnesisBody._a.casalud_id_fk =
+      this.casaSaludBody?.casalud_id_pk ?? 0;
+    if (this.anamnesisBody._a.fk_hcu === 0) {
+      this.anamnesisBody._a.fk_hcu =
+        this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    }
+    /* this.anamnesisBody._a.fk_hcu =
+      this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0; */
+    this.anamnesisBody._l.medico_usu_id_fk =
+      this._loginService.getUserLocalStorage()?.pk_usuario ?? null;
+    this.anamnesisBody.medico_usu_id_fk =
+      this._loginService.getUserLocalStorage()?.pk_usuario ?? null;
 
-    const payload = this.sanitizeStrings(JSON.parse(JSON.stringify(this.anamnesisBody)));
+    const payload = this.sanitizeStrings(
+      JSON.parse(JSON.stringify(this.anamnesisBody))
+    );
 
     Swal.fire({
       title: '¿Está seguro?',
@@ -571,30 +608,45 @@ export class FormAnamnesisComponent {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this._anamnesisService.guardarAnamnesis(payload, this.opcion).subscribe({
-          next: (resp) => {
-            if (resp.status === 'ok') {
-              this.opcion = 'U';
-              const pkAnam = resp.data?._a?.pk_anam ?? resp.data?.pk_anam ?? 0;
-              this.anamnesisBody._a.pk_anam = pkAnam;
-              this.idNum = pkAnam;
-              toastr.success('Éxito', `Anamnesis guardada correctamente`);
-              this._router.navigate(['/form_anamnesis', pkAnam, false]);
-              this.getListaDiagnosticos();
-            } else {
-              toastr.error('Error', `Problema al registrar la anamnesis`);
-            }
-          },
-          error: (err) => {
-            toastr.error('Error', `${err} - Problema al registrar la anamnesis`);
-          },
-        });
+        this._anamnesisService
+          .guardarAnamnesis(payload, this.opcion)
+          .subscribe({
+            next: (resp) => {
+              if (resp.status === 'ok') {
+                this.opcion = 'U';
+                const pkAnam =
+                  resp.data?._a?.pk_anam ?? resp.data?.pk_anam ?? 0;
+                this.anamnesisBody._a.pk_anam = pkAnam;
+                this.idNum = pkAnam;
+                toastr.success('Éxito', `Anamnesis guardada correctamente`);
+                // Evita doble entrada en history al pasar de "crear" a "editar"
+                // para que "Cerrar" vuelva al componente anterior en 1 click.
+                this._router.navigate(
+                  ['/form_anamnesis', pkAnam, false, this.cabecera],
+                  { replaceUrl: true }
+                );
+                this.getListaDiagnosticos();
+              } else {
+                toastr.error('Error', `Problema al registrar la anamnesis`);
+              }
+            },
+            error: (err) => {
+              toastr.error(
+                'Error',
+                `${err} - Problema al registrar la anamnesis`
+              );
+            },
+          });
       }
     });
   }
 
   cerrarFormulario(): void {
-    this._router.navigate(['/anamnesis']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this._router.navigate(['/anamnesis']);
+    }
   }
 
   validarGuardar(): boolean {
@@ -619,7 +671,8 @@ export class FormAnamnesisComponent {
     const talla = this.anamnesisBody._g.talla_cm;
     if (peso && talla && talla > 0) {
       const tallaM = talla / 100;
-      this.anamnesisBody._g.imc_kg_m2 = Math.round((peso / (tallaM * tallaM)) * 100) / 100;
+      this.anamnesisBody._g.imc_kg_m2 =
+        Math.round((peso / (tallaM * tallaM)) * 100) / 100;
     }
   }
 
@@ -687,23 +740,25 @@ export class FormAnamnesisComponent {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this._anamnesisService.guardarDiagnostico(this.diagnosticoBody, 'I').subscribe({
-          next: (resp) => {
-            if (resp.status === 'ok') {
-              this.getListaDiagnosticos();
-              $('#diagnosticoAnamnesisModal').modal('hide');
-              toastr.success('Éxito', `Diagnóstico agregado!`);
-            } else {
-              toastr.error(
-                'Error',
-                `Problema al crear diagnóstico - Posible duplicado`
-              );
-            }
-          },
-          error: (err) => {
-            toastr.error('Error', `${err} - Problema al crear diagnóstico`);
-          },
-        });
+        this._anamnesisService
+          .guardarDiagnostico(this.diagnosticoBody, 'I')
+          .subscribe({
+            next: (resp) => {
+              if (resp.status === 'ok') {
+                this.getListaDiagnosticos();
+                $('#diagnosticoAnamnesisModal').modal('hide');
+                toastr.success('Éxito', `Diagnóstico agregado!`);
+              } else {
+                toastr.error(
+                  'Error',
+                  `Problema al crear diagnóstico - Posible duplicado`
+                );
+              }
+            },
+            error: (err) => {
+              toastr.error('Error', `${err} - Problema al crear diagnóstico`);
+            },
+          });
       }
     });
   }

@@ -28,6 +28,7 @@ export class PerfilesComponent {
   private _perfilService = inject(PerfilService);
   listModulos: any[] = [];
   listPerfiles: any[] = [];
+  private allPerfiles: any[] = [];
   moduloSelect: any = {};
   idModulo: number = null;
   perfilBody: PerfilBody = {
@@ -40,11 +41,16 @@ export class PerfilesComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = false;
+  hasNext: boolean = false;
 
   inicializacion(){
     this.getModulos();
     this.idModulo=null;
     this.listPerfiles=[];
+    this.allPerfiles = [];
+    this.desde = 0;
+    this.numeracion = 1;
+    this.hasNext = false;
   }
 
   getModulos() {
@@ -72,7 +78,8 @@ export class PerfilesComponent {
       next: (resp) => {
         this.loading = false;
         if (resp.status === 'ok') {
-          this.listPerfiles = resp.rows;
+          this.allPerfiles = resp.rows ?? [];
+          this.applyPagination();
         }
       },
       error: (err) => {
@@ -89,15 +96,24 @@ export class PerfilesComponent {
   }
 
   avanzar() {
+    if (!this.hasNext) return;
     this.desde += this.intervalo;
     this.numeracion += 1;
-    this.getPerfiles(this.idModulo);
+    this.applyPagination();
   }
 
   retoceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
-    this.getPerfiles(this.idModulo);
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.hasNext = true;
+    this.applyPagination();
+  }
+
+  private applyPagination() {
+    const start = Math.max(0, this.desde);
+    const end = start + this.intervalo;
+    this.listPerfiles = (this.allPerfiles ?? []).slice(start, end);
+    this.hasNext = end < (this.allPerfiles?.length ?? 0);
   }
 
   validarGuardar() {

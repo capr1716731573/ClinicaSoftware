@@ -12,21 +12,19 @@
             class="has-arrow waves-effect waves-dark"
             href="#"
             aria-expanded="false"
-            ><img src="./assets/images/users/profile.png" alt="user" /><span
+            ><img src="./assets/images/users/doctor.png" alt="user" /><span
               class="hide-menu"
-              >Steave Jobs
+              >General
             </span></a
           >
           <ul aria-expanded="false" class="collapse">
-            <li><a href="javascript:void()">My Profile </a></li>
-            <li><a href="javascript:void()">My Balance</a></li>
-            <li><a href="javascript:void()">Inbox</a></li>
-            <li><a routerLink="/settings">Account Setting</a></li>
-            <li><a (click)="logoutComponent()">Logout</a></li>
+            <li><a routerLink="/dashboard">Inicio </a></li>
+            <li><a routerLink="/perfil">Mi Perfil</a></li>
+            <li><a routerLink="/settings">Themes App</a></li>
           </ul>
         </li>
         <li class="nav-devider"></li>
-        <li class="nav-small-cap">PERSONAL</li>
+        <li class="nav-small-cap">MENÚ</li>
 
         <!-- <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
                             <i class="mdi mdi-gauge"></i>
@@ -47,7 +45,7 @@
             role="button"
             tabindex="0"
             class="has-arrow waves-effect waves-dark"
-            (click)="item.expanded = !item.expanded"
+            (click)="toggleMenu(item)"
             [attr.aria-expanded]="item.expanded"
           >
             <i
@@ -74,6 +72,7 @@
                 [routerLink]="sub.ruta_menu"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
+                (click)="activateParent(item)"
               >
                 {{ sub.desc_menu }}
               </a>

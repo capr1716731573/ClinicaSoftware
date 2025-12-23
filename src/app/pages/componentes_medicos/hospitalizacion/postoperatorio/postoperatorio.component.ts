@@ -50,92 +50,91 @@ export class PostoperatorioComponent {
   }
 
   parametrizarProtocoloOperatorio(data: any): ProtocoloOperatorio {
-  // Bloques del JSON de origen
-  const proc  = data?.procedimiento_protope ?? {};
-  const integ = data?.integrantes_protope ?? {};
-  const tipoA = data?.tipoanestesia_protope ?? {};
-  const tiempos = data?.tiemposquirurgicos_protope ?? {};
-  const comp  = data?.complicaciones_protope ?? {};
-  const histo = data?.histopatologicos_protope ?? {};
+    // Bloques del JSON de origen
+    const proc = data?.procedimiento_protope ?? {};
+    const integ = data?.integrantes_protope ?? {};
+    const tipoA = data?.tipoanestesia_protope ?? {};
+    const tiempos = data?.tiemposquirurgicos_protope ?? {};
+    const comp = data?.complicaciones_protope ?? {};
+    const histo = data?.histopatologicos_protope ?? {};
 
-  return {
-    /* === A === */
-    _a: {
-      pk_protope: data?.pk_protope ?? 0,
-      casalud_id_fk: data?.casalud_id_fk ?? 0,
-      fk_hcu: data?.fk_hcu ?? 0,
-      estado_protope: data?.estado_protope ?? false,
-      medico_usu_id_fk: data?.medico_usu_id_fk ?? 0,
-    },
+    return {
+      /* === A === */
+      _a: {
+        pk_protope: data?.pk_protope ?? 0,
+        casalud_id_fk: data?.casalud_id_fk ?? 0,
+        fk_hcu: data?.fk_hcu ?? 0,
+        estado_protope: data?.estado_protope ?? false,
+        medico_usu_id_fk: data?.medico_usu_id_fk ?? 0,
+      },
 
-    /* === C: procedimiento_protope === */
-    _c: {
-      electiva:  proc?.electiva ?? false,
-      emergencia: proc?.emergencia ?? false,
-      urgencia:   proc?.urgencia ?? false,
-      proyectado: proc?.proyectado ?? null,
-      realizado:  proc?.realizado ?? null,
-    },
+      /* === C: procedimiento_protope === */
+      _c: {
+        electiva: proc?.electiva ?? false,
+        emergencia: proc?.emergencia ?? false,
+        urgencia: proc?.urgencia ?? false,
+        proyectado: proc?.proyectado ?? null,
+        realizado: proc?.realizado ?? null,
+      },
 
-    /* === D: integrantes_protope === */
-    _d: {
-      cirujano_1: integ?.cirujano_1 ?? null,
-      cirujano_2: integ?.cirujano_2 ?? null,
-      primer_ayudante:  integ?.primer_ayudante ?? null,
-      segundo_ayudante: integ?.segundo_ayudante ?? null,
-      tercer_ayudante:  integ?.tercer_ayudante ?? null,
-      anestesiologo:    integ?.anestesiologo ?? null,
-      instrumentista:   integ?.instrumentista ?? null,
-      circulante:       integ?.circulante ?? null,
-      ayudanteanesteciologia: integ?.ayudanteanesteciologia ?? null,
-      otros: integ?.otros ?? null,
-    },
+      /* === D: integrantes_protope === */
+      _d: {
+        cirujano_1: integ?.cirujano_1 ?? null,
+        cirujano_2: integ?.cirujano_2 ?? null,
+        primer_ayudante: integ?.primer_ayudante ?? null,
+        segundo_ayudante: integ?.segundo_ayudante ?? null,
+        tercer_ayudante: integ?.tercer_ayudante ?? null,
+        anestesiologo: integ?.anestesiologo ?? null,
+        instrumentista: integ?.instrumentista ?? null,
+        circulante: integ?.circulante ?? null,
+        ayudanteanesteciologia: integ?.ayudanteanesteciologia ?? null,
+        otros: integ?.otros ?? null,
+      },
 
-    /* === E: tipoanestesia_protope === */
-    _e: {
-      general:  tipoA?.general ?? false,
-      regional: tipoA?.regional ?? false,
-      sedacion: tipoA?.sedacion ?? false,
-      otros:    tipoA?.otros ?? false,
-    },
+      /* === E: tipoanestesia_protope === */
+      _e: {
+        general: tipoA?.general ?? false,
+        regional: tipoA?.regional ?? false,
+        sedacion: tipoA?.sedacion ?? false,
+        otros: tipoA?.otros ?? false,
+      },
 
-    /* === F: tiemposquirurgicos_protope === */
-    _f: {
-      fecha_operacion:   tiempos?.fecha_operacion ?? null,
-      hora_inicio:       tiempos?.hora_inicio ?? null,
-      hora_terminacion:  tiempos?.hora_terminacion ?? null,
-      dieresis:          tiempos?.dieresis ?? null,
-      exposicion:        tiempos?.exposicion ?? null,
-      hallazgos:         tiempos?.hallazgos ?? null,
-      procedimiento:     tiempos?.procedimiento ?? null,
-    },
+      /* === F: tiemposquirurgicos_protope === */
+      _f: {
+        fecha_operacion: tiempos?.fecha_operacion ?? null,
+        hora_inicio: tiempos?.hora_inicio ?? null,
+        hora_terminacion: tiempos?.hora_terminacion ?? null,
+        dieresis: tiempos?.dieresis ?? null,
+        exposicion: tiempos?.exposicion ?? null,
+        hallazgos: tiempos?.hallazgos ?? null,
+        procedimiento: tiempos?.procedimiento ?? null,
+      },
 
-    /* === G: complicaciones_protope === */
-    _g: {
-      observacion: comp?.observacion ?? null,
-      descripcion: comp?.descripcion ?? null,
-      perdida:     comp?.perdida ?? 0,
-      sangrado:    comp?.sangrado ?? 0,
-      uso:         comp?.uso ?? 'NO',
-    },
+      /* === G: complicaciones_protope === */
+      _g: {
+        observacion: comp?.observacion ?? null,
+        descripcion: comp?.descripcion ?? null,
+        perdida: comp?.perdida ?? 0,
+        sangrado: comp?.sangrado ?? 0,
+        uso: comp?.uso ?? 'NO',
+      },
 
-    /* === H: histopatologicos_protope === */
-    _h: {
-      transquirurgico:  histo?.transquirurgico ?? null,
-      biopsia:          histo?.biopsia ?? 'NO',
-      resultado:        histo?.resultado ?? null,
-      histopatologico:  histo?.histopatologico ?? 'NO',
-      muestra:          histo?.muestra ?? null,
-      medico_nombre:    histo?.medico_nombre ?? null,
-    },
+      /* === H: histopatologicos_protope === */
+      _h: {
+        transquirurgico: histo?.transquirurgico ?? null,
+        biopsia: histo?.biopsia ?? 'NO',
+        resultado: histo?.resultado ?? null,
+        histopatologico: histo?.histopatologico ?? 'NO',
+        muestra: histo?.muestra ?? null,
+        medico_nombre: histo?.medico_nombre ?? null,
+      },
 
-    /* === I: diagrama_protope (string plano en raíz) === */
-    _i: {
-      diagrama_protope: data?.diagrama_protope ?? null,
-    },
-  };
-}
-
+      /* === I: diagrama_protope (string plano en raíz) === */
+      _i: {
+        diagrama_protope: data?.diagrama_protope ?? null,
+      },
+    };
+  }
 
   getCasaSalud() {
     this._casaSaludService.getCasaSaludPrincipal().subscribe({
@@ -222,7 +221,7 @@ export class PostoperatorioComponent {
           Swal.fire({
             title: '¡Error!',
             icon: 'error',
-            text: `Epicrisis (getFechasPostOperatorio) - ${err.message}`,
+            text: `Protocolo (getFechasPostOperatorio) - ${err.message}`,
             confirmButtonText: 'Aceptar',
           });
         },
@@ -299,12 +298,12 @@ export class PostoperatorioComponent {
         protocolo.estado_protope = true;
         protocolo.medico_usu_id_fk =
           this._loginService.getUserLocalStorage().pk_usuario;
-          console.log(JSON.stringify(protocolo));
-        
-          let protocoloFinal = this.parametrizarProtocoloOperatorio(protocolo);
-          alert(JSON.stringify(protocoloFinal))
-          
-          protocoloFinal._a.estado_protope=true;
+        console.log(JSON.stringify(protocolo));
+
+        let protocoloFinal = this.parametrizarProtocoloOperatorio(protocolo);
+        /* alert(JSON.stringify(protocoloFinal)); */
+
+        protocoloFinal._a.estado_protope = true;
         this.guardarProtocoloPostOperatorio(protocoloFinal);
       } else if (
         result.isDismissed &&
@@ -387,6 +386,7 @@ export class PostoperatorioComponent {
         '/form_protocolo',
         protocolo.pk_protope,
         false,
+        true
       ]); //true es editar
     } else {
       if (protocolo.estado_protope) {
@@ -394,19 +394,21 @@ export class PostoperatorioComponent {
           '/form_protocolo',
           protocolo.pk_protope,
           true,
+          true
         ]); //true es editar
       } else {
         this._routerService.navigate([
           '/form_protocolo',
           protocolo.pk_protope,
           false,
+          true
         ]); //true es editar
       }
     }
   }
 
   nuevoProtocoloPostOperatorio() {
-    this._routerService.navigate(['/form_protocolo', 0, false]); //true es editar
+    this._routerService.navigate(['/form_protocolo', 0, false, true]); //true es editar
   }
 
   imprimirProtocoloPostOperatorio(protocolo: any) {

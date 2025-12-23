@@ -1,1 +1,20 @@
-<p>dashboard works!</p>
+<section class="dashboard-hero" [@heroIntro]="heroState()">
+  <div class="dashboard-hero-card">
+    <img
+      class="dashboard-logo"
+      src="assets/images/logo_completo_dark.png"
+      alt="ClinicOS"
+      loading="eager"
+      decoding="async"
+      (load)="onLogoLoad()"
+      [@logoPop]="logoState()"
+    />
+
+    <h1 class="dashboard-title" [@subtitleFade]="heroState()">
+      <strong>Sistema</strong> de Gestión de Historias Clínicas
+    </h1>
+    <p class="dashboard-subtitle" [@subtitleFade]="heroState()">
+      Clínicas • Pacientes • Reportes
+    </p>
+  </div>
+</section>

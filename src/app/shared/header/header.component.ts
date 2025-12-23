@@ -15,7 +15,12 @@ export class HeaderComponent {
   private router = inject(Router);
   private _loginService = inject(LoginService);
 
-  constructor() {}
+  public usuario:any;
+
+
+  constructor() {
+    this.usuario= this._loginService.getUserLocalStorage();
+  }
 
   logoutComponent() {
     this._loginService.logout();

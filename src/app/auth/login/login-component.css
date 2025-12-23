@@ -28,8 +28,9 @@ Login register and recover password Page
     position: fixed; }
   
   .login-box {
-    width: 400px;
-    margin: 0 auto; }
+    /* Responsive: se adapta a pantallas pequeñas sin romper el layout */
+    width: min(92vw, 420px);
+    margin: 0; }
     .login-box .footer {
       width: 100%;
       left: 0px;
@@ -50,4 +51,99 @@ Login register and recover password Page
       height: 100%; }
   
   /**********************/
- 
+ /* *************  Aqui probar BG ******** */
+html {
+  height:100%;
+}
+
+body {
+  margin:0;
+}
+
+.bg {
+  animation:slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, rgb(5, 5, 123) 50%, #09f 50%);
+  bottom:0;
+  left:-50%;
+  opacity:.5;
+  pointer-events: none;
+  position:fixed;
+  right:-50%;
+  top:0;
+  /* Asegura que el gradiente se vea detrás del login (y no quede “debajo” del body) */
+  z-index: 0;
+}
+
+.bg2 {
+  animation-direction:alternate-reverse;
+  animation-duration:4s;
+}
+
+.bg3 {
+  animation-duration:5s;
+}
+
+.content {
+  /* Quita el cuadro/fondo detrás del formulario */
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 48px);
+  position: relative;
+  z-index: 1;
+  left: auto;
+  top: auto;
+  transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.login-box.card {
+  /* Bordes redondeados para el cuadro del login */
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.login-box.card .card-body {
+  border-radius: inherit;
+  padding: clamp(18px, 4vw, 40px);
+}
+
+.label-left label {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: .25rem;
+  font-weight: 600;
+}
+
+/* Inputs/selects 100% en todos los tamaños */
+.form-control,
+.custom-select {
+  width: 100%;
+}
+
+/* Si la altura es muy chica, alinea arriba para evitar que quede cortado */
+@media (max-height: 640px) {
+  .content {
+    align-items: flex-start;
+  }
+}
+
+h1 {
+  font-family:monospace;
+}
+
+@keyframes slide {
+  0% {
+    transform:translateX(-25%);
+  }
+  100% {
+    transform:translateX(25%);
+  }
+}

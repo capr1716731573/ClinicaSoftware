@@ -5884,3 +5884,72 @@ File: scss
     text-align: center;
     margin-top: 10px;
     overflow: hidden; } }
+
+/* ============================================================
+   Vertical tabs (vtabs) - integrado para uso global
+   Scoped a .vtabs / .customvtab para NO afectar tabs horizontales
+   ============================================================ */
+.vtabs {
+  display: table;
+  width: 100%;
+}
+.vtabs .tabs-vertical {
+  width: 150px;
+  border-bottom: 0px;
+  border-right: 1px solid rgba(120, 130, 140, 0.13);
+  display: table-cell;
+  vertical-align: top;
+}
+.vtabs .tabs-vertical li .nav-link {
+  color: #263238;
+  margin-bottom: 10px;
+  border: 0px;
+  border-radius: 4px 0 0 4px;
+}
+.vtabs .tab-content {
+  display: table-cell;
+  padding: 20px;
+  vertical-align: top;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* En pantallas pequeñas, evitamos display:table (problemas de scroll/navegación) */
+@media (max-width: 600px) {
+  .vtabs {
+    display: block;
+    width: 100%;
+  }
+
+  .vtabs .tabs-vertical {
+    display: block;
+    width: 100%;
+    border-right: 0px;
+    border-bottom: 1px solid rgba(120, 130, 140, 0.13);
+  }
+
+  .vtabs .tab-content {
+    display: block;
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+.tabs-vertical li .nav-link.active,
+.tabs-vertical li .nav-link:hover,
+.tabs-vertical li .nav-link.active:focus {
+  background: #398bf7;
+  border: 0px;
+  color: #ffffff;
+}
+
+/* Custom vertical tab */
+.customvtab .tabs-vertical li .nav-link.active,
+.customvtab .tabs-vertical li .nav-link:hover,
+.customvtab .tabs-vertical li .nav-link:focus {
+  background: #ffffff;
+  border: 0px;
+  border-right: 2px solid #398bf7;
+  margin-right: -1px;
+  color: #398bf7;
+}

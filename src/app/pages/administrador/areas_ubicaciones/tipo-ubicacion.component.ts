@@ -50,19 +50,29 @@ export class TipoUbicacionComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = true;
+  hasNext: boolean = true;
+  private prevDesde = 0;
+  private prevNumeracion = 1;
+  isSearchActive: boolean = false;
 
   constructor() {
+    this.opcion = 'I';
+    this.desde = 0;
+    this.numeracion = 1;
+    this.prevDesde = 0;
+    this.prevNumeracion = 1;
+    this.hasNext = true;
     this.getTipoUbicacion(this.tipo);
-    this.opcion='I';
-    this.desde=0;
-    this.numeracion=1;
   }
 
   inicializacion() {
+    this.opcion = 'I';
+    this.desde = 0;
+    this.numeracion = 1;
+    this.prevDesde = 0;
+    this.prevNumeracion = 1;
+    this.hasNext = true;
     this.getTipoUbicacion(this.tipo);
-    this.opcion='I';
-    this.desde=0;
-    this.numeracion=1;
   }
 
   onTipoChange(valor: string | null) {
@@ -78,11 +88,30 @@ export class TipoUbicacionComponent {
         next: (resp) => {
           this.loading = false;
           if (resp.status === 'ok') {
-            this.listTipoUbicacion = resp.rows;
+            const rows = resp.rows ?? [];
+            if (rows.length > 0) {
+              this.listTipoUbicacion = rows;
+              this.hasNext = rows.length === this.intervalo;
+            } else {
+              // si intentamos avanzar y no hay data, volver y bloquear avanzar
+              if (this.desde !== this.prevDesde) {
+                this.desde = this.prevDesde ?? 0;
+                this.numeracion = this.prevNumeracion ?? 1;
+                this.hasNext = false;
+              } else {
+                this.listTipoUbicacion = [];
+                this.hasNext = false;
+              }
+            }
           }
         },
         error: (err) => {
           this.loading = false;
+          if (this.desde !== this.prevDesde) {
+            this.desde = this.prevDesde ?? 0;
+            this.numeracion = this.prevNumeracion ?? 1;
+            this.hasNext = false;
+          }
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -108,9 +137,11 @@ export class TipoUbicacionComponent {
             this.listTipoUbicacion = [];
           }
         }
+        this.hasNext = false;
       },
       error: (err) => {
         this.loading = false;
+        this.hasNext = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -123,14 +154,21 @@ export class TipoUbicacionComponent {
   }
 
   avanzar() {
+    if (this.isSearchActive || !this.hasNext) return;
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
     this.desde += this.intervalo;
     this.numeracion += 1;
     this.getTipoUbicacion(this.tipo);
   }
 
   retroceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
+    if (this.isSearchActive) return;
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
+    this.hasNext = true;
     this.getTipoUbicacion(this.tipo);
   }
 
@@ -163,11 +201,18 @@ export class TipoUbicacionComponent {
 
   buscarTipoUbicacion() {
     if (this.bsqTipoUbicacion.length >= 4) {
+      this.isSearchActive = true;
+      this.desde = 0;
+      this.numeracion = 1;
       this.getTipoUbicacionBusqueda(this.bsqTipoUbicacion, this.tipo);
       // tu lógica aquí
     } else if (this.bsqTipoUbicacion.length === 0) {
-      this.desde -= this.intervalo;
-      this.numeracion -= 1;
+      this.isSearchActive = false;
+      this.desde = 0;
+      this.numeracion = 1;
+      this.prevDesde = 0;
+      this.prevNumeracion = 1;
+      this.hasNext = true;
       this.getTipoUbicacion(this.tipo);
     }
   }

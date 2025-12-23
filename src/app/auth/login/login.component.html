@@ -1,14 +1,24 @@
- <!-- ============================================================== -->
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
+<div class="content">
+<!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <section id="wrapper">
-        <div class="login-register" style="background-image:url(../assets/images/background/login-register.jpg);">
+        <!-- <div class="login-register" style="background-image:url(../assets/images/background/login-register.jpg);"> -->
             <div class="login-box card">
                 <div class="card-body">
                     <form class="form-horizontal form-material"
                     (submit)="login()"
                     id="loginform" action="index.html">
-                        <h3 class="box-title m-b-20">Ingreso al Sistema</h3>
+                        <div class="login-title m-b-20">
+                            <img
+                                class="login-title__img"
+                                src="assets/images/login_blanco.png"
+                                alt="Ingreso al Sistema"
+                            />
+                        </div>
                         <div class="form-group ">
                             <div class="col-xs-12">
                                 <input class="form-control" type="text" required="" placeholder="Username" 
@@ -19,7 +29,7 @@
                                 <input class="form-control" type="password" required="" placeholder="Password"
                                 [(ngModel)]="password" name="password"> </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group label-left">
                             <label>Módulo</label>
                             <select
                                 class="custom-select col-12"
@@ -34,7 +44,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group label-left">
                             <label>Perfiles</label>
                             <select
                                 class="custom-select col-12"
@@ -53,26 +63,15 @@
                                 <button class="btn btn-block btn-lg btn-info btn-rounded" type="submit" [disabled]="!username || !password || modulo === 0 || perfil===0">Ingresar</button>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 m-t-10 text-center">
-                                <div class="social">
-                                    <a href="javascript:void(0)" class="btn  btn-facebook" data-toggle="tooltip" title="Login with Facebook"> <i aria-hidden="true" class="fa fa-facebook"></i> </a>
-                                    <a href="javascript:void(0)" class="btn btn-googleplus" data-toggle="tooltip" title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group m-b-0">
-                            <div class="col-sm-12 text-center">
-                                Don't have an account? <a href="pages-register.html" class="text-info m-l-5"><b>Sign Up</b></a>
-                            </div>
-                        </div>
+                       
                     </form>
                    
                 </div>
             </div>
-        </div>
+       <!--  </div> -->
     </section>
     
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
+</div>

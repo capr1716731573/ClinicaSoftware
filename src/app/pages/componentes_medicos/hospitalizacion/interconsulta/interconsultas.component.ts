@@ -190,7 +190,7 @@ export class InterconsultasComponent {
   }
 
   nuevoInterconsultaSolicitud() {
-    this._routerService.navigate(['/form_interconsulta_solicitud', 0, false]); //true es editar
+    this._routerService.navigate(['/form_interconsulta_solicitud', 0, false,true]); //true es editar
   }
 
   editarInterconsultaSolicitud(interconsulta: any) {
@@ -198,20 +198,20 @@ export class InterconsultasComponent {
       this._routerService.navigate([
         '/form_interconsulta_solicitud',
         interconsulta.pk_intersol,
-        false,
+        false,true
       ]); //true es editar
     } else {
       if (interconsulta.contestada === 'SI') {
         this._routerService.navigate([
           '/form_interconsulta_solicitud',
           interconsulta.pk_intersol,
-          true,
+          true,true
         ]); //true es editar
       } else {
         this._routerService.navigate([
           '/form_interconsulta_solicitud',
           interconsulta.pk_intersol,
-          false,
+          false,true
         ]); //true es editar
       }
     }
@@ -222,7 +222,7 @@ export class InterconsultasComponent {
       '/form_interconsulta_informe',
       pk_intersol,
       0,
-      false,
+      false,true
     ]); //true es editar
   }
 
@@ -236,7 +236,7 @@ export class InterconsultasComponent {
         '/form_interconsulta_informe',
         idSolicitud,
         idInforme,
-        false, // editable
+        false,true // editable
       ]);
       return;
     }
@@ -290,7 +290,7 @@ export class InterconsultasComponent {
           '/form_interconsulta_informe',
           idSolicitud,
           idInforme,
-          true, // bloqueado / solo lectura
+          true,true // bloqueado / solo lectura
         ]);
       });
     } else {
@@ -299,7 +299,7 @@ export class InterconsultasComponent {
         '/form_interconsulta_informe',
         idSolicitud,
         idInforme,
-        false, // editable
+        false,true // editable
       ]);
     }
   }

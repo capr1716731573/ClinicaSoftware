@@ -101,7 +101,12 @@
                 <button type="button" class="btn btn-info">
                   {{ numeracion }}
                 </button>
-                <button type="button" class="btn btn-info" (click)="avanzar()">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                  [disabled]="!hasNext"
+                >
                   <i class="fa fa-fast-forward"></i>
                 </button>
               </div>

@@ -64,7 +64,6 @@
                   <td data-label="EDAD">
                     {{ item.edad.valor }} {{ item.edad.tipo }}
                   </td>
-                  
 
                   <td data-label="ACCIÓN">
                     <div class="btn-group d-flex justify-content-center">
@@ -90,10 +89,14 @@
                         >
                         <a
                           class="dropdown-item pointer"
+                          (click)="ciclosHospitalizacion(item.pk_hcu)"
+                          >Ciclos Hospitalización</a
+                        >
+                        <a
+                          class="dropdown-item pointer"
                           (click)="anexosHistoriaClinica(item.pk_hcu)"
                           >Anexos</a
                         >
-                       
                       </div>
                     </div>
                   </td>
@@ -107,7 +110,6 @@
                 <button
                   type="button"
                   class="btn btn-info"
-                  [disabled]="numeracion === 1"
                   (click)="retoceder()"
                 >
                   <i class="fa fa-fast-backward"></i>
@@ -115,7 +117,11 @@
                 <button type="button" class="btn btn-info">
                   {{ numeracion }}
                 </button>
-                <button type="button" class="btn btn-info" (click)="avanzar()">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  (click)="avanzar()"
+                >
                   <i class="fa fa-fast-forward"></i>
                 </button>
               </div>
@@ -127,4 +133,3 @@
     </div>
   </div>
 </div>
-

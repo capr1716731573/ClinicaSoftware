@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -40,6 +40,7 @@ export class FormInterconsultaInformeComponent {
   private _casaSaludService = inject(CasasSaludService);
   private _loginService = inject(LoginService);
   private _cieService = inject(CieService);
+  private location = inject(Location);
 
   tabActivo: 'B' | 'C' | 'D' | 'E' | 'F' = 'B';
   opcion: 'I' | 'U' = 'I';
@@ -47,6 +48,7 @@ export class FormInterconsultaInformeComponent {
   idSol = 0;
   idInf = 0;
   casaSaludBody: any = {};
+  cabecera: any;
 
   informeBody!: InterconsultaRespuesta;
 
@@ -82,6 +84,9 @@ export class FormInterconsultaInformeComponent {
       const accionParam = (pm.get('accion') ?? '').toLowerCase();
       this.accionVer =
         accionParam === 'true' || accionParam === '1' || accionParam === 'ver';
+      const cabParam = (pm.get('cab') ?? '').toLowerCase();
+      this.cabecera =
+        cabParam === 'true' || cabParam === '1' || cabParam === 'ver';
 
       if (this.idInf && !isNaN(this.idInf) && this.idInf !== 0) {
         this.opcion = 'U';
@@ -201,8 +206,12 @@ export class FormInterconsultaInformeComponent {
     }
 
     this.informeBody.casalud_id_fk = this.casaSaludBody?.casalud_id_pk ?? 0;
-    this.informeBody.fk_hcu =
-      this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    /* this.informeBody.fk_hcu =
+      this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0; */
+    if (this.informeBody.fk_hcu === 0) {
+      this.informeBody.fk_hcu =
+        this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    }
     this.informeBody.medico_usu_id_fk =
       this._loginService.getUserLocalStorage()?.pk_usuario ?? 0;
     this.informeBody.fk_intersol = this.idSol || null;
@@ -229,12 +238,18 @@ export class FormInterconsultaInformeComponent {
                 this.informeBody.pk_interresp = resp.data.pk_interresp;
                 this.idInf = resp.data.pk_interresp;
                 toastr.success('Éxito', `Informe guardado correctamente`);
-                this._router.navigate([
-                  '/form_interconsulta_informe',
-                  this.idSol,
-                  resp.data.pk_interresp,
-                  false,
-                ]);
+                // IMPORTANTE: replaceUrl evita agregar una nueva entrada al history
+                // (si no, el primer "Cerrar" vuelve al mismo formulario previo al guardado)
+                this._router.navigate(
+                  [
+                    '/form_interconsulta_informe',
+                    this.idSol,
+                    resp.data.pk_interresp,
+                    false,
+                    this.cabecera,
+                  ],
+                  { replaceUrl: true }
+                );
                 this.getListaDiagnosticos();
               } else {
                 toastr.error(
@@ -244,7 +259,10 @@ export class FormInterconsultaInformeComponent {
               }
             },
             error: (err) => {
-              toastr.error('Error', `${err} - Problema al registrar el informe`);
+              toastr.error(
+                'Error',
+                `${err} - Problema al registrar el informe`
+              );
             },
           });
       }
@@ -252,20 +270,27 @@ export class FormInterconsultaInformeComponent {
   }
 
   cerrarFormulario(): void {
-    this._router.navigate(['/interconsultas']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this._router.navigate(['/interconsultas']);
+    }
   }
 
   validarGuardar(): boolean {
     const b = this.informeBody;
     if (!b) return false;
 
-    const fkHcuOk = b.fk_hcu !== null && b.fk_hcu !== undefined && b.fk_hcu !== 0;
+    const fkHcuOk =
+      b.fk_hcu !== null && b.fk_hcu !== undefined && b.fk_hcu !== 0;
     const medicoOk =
       b.medico_usu_id_fk !== null &&
       b.medico_usu_id_fk !== undefined &&
       b.medico_usu_id_fk !== 0;
     const fkIntersolOk =
-      b.fk_intersol !== null && b.fk_intersol !== undefined && b.fk_intersol !== 0;
+      b.fk_intersol !== null &&
+      b.fk_intersol !== undefined &&
+      b.fk_intersol !== 0;
     const cuadroOk =
       b.cuadro_clinico_interresp !== null &&
       b.cuadro_clinico_interresp !== undefined &&
@@ -395,7 +420,10 @@ export class FormInterconsultaInformeComponent {
               }
             },
             error: (err) => {
-              toastr.error('Error', `${err} - Problema al eliminar diagnóstico`);
+              toastr.error(
+                'Error',
+                `${err} - Problema al eliminar diagnóstico`
+              );
             },
           });
       }

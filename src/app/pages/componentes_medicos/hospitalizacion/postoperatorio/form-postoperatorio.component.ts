@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -8,7 +8,6 @@ import { SkeletonCrudComponent } from '../../../../componentes_reutilizables/ske
 import { PosOperatorioService } from '../../../../services/hospitalizacion/posoperatorio/posoperatorio.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import {
   ProtocoloOperatorio,
@@ -43,6 +42,7 @@ export class FormPostoperatorioComponent {
   private _casaSaludService = inject(CasasSaludService);
   private _cieService = inject(CieService);
   private _especialidadMedicoService = inject(EspecialidadMedicoService);
+  private location = inject(Location);
 
   // Variables principales
   opcion: string = 'I';
@@ -51,6 +51,7 @@ export class FormPostoperatorioComponent {
   protocoloBody!: ProtocoloOperatorio;
   idNum: number = 0;
   accionVer: any;
+  cabecera: any;
 
   // Variables de Diagnósticos
   listDiagnosticos: any[] = [];
@@ -99,12 +100,19 @@ export class FormPostoperatorioComponent {
       this.idNum = Number(pm.get('id') ?? 0);
 
       const accion = (pm.get('accion') ?? '').toLowerCase();
+      const cab = (pm.get('cab') ?? '').toLowerCase();
       // considera "ver", "v", "true", "1" como VER (solo lectura)
       this.accionVer =
         accion === 'ver' ||
         accion === 'v' ||
         accion === 'true' ||
         accion === '1';
+
+      this.cabecera =
+        cab === 'ver' ||
+        cab === 'v' ||
+        cab === 'true' ||
+        cab === '1';
 
       if (this.idNum !== 0 && !isNaN(this.idNum)) {
         this.opcion = 'U';
@@ -194,7 +202,7 @@ export class FormPostoperatorioComponent {
         resultado: '',
         histopatologico: 'NO', // Por defecto NO
         muestra: '',
-        medico_nombre:''
+        medico_nombre: '',
       },
       _i: {
         diagrama_protope: '',
@@ -383,7 +391,7 @@ export class FormPostoperatorioComponent {
         resultado: asStr(histopatologicos?.resultado),
         histopatologico: asSiNo(histopatologicos?.histopatologico),
         muestra: asStr(histopatologicos?.muestra),
-        medico_nombre:asStr(histopatologicos?.medico_nombre),
+        medico_nombre: asStr(histopatologicos?.medico_nombre),
       },
 
       _i: {
@@ -436,8 +444,11 @@ export class FormPostoperatorioComponent {
   guardarPostOperatorio() {
     // Aseguramos casa de salud y médico antes de guardar
     this.protocoloBody._a.casalud_id_fk = this.casaSaludBody.casalud_id_pk;
-    this.protocoloBody._a.medico_usu_id_fk =
-      this._loginService.getUserLocalStorage().pk_usuario;
+    this.protocoloBody._a.medico_usu_id_fk =this._loginService.getUserLocalStorage().pk_usuario;
+    if (this.protocoloBody._a.fk_hcu === 0) {
+      this.protocoloBody._a.fk_hcu =
+        this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    }
 
     // Sanitizar comillas simples en todo el objeto (mismo helper que en Epicrisis)
     this.protocoloBody = this.sanitizePosOperatorioBodyStrings(
@@ -463,11 +474,16 @@ export class FormPostoperatorioComponent {
                 /* console.log(JSON.stringify(resp.data)); */
 
                 // Navegar al formulario ya en modo edición
-                this._routerService2.navigate([
-                  '/form_protocolo', // ajusta la ruta si tu route es otro
-                  resp.data._a.pk_protope,
-                  false,
-                ]);
+                // Evita doble entrada en history al pasar de "crear" a "editar"
+                this._routerService2.navigate(
+                  [
+                    '/form_protocolo', // ajusta la ruta si tu route es otro
+                    resp.data._a.pk_protope,
+                    false,
+                    this.cabecera,
+                  ],
+                  { replaceUrl: true }
+                );
 
                 toastr.success('Éxito', `Protocolo postoperatorio guardado!`);
               } else {
@@ -489,11 +505,16 @@ export class FormPostoperatorioComponent {
   }
 
   cerrarPostOperatorio() {
-    this._routerService2.navigate(['/protocolo']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this._routerService2.navigate(['/protocolo']);
+    }
   }
 
   validarGuardar(): boolean {
     if (
+      
       !this.protocoloBody ||
       !this.protocoloBody._a.fk_hcu ||
       this.protocoloBody._a.fk_hcu === null ||
@@ -982,17 +1003,20 @@ export class FormPostoperatorioComponent {
         this._postoperatorioService
           .actualizarDiagrama(this.imgDiagrama, this.protocoloBody)
           .then((img) => {
-            console.log(JSON.stringify(img))
+            console.log(JSON.stringify(img));
             //this.parametrizarPostOperatorio(img);
             //this.protocoloBody = img;
             this.opcion = 'U';
             toastr.success('Éxito!', 'Diagrama actualizado correctamente');
-             this._routerService2.navigate([
-                  '/form_protocolo', // ajusta la ruta si tu route es otro
-                  img._a.pk_protope,
-                  false,
-                ]);
-
+            // replaceUrl para no apilar history dentro del mismo formulario
+            this._routerService2.navigate(
+              [
+                '/form_protocolo', // ajusta la ruta si tu route es otro
+                img._a.pk_protope,
+                false,
+              ],
+              { replaceUrl: true }
+            );
           });
       }
     });
@@ -1000,19 +1024,19 @@ export class FormPostoperatorioComponent {
 
   verImagenDiagrama(): string {
     const noImage = './assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
-    
-    if(!this.protocoloBody._i.diagrama_protope ||
+
+    if (
+      !this.protocoloBody._i.diagrama_protope ||
       this.protocoloBody._i.diagrama_protope === null ||
       this.protocoloBody._i.diagrama_protope === undefined ||
-      this.protocoloBody._i.diagrama_protope === '' 
-    ){
+      this.protocoloBody._i.diagrama_protope === ''
+    ) {
       //alert('No IMagen')
       return noImage;
-    }else{
+    } else {
       return this._postoperatorioService.verDiagrama(
-          this.protocoloBody._i.diagrama_protope
-        );
+        this.protocoloBody._i.diagrama_protope
+      );
     }
-
   }
 }

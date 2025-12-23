@@ -9,7 +9,7 @@ export class SettingsService {
 
   constructor() { 
      //Accedo al documento index.html    
-     const url=localStorage.getItem('theme') || `./assets/css/colors/purple-dark.css`;
+     const url=localStorage.getItem('theme') || `./assets/css/colors/blue-dark.css`;
      this.linkTheme.setAttribute('href',url);
   }
 

@@ -7,6 +7,7 @@ import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { HistoriaClinicaService } from '../../../services/historia_clinica/historia_clinica.service';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { LoginService } from '../../../services/login.service';
 declare var toastr: any;
 declare var $: any;
 
@@ -19,6 +20,7 @@ declare var $: any;
 export class HistoriasComponent {
   private _historiaClinicaService = inject(HistoriaClinicaService);
   private _routerService = inject(Router);
+  private _loginService = inject(LoginService)
   historiaclinicaList: any[] = [];
   bsqHistoriaClinica: string = '';
   opcion: string = 'I';
@@ -27,18 +29,56 @@ export class HistoriasComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = true;
+  hasNext: boolean = true;
+  private prevDesde = 0;
+  private prevNumeracion = 1;
+  private prevHasNext = true;
+  isSearchActive: boolean = false;
 
   constructor() {
     this.getAllHistoriaClinica();
+    this._loginService.removeHcuLocalStorage();
   }
 
-  controlManejoPaginacion() {
-    if ((this.desde -= this.intervalo) < 0 || this.numeracion < 0) {
-      this.desde = 0;
-      this.numeracion = 1;
+  private revertPagination(lockNext: boolean = false) {
+    this.desde = this.prevDesde ?? 0;
+    this.numeracion = this.prevNumeracion ?? 1;
+    this.hasNext = lockNext ? false : (this.prevHasNext ?? true);
+  }
+
+  private resetPagination() {
+    this.desde = 0;
+    this.numeracion = 1;
+    this.prevDesde = 0;
+    this.prevNumeracion = 1;
+    this.prevHasNext = true;
+    this.hasNext = true;
+  }
+
+  canGoNext(): boolean {
+    return !this.loading && !this.isSearchActive && this.hasNext;
+  }
+
+  canGoPrev(): boolean {
+    return !this.loading && !this.isSearchActive && this.numeracion > 1 && this.desde > 0;
+  }
+
+  private notifyPaginationBlocked(direction: 'next' | 'prev') {
+    if (this.loading) {
+      toastr.info('Cargando...', 'Espera a que termine la carga para navegar.');
+      return;
+    }
+    if (this.isSearchActive) {
+      toastr.warning(
+        'Búsqueda activa',
+        'Desactiva la búsqueda (borra el texto) para usar la paginación.'
+      );
+      return;
+    }
+    if (direction === 'next') {
+      toastr.info('Última página', 'No hay más registros para mostrar.');
     } else {
-      this.desde -= this.intervalo;
-      this.numeracion -= 1;
+      toastr.info('Primera página', 'Ya estás en la primera página.');
     }
   }
 
@@ -47,18 +87,40 @@ export class HistoriasComponent {
     this._historiaClinicaService.getAllHistoriaClinica(this.desde).subscribe({
       next: (resp) => {
         this.loading = false;
-        if (resp.status === 'ok') {
+        if (resp?.status === 'ok') {
           //Validacion para numeracion y parametro desde
           //Si resp.rows sea mayor a 0 se actualiza sino no
-          if (resp.data.length > 0) {
+          if (resp.data && resp.data.length > 0) {
             this.historiaclinicaList = resp.data;
+            // optimista: si viene "llena", probablemente hay siguiente
+            this.hasNext = resp.data.length === this.intervalo;
           } else {
-            this.controlManejoPaginacion();
+            // Si venimos de un "avanzar" y no hay data, volvemos a la última página válida y bloqueamos avanzar
+            if (this.desde !== this.prevDesde) {
+              const direction: 'next' | 'prev' = this.desde > this.prevDesde ? 'next' : 'prev';
+              this.revertPagination(direction === 'next');
+              this.notifyPaginationBlocked(direction);
+            } else {
+              this.historiaclinicaList = [];
+              this.hasNext = false;
+            }
           }
+        } else {
+          Swal.fire({
+            title: '¡Error!',
+            icon: 'error',
+            text: `Historias Clinicas (getAllHistoriaClinica) - Respuesta inválida del servidor.`,
+            confirmButtonText: 'Aceptar',
+          });
         }
       },
       error: (err) => {
         this.loading = false;
+        if (this.desde !== this.prevDesde) {
+          const direction: 'next' | 'prev' = this.desde > this.prevDesde ? 'next' : 'prev';
+          this.revertPagination(direction === 'next');
+          this.notifyPaginationBlocked(direction);
+        }
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -84,9 +146,11 @@ export class HistoriasComponent {
             this.historiaclinicaList = [];
           }
         }
+        this.hasNext = false; // en búsqueda no paginamos
       },
       error: (err) => {
         this.loading = false;
+        this.hasNext = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -100,24 +164,43 @@ export class HistoriasComponent {
 
   buscarHistoriaClinica() {
     if (this.bsqHistoriaClinica.length >= 4) {
+      this.isSearchActive = true;
+      this.desde = 0;
+      this.numeracion = 1;
       this.getAllHistoriaClinicaBusqueda(this.bsqHistoriaClinica);
       // tu lógica aquí
     } else if (this.bsqHistoriaClinica.length === 0) {
-      this.desde = 0;
-      this.numeracion = 1;
+      this.isSearchActive = false;
+      this.resetPagination();
       this.getAllHistoriaClinica();
     }
   }
 
   avanzar() {
+    if (!this.canGoNext()) {
+      this.notifyPaginationBlocked('next');
+      return;
+    }
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
+    this.prevHasNext = this.hasNext;
     this.desde += this.intervalo;
     this.numeracion += 1;
     this.getAllHistoriaClinica();
   }
 
   retoceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
+    if (!this.canGoPrev()) {
+      this.notifyPaginationBlocked('prev');
+      return;
+    }
+    // Guardamos estado anterior por si hay error y toca revertir
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
+    this.prevHasNext = this.hasNext;
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.hasNext = true;
     this.getAllHistoriaClinica();
   }
 
@@ -131,6 +214,10 @@ export class HistoriasComponent {
 
   anexosHistoriaClinica(pk_historia: number) {
     this._routerService.navigate(['/anexos', pk_historia]);
+  }
+
+  ciclosHospitalizacion(pk_historia: number) {
+    this._routerService.navigate(['/ingresos', pk_historia]);
   }
 
   historialClinico(pk_historia:number){

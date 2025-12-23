@@ -339,27 +339,27 @@ export class EpicrisisComponent {
       this._routerService.navigate([
         '/form_epicrisis',
         epicrisis.pk_epi,
-        false,
+        false,true
       ]); //true es editar
     } else {
       if (epicrisis.estado_epi) {
         this._routerService.navigate([
           '/form_epicrisis',
           epicrisis.pk_epi,
-          true,
+          true,true
         ]); //true es editar
       } else {
         this._routerService.navigate([
           '/form_epicrisis',
           epicrisis.pk_epi,
-          false,
+          false,true
         ]); //true es editar
       }
     }
   }
 
   nuevoEpicrisis() {
-    this._routerService.navigate(['/form_epicrisis', 0, false]); //true es editar
+    this._routerService.navigate(['/form_epicrisis', 0, false,true]); 
   }
 
   imprimirEpicrisis(epicrisis: any) {

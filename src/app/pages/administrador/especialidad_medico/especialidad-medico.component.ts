@@ -48,6 +48,10 @@ export class EspecialidadMedicoComponent {
   intervalo = environment.filas;
   numeracion: number = 1;
   loading: boolean = true;
+  hasNext: boolean = true;
+  private prevDesde = 0;
+  private prevNumeracion = 1;
+  isSearchActive: boolean = false;
 
   constructor() {
     this.getEspecialidadesMedicos();
@@ -63,12 +67,30 @@ export class EspecialidadMedicoComponent {
         next: (resp) => {
           this.loading = false;
           if (resp.status === 'ok') {
-            this.listEspecialidadesMedicos = resp.rows;
+            const rows = resp.rows ?? [];
+            if (rows.length > 0) {
+              this.listEspecialidadesMedicos = rows;
+              this.hasNext = rows.length === this.intervalo;
+            } else {
+              if (this.desde !== this.prevDesde) {
+                this.desde = this.prevDesde ?? 0;
+                this.numeracion = this.prevNumeracion ?? 1;
+                this.hasNext = false;
+              } else {
+                this.listEspecialidadesMedicos = [];
+                this.hasNext = false;
+              }
+            }
             console.log(JSON.stringify(this.listEspecialidadesMedicos))
           }
         },
         error: (err) => {
           this.loading = false;
+          if (this.desde !== this.prevDesde) {
+            this.desde = this.prevDesde ?? 0;
+            this.numeracion = this.prevNumeracion ?? 1;
+            this.hasNext = false;
+          }
           // manejo de error
           Swal.fire({
             title: '¡Error!',
@@ -94,9 +116,11 @@ export class EspecialidadMedicoComponent {
             this.listEspecialidadesMedicos = [];
           }
         }
+        this.hasNext = false;
       },
       error: (err) => {
         this.loading = false;
+        this.hasNext = false;
         // manejo de error
         Swal.fire({
           title: '¡Error!',
@@ -149,14 +173,21 @@ export class EspecialidadMedicoComponent {
   }
 
   avanzar() {
+    if (this.isSearchActive || !this.hasNext) return;
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
     this.desde += this.intervalo;
     this.numeracion += 1;
     this.getEspecialidadesMedicos();
   }
 
   retoceder() {
-    this.desde -= this.intervalo;
-    this.numeracion -= 1;
+    if (this.isSearchActive) return;
+    this.desde = Math.max(0, this.desde - this.intervalo);
+    this.numeracion = Math.max(1, this.numeracion - 1);
+    this.prevDesde = this.desde;
+    this.prevNumeracion = this.numeracion;
+    this.hasNext = true;
     this.getEspecialidadesMedicos();
   }
 
@@ -254,11 +285,18 @@ export class EspecialidadMedicoComponent {
 
   buscarEspecialidadMedico() {
     if (this.bsqEspecialidadMedico.length >= 4) {
+      this.isSearchActive = true;
+      this.desde = 0;
+      this.numeracion = 1;
       this.getAllEspecialidadesMedicosBusqueda(this.bsqEspecialidadMedico);
       // tu lógica aquí
     } else if (this.bsqEspecialidadMedico.length === 0) {
+      this.isSearchActive = false;
       this.desde = 0;
       this.numeracion = 1;
+      this.prevDesde = 0;
+      this.prevNumeracion = 1;
+      this.hasNext = true;
       this.getEspecialidadesMedicos();
     }
   }

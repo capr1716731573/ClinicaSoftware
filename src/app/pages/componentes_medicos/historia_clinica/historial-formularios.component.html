@@ -1,0 +1,722 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Reportes</h4>
+        <h6 class="card-subtitle">
+          Gestión de Reportes del paciente seleccionado por ciclo de
+          hospitalización en formularios específicos
+        </h6>
+
+        <!-- Encabezado ciclo hospitalización (sin app-info-paciente) -->
+        @if (loadingHeader) {
+        <div class="row mt-2 mb-2">
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="card">
+              <div class="box bg-light text-center">
+                <div
+                  class="skeleton"
+                  style="height: 18px; width: 70%; margin: 0 auto"
+                ></div>
+                <div
+                  class="skeleton"
+                  style="height: 12px; width: 40%; margin: 10px auto 0"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="card">
+              <div class="box bg-light text-center">
+                <div
+                  class="skeleton"
+                  style="height: 18px; width: 60%; margin: 0 auto"
+                ></div>
+                <div
+                  class="skeleton"
+                  style="height: 12px; width: 30%; margin: 10px auto 0"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="card">
+              <div class="box bg-light text-center">
+                <div
+                  class="skeleton"
+                  style="height: 18px; width: 50%; margin: 0 auto"
+                ></div>
+                <div
+                  class="skeleton"
+                  style="height: 12px; width: 35%; margin: 10px auto 0"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        } @else { @if (ciclo) {
+        <div class="row mt-2 mb-2">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card">
+              <div class="box bg-primary text-center">
+                <h5 class="font-light text-white">
+                  <small>{{ nombreCompleto }}</small>
+                </h5>
+                <h6 class="text-white">Nombres y Apellidos</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-2">
+            <div class="card">
+              <div class="box bg-success text-center">
+                <h5 class="font-light text-white">
+                  {{ ciclo.numidentificacion_persona }}
+                </h5>
+                <h6 class="text-white">Identificación</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-2">
+            <div class="card">
+              <div class="box bg-dark text-center">
+                <h5 class="font-light text-white">
+                  {{ ciclo.area }}
+                </h5>
+                <h6 class="text-white">Área</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-2">
+            <div class="card">
+              <div class="box bg-info text-center">
+                <h5 class="font-light text-white">{{ fechaInicio }}</h5>
+                <h6 class="text-white">Fecha inicio</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-2">
+            <div class="card">
+              <div class="box bg-warning text-center">
+                @if (ciclo.activo_ciclohosp) {
+                <h5 class="font-light text-white" style="font-size: 0.95rem">
+                  Actualmente Hospitalizado
+                </h5>
+                } @else {
+                <h5 class="font-light text-white">{{ fechaFin }}</h5>
+                }
+                <h6 class="text-white">Fecha fin</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        } }
+
+        <!-- Botón volver -->
+        <div class="row mb-2">
+          <div class="col-12 d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-info"
+              (click)="volverAIngresos()"
+              [disabled]="!ciclo?.fk_hcu"
+            >
+              <i class="fa fa-arrow-left mr-1"></i> Volver
+            </button>
+          </div>
+        </div>
+
+        <!-- Nav tabs -->
+        <div class="vtabs customvtab">
+          <ul class="nav nav-tabs tabs-vertical" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                data-toggle="tab"
+                href="#evolucion"
+                role="tab"
+              >
+                <span class="hidden-sm-up"><i class="ti-file"></i></span>
+                <span class="hidden-xs-down">Evolución</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="tab"
+                href="#epicrisis"
+                role="tab"
+                (click)="getFechasEpicrisis()"
+              >
+                <span class="hidden-sm-up"><i class="ti-folder"></i></span>
+                <span class="hidden-xs-down">Epicrisis</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="tab"
+                href="#protocolo"
+                role="tab"
+                (click)="getFechasPostOperatorio()"
+              >
+                <span class="hidden-sm-up"><i class="ti-clipboard"></i></span>
+                <span class="hidden-xs-down">Protocolo Quirúrgico</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="tab"
+                href="#interconsulta"
+                role="tab"
+                (click)="getFechasInterconsulta()"
+              >
+                <span class="hidden-sm-up"><i class="ti-book"></i></span>
+                <span class="hidden-xs-down">Interconsultas</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="tab"
+                href="#anamnesis"
+                role="tab"
+                (click)="getFechasAnamnesis()"
+              >
+                <span class="hidden-sm-up"><i class="ti-calendar"></i></span>
+                <span class="hidden-xs-down">Anamnesis</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#signos" role="tab">
+                <span class="hidden-sm-up"><i class="ti-dashboard"></i></span>
+                <span class="hidden-xs-down">Constantes Vitales</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#kardex" role="tab">
+                <span class="hidden-sm-up"><i class="ti-menu-alt"></i></span>
+                <span class="hidden-xs-down"
+                  >Administración de Medicamentos</span
+                >
+              </a>
+            </li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="evolucion" role="tabpanel">
+              <h3>Evoluciones</h3>
+              <!-- Aqui Evoluciones -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-info ml-auto"
+                  (click)="imprimirEvolucion()"
+                  [disabled]="!ciclo?.fk_hcu || !ciclo?.fecha_ciclohosp"
+                >
+                  <i class="fa fa-download mr-1"></i> Descargar
+                </button>
+              </div>
+            </div>
+            <div class="tab-pane" id="epicrisis" role="tabpanel">
+              <h3>Epicrisis</h3>
+              <!-- Tabla Epicrisis (período del ciclo) -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ ciclo?.fecha_ciclohosp }}] - [{{ ciclo?.egreso?.fecha_ciclohosp }}]
+                </div>
+              </div>
+
+              <div class="w-100 mt-2">
+                @if (loadingEpicrisis) {
+                  <div class="table-responsive report-scroll w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (_ of [1,2,3]; track $index) {
+                          <tr>
+                            <td><div class="skeleton" style="height: 14px; width: 120px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 220px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 30px; width: 44px; margin: 0 auto;"></div></td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else {
+                  <div class="table-responsive report-scroll pointer w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (epicrisisList.length === 0) {
+                          <tr>
+                            <td colspan="3" class="text-center">
+                              No existen registros de Epicrisis en el periodo.
+                            </td>
+                          </tr>
+                        } @else {
+                          @for (item of epicrisisList; track item.pk_epi) {
+                            <tr>
+                              <td data-label="FECHA INICIO">
+                                <small>
+                                  <div>{{ item.fecha_inicio }}</div>
+                                  @if (item.hora_inicio) { <div>{{ item.hora_inicio }}</div> }
+                                </small>
+                              </td>
+
+                              <td data-label="RESPONSABLE">
+                                <small>
+                                  <div>
+                                    {{ item.medico_apellidopat_persona }}
+                                    {{ item.medico_apellidomat_persona }}
+                                    {{ item.medico_nombre_primario_persona }}
+                                    {{ item.medico_nombre_secundario_persona }}
+                                  </div>
+                                  <div>{{ item.medico_numidentificacion_persona }}</div>
+                                </small>
+                              </td>
+
+                              <td data-label="ACCIÓN">
+                                <div class="btn-group d-flex justify-content-center">
+                                  <button
+                                    type="button"
+                                    class="btn btn-success dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                  >
+                                    <i class="ti-settings"></i>
+                                  </button>
+                                  <div class="dropdown-menu pointer">
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="editarEpicrisis(item)"
+                                      >Editar/Ver</a
+                                    >
+
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="imprimirEpicrisis(item.pk_epi)"
+                                      >Imprimir</a
+                                    >
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          }
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="tab-pane" id="protocolo" role="tabpanel">
+              <h3>Protocolos Quirúrgicos</h3>
+              <!-- Tabla Protocolo (período del ciclo) -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+              </div>
+
+              <div class="w-100 mt-2">
+                @if (loadingProtocolo) {
+                  <div class="table-responsive report-scroll w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (_ of [1,2,3]; track $index) {
+                          <tr>
+                            <td><div class="skeleton" style="height: 14px; width: 120px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 220px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 30px; width: 44px; margin: 0 auto;"></div></td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else {
+                  <div class="table-responsive report-scroll pointer w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (postoperatorioList.length === 0) {
+                          <tr>
+                            <td colspan="3" class="text-center">
+                              No existen Protocolos Quirúrgicos en el periodo.
+                            </td>
+                          </tr>
+                        } @else {
+                          @for (item of postoperatorioList; track item.pk_protope) {
+                            <tr>
+                              <td data-label="FECHA INICIO">
+                                <div>{{ item.fecha_inicio }}</div>
+                              </td>
+
+                              <td data-label="RESPONSABLE">
+                                <small>
+                                  <div>
+                                    {{ item.medico_apellidopat_persona }}
+                                    {{ item.medico_apellidomat_persona }}
+                                    {{ item.medico_nombre_primario_persona }}
+                                    {{ item.medico_nombre_secundario_persona }}
+                                  </div>
+                                  <div>{{ item.medico_numidentificacion_persona }}</div>
+                                </small>
+                              </td>
+
+                              <td data-label="ACCIÓN">
+                                <div class="btn-group d-flex justify-content-center">
+                                  <button
+                                    type="button"
+                                    class="btn btn-success dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                  >
+                                    <i class="ti-settings"></i>
+                                  </button>
+                                  <div class="dropdown-menu pointer">
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="editarProtocoloPostOperatorio(item)"
+                                      >Editar/Ver</a
+                                    >
+
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="imprimirProtocoloPostOperatorio(item.pk_protope)"
+                                      >Imprimir</a
+                                    >
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          }
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="tab-pane" id="interconsulta" role="tabpanel">
+              <h3>Interconsultas</h3>
+              <!-- Tabla Interconsultas (período del ciclo) -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+              </div>
+
+              <div class="w-100 mt-2">
+                @if (loadingInterconsulta) {
+                  <div class="table-responsive report-scroll w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ESPECIALIDAD ORIGEN</th>
+                          <th scope="col">ESPECIALIDAD DESTINO</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (_ of [1,2,3]; track $index) {
+                          <tr>
+                            <td><div class="skeleton" style="height: 14px; width: 120px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 220px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 180px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 180px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 30px; width: 44px; margin: 0 auto;"></div></td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else {
+                  <div class="table-responsive report-scroll pointer w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ESPECIALIDAD ORIGEN</th>
+                          <th scope="col">ESPECIALIDAD DESTINO</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (interconsultaList.length === 0) {
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              No existen Interconsultas en el periodo.
+                            </td>
+                          </tr>
+                        } @else {
+                          @for (item of interconsultaList; track item.pk_intersol) {
+                            <tr>
+                              <td data-label="FECHA INICIO">
+                                <small>
+                                  <div>{{ item.fecha_inicio }}</div>
+                                  @if (item.hora_inicio) { <div>{{ item.hora_inicio }}</div> }
+                                </small>
+                              </td>
+
+                              <td data-label="RESPONSABLE">
+                                <small>
+                                  <div>
+                                    {{ item.medico_apellidopat_persona }}
+                                    {{ item.medico_apellidomat_persona }}
+                                    {{ item.medico_nombre_primario_persona }}
+                                    {{ item.medico_nombre_secundario_persona }}
+                                  </div>
+                                  <div>{{ item.medico_numidentificacion_persona }}</div>
+                                </small>
+                              </td>
+
+                              <td data-label="ESPECIALIDAD ORIGEN">
+                                {{
+                                  item?.caracteristicas_solicitud_intersol?.especialidad?.especialidad_origen
+                                    || '-'
+                                }}
+                              </td>
+
+                              <td data-label="ESPECIALIDAD DESTINO">
+                                {{
+                                  item?.caracteristicas_solicitud_intersol?.especialidad?.especialidad_destino
+                                    || '-'
+                                }}
+                              </td>
+
+                              <td data-label="ACCIÓN">
+                                <div class="btn-group d-flex justify-content-center">
+                                  <button
+                                    type="button"
+                                    class="btn btn-success dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                  >
+                                    <i class="ti-settings"></i>
+                                  </button>
+                                  <div class="dropdown-menu pointer">
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="editarInterconsultaSolicitud(item)"
+                                      >Editar/Ver Solicitud</a
+                                    >
+
+                                    <a
+                                      class="dropdown-item pointer"
+                                      [class.disabled]="!item?.interconsulta_respuesta"
+                                      [style.pointer-events]="item?.interconsulta_respuesta ? 'auto' : 'none'"
+                                      style="cursor: pointer;"
+                                      (click)="editarInterconsultaInforme(item)"
+                                      >Editar/Ver Informe</a
+                                    >
+
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="imprimirInterconsulta(item)"
+                                      >Imprimir</a
+                                    >
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          }
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="tab-pane" id="anamnesis" role="tabpanel">
+              <h3>Anamnesis</h3>
+              <!-- Tabla Anamnesis (período del ciclo) -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+              </div>
+
+              <div class="w-100 mt-2">
+                @if (loadingAnamnesis) {
+                  <div class="table-responsive report-scroll w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (_ of [1,2,3]; track $index) {
+                          <tr>
+                            <td><div class="skeleton" style="height: 14px; width: 120px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 14px; width: 220px; margin: 4px auto;"></div></td>
+                            <td><div class="skeleton" style="height: 30px; width: 44px; margin: 0 auto;"></div></td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else {
+                  <div class="table-responsive report-scroll pointer w-100">
+                    <table class="table full-color-table full-info-table hover-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">FECHA INICIO</th>
+                          <th scope="col">RESPONSABLE</th>
+                          <th scope="col">ACCIÓN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (anamnesisList.length === 0) {
+                          <tr>
+                            <td colspan="3" class="text-center">
+                              No existen Anamnesis en el periodo.
+                            </td>
+                          </tr>
+                        } @else {
+                          @for (item of anamnesisList; track item.pk_anam) {
+                            <tr>
+                              <td data-label="FECHA INICIO">
+                                <small>
+                                  <div>{{ item.fecha_inicio }}</div>
+                                  @if (item.hora_inicio) { <div>{{ item.hora_inicio }}</div> }
+                                </small>
+                              </td>
+
+                              <td data-label="RESPONSABLE">
+                                <small>
+                                  <div>
+                                    {{ item.medico_apellidopat_persona }}
+                                    {{ item.medico_apellidomat_persona }}
+                                    {{ item.medico_nombre_primario_persona }}
+                                    {{ item.medico_nombre_secundario_persona }}
+                                  </div>
+                                  <div>{{ item.medico_numidentificacion_persona }}</div>
+                                </small>
+                              </td>
+
+                              <td data-label="ACCIÓN">
+                                <div class="btn-group d-flex justify-content-center">
+                                  <button
+                                    type="button"
+                                    class="btn btn-success dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                  >
+                                    <i class="ti-settings"></i>
+                                  </button>
+                                  <div class="dropdown-menu pointer">
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="editarAnamnesis(item)"
+                                      >Editar/Ver</a
+                                    >
+
+                                    <a
+                                      class="dropdown-item pointer"
+                                      style="cursor: pointer;"
+                                      (click)="imprimirAnamnesis(item.pk_anam)"
+                                      >Imprimir</a
+                                    >
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          }
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="tab-pane" id="signos" role="tabpanel">
+              <h3>Constantes Vitales</h3>
+              <!-- Aqui Constantes Vitales -->
+              <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-info ml-auto"
+                  (click)="imprimirSignos()"
+                  [disabled]="!ciclo?.fk_hcu || !ciclo?.fecha_ciclohosp"
+                >
+                  <i class="fa fa-download mr-1"></i> Descargar
+                </button>
+              </div>
+            </div>
+            <div class="tab-pane" id="kardex" role="tabpanel">
+              <h3>Administración de Medicamentos</h3>
+              <!-- Aqui Administración de Medicamentos -->
+               <div class="d-flex align-items-center flex-wrap mt-3">
+                <div class="font-weight-bold mr-3">
+                  Periodo [{{ fechaInicio }}] - [{{ fechaFin }}]
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-info ml-auto"
+                  (click)="imprimirKardex()"
+                  [disabled]="!ciclo?.fk_hcu || !ciclo?.fecha_ciclohosp"
+                >
+                  <i class="fa fa-download mr-1"></i> Descargar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

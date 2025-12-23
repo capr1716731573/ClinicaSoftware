@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Ciclos de Hospitalización</h4>
+        <h6 class="card-subtitle">Lista de Ciclos de Hospitalización del paciente seleccionado</h6>
+
+        <div class="col-lg-12">
+          @if (loading) {
+            <app-skeleton-table></app-skeleton-table>
+          } @else {
+
+            <!-- Encabezado paciente -->
+            <app-info-paciente
+              [hcuInput]="pacienteInfo"
+              [compact]="true"
+              colClass="col-12 col-md-4 col-lg-4"
+              [bigText]="true"
+              [showArea]="false"
+              [showCama]="false"
+              [showIdentificacion]="false"
+              [showNombreCompleto]="true"
+              [showSexo]="true"
+              [showEdad]="true"
+            ></app-info-paciente>
+
+            <div class="table-responsive pointer">
+              <table class="table full-color-table full-info-table hover-table">
+                <thead>
+                  <tr>
+                    <th scope="col">FECHA INGRESO</th>
+                    <th scope="col">FECHA EGRESO</th>
+                    <th scope="col">ÁREA</th>
+                    <th scope="col">UBICACIÓN</th>
+                    <th scope="col">ACCIÓN</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @if (ingresosList.length === 0) {
+                    <tr>
+                      <td colspan="5" class="text-center">
+                        No existen ingresos registrados.
+                      </td>
+                    </tr>
+                  } @else {
+                    @for (item of ingresosList; track item.pk_ciclohosp) {
+                      <tr>
+                        <td data-label="FECHA INGRESO">{{ item.fecha_ciclohosp }}</td>
+                        <td data-label="FECHA EGRESO">
+                          @if (item.activo_ciclohosp) {
+                            <span class="badge badge-warning" style="font-size: 0.95rem; padding: 0.45rem 0.65rem;">
+                              Actualmente Hospitalizado
+                            </span>
+                          } @else {
+                            {{ item.egreso?.fecha_ciclohosp || '-' }}
+                          }
+                        </td>
+
+                        <td data-label="ÁREA">{{ item.area }}</td>
+                        <td data-label="UBICACIÓN">{{ item.ubicacion }}</td>
+
+                        <td data-label="ACCIÓN">
+                          <div class="btn-group d-flex justify-content-center">
+                            <button
+                              type="button"
+                              class="btn btn-success dropdown-toggle"
+                              data-toggle="dropdown"
+                              aria-haspopup="true"
+                              aria-expanded="false"
+                              [disabled]="item.activo_ciclohosp"
+                              [attr.aria-disabled]="item.activo_ciclohosp"
+                            >
+                              <i class="ti-settings"></i>
+                            </button>
+                            <div class="dropdown-menu pointer">
+                              <a
+                                class="dropdown-item pointer"
+                                [class.disabled]="item.activo_ciclohosp"
+                                [style.pointer-events]="item.activo_ciclohosp ? 'none' : 'auto'"
+                                (click)="item.activo_ciclohosp ? null : abrirFormularios(item.pk_ciclohosp)"
+                              >
+                                Formularios
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

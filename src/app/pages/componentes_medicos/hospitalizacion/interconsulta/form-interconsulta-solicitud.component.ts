@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -64,12 +64,14 @@ export class FormInterconsultaSolicitudComponent {
   private _cieService = inject(CieService);
   private _especilidadesMedicas = inject(CabeceraDetalleService);
   private _usuariosMedicos = inject(UsuarioService);
+  private location = inject(Location);
 
   tabActivo: 'B' | 'C' | 'D' | 'E' | 'F' = 'B';
   opcion: 'I' | 'U' = 'I';
   accionVer = false;
   idNum = 0;
   casaSaludBody: any = {};
+  cabecera: any;
 
   listEspecialidades: any[] = [];
   listMedicos: any[] = [];
@@ -90,7 +92,7 @@ export class FormInterconsultaSolicitudComponent {
   };
   diagnosticoTipos = [
     { value: 'presuntivos', label: 'Presuntivo' },
-    { value: 'definitivos', label: 'Definitivo' }
+    { value: 'definitivos', label: 'Definitivo' },
   ];
   listCie10: any[] = [];
   idCie: any;
@@ -110,8 +112,11 @@ export class FormInterconsultaSolicitudComponent {
     this._route.paramMap.subscribe((pm) => {
       this.idNum = Number(pm.get('id') ?? 0);
       const accionParam = (pm.get('accion') ?? '').toLowerCase();
+      const cabParam = (pm.get('cab') ?? '').toLowerCase();
       this.accionVer =
         accionParam === 'true' || accionParam === '1' || accionParam === 'ver';
+      this.cabecera =
+        cabParam === 'true' || cabParam === '1' || cabParam === 'ver';
 
       if (this.idNum && !isNaN(this.idNum)) {
         this.opcion = 'U';
@@ -330,8 +335,12 @@ export class FormInterconsultaSolicitudComponent {
 
     this.interconsultaBody.casalud_id_fk =
       this.casaSaludBody?.casalud_id_pk ?? 0;
-    this.interconsultaBody.fk_hcu =
-      this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    /* this.interconsultaBody.fk_hcu =
+      this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0; */
+    if (this.interconsultaBody.fk_hcu === 0) {
+      this.interconsultaBody.fk_hcu =
+        this._loginService.getHcuLocalStorage()?.fk_hcu ?? 0;
+    }
     this.interconsultaBody.medico_usu_id_fk =
       this._loginService.getUserLocalStorage()?.pk_usuario ?? 0;
 
@@ -357,11 +366,17 @@ export class FormInterconsultaSolicitudComponent {
                 this.interconsultaBody.pk_intersol = resp.data.pk_intersol;
                 this.idNum = resp.data.pk_intersol;
                 toastr.success('Éxito', `Solicitud guardada correctamente`);
-                this._router.navigate([
-                  '/form_interconsulta_solicitud',
-                  resp.data.pk_intersol,
-                  false,
-                ]);
+                // IMPORTANTE: replaceUrl evita agregar una nueva entrada al history
+                // (si no, el primer "Cerrar" vuelve al mismo formulario previo al guardado)
+                this._router.navigate(
+                  [
+                    '/form_interconsulta_solicitud',
+                    resp.data.pk_intersol,
+                    false,
+                    this.cabecera,
+                  ],
+                  { replaceUrl: true }
+                );
                 this.getListaDiagnosticos();
               } else {
                 toastr.error(
@@ -382,12 +397,17 @@ export class FormInterconsultaSolicitudComponent {
   }
 
   cerrarFormulario(): void {
-    this._router.navigate(['/interconsultas']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this._router.navigate(['/interconsultas']);
+    }
   }
 
   validarGuardar(): boolean {
     const b = this.interconsultaBody;
-    if (!b || !b.fk_hcu) return false;
+    /* if (!b || !b.fk_hcu) return false; */
+    if (!b) return false;
 
     const car = b.caracteristicas_solicitud_intersol;
     if (!car) return false;
