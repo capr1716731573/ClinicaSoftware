@@ -1291,7 +1291,7 @@
                     <option value="mascara">
                       Máscara o Superior
                     </option>
-                    
+
                   </select>
                 </div>
                 <div class="col-md-2 form-group">
@@ -2819,6 +2819,94 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<!-- diagnostico -->
+<div
+  id="diagnosticoModal"
+  class="modal fade bs-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Registro Diagnostico</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form" (ngSubmit)="guardarDiagnostico()">
+          <div class="form-group">
+            <label> Cie (*)</label>
+            <ng-select
+              [items]="listCie10"
+              [typeahead]="typeahead"
+              bindLabel="cie_completo"
+              bindValue="pk_cie"
+              placeholder="Busca diagnostico..."
+              name="idCie"
+              [(ngModel)]="idCie"
+              (search)="onSearchCie($event)"
+              [loading]="isLoading"
+              (change)="seleccionCie($event)"
+              [clearable]="false"
+              [typeToSearchText]="'Empieza a escribir...'"
+            >
+              <!-- Template de cómo se muestra cada opción -->
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <small
+                    ><b>{{ item.desc_cie }}</b></small
+                  ><br />
+                  <small>Código:{{ item.codigo_cie }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de Diagnostico (*)</label>
+            <select
+              class="form-control"
+              [(ngModel)]="diagnosticoBody.tipo_emerdiag"
+              name="tipo_emerdiag"
+            >
+              <option [ngValue]="null" disabled selected>
+                -- Seleccione --
+              </option>
+              <option [ngValue]="'P'">Presuntivo</option>
+              <option [ngValue]="'D'">Definitivo</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect"
+              [disabled]="!validarGuardarDiagnostico()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger waves-effect"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- Fin Modal -->
+
 
 <!-- Modal -->
 <!-- diagnostico -->

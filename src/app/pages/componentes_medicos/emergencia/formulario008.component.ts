@@ -452,7 +452,7 @@ export class Formulario008Component {
       this.emergenciaBody._g.pulsioximetria_porcentaje != null &&
       this.emergenciaBody._g.estado_conciencia != null &&
       this.emergenciaBody._g.oxigeno_terapia != null &&
-      this.emergenciaBody._g.gasto_urinario != null 
+      this.emergenciaBody._g.gasto_urinario != null
     ) {
       this.loadCalculosSignosVitales();
     }
@@ -503,7 +503,7 @@ export class Formulario008Component {
   sm_saturacion:any=null;
   sm_estado_conciencia:any=null;
   sm_proteinuria:any=null;
-     * 
+     *
      */
 
     if (opcion === 1) {
