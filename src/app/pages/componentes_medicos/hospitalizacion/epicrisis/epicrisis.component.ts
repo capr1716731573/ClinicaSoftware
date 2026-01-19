@@ -8,9 +8,9 @@ import { SkeletonTableComponent } from '../../../../componentes_reutilizables/sk
 import { EpicrisisService } from '../../../../services/hospitalizacion/epicrisis/epicrisis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { Epicrisis } from './epicrisis.interface';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

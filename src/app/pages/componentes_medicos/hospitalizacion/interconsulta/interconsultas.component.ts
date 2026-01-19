@@ -3,12 +3,12 @@ import { InterconsultaService } from '../../../../services/hospitalizacion/inter
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
 import { Router, RouterModule } from '@angular/router';
-import { environment } from '../../../../../enviroments/enviroments';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
 import Swal from 'sweetalert2';
 import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

@@ -1023,7 +1023,7 @@ export class FormPostoperatorioComponent {
   }
 
   verImagenDiagrama(): string {
-    const noImage = './assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
+    const noImage = 'assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
 
     if (
       !this.protocoloBody._i.diagrama_protope ||

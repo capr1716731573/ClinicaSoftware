@@ -5,10 +5,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { InstitucionService } from '../../../services/casas_salud/instituciones.service';
 import { CasasSaludService } from '../../../services/casas_salud/casas_salud.service';
 import { GeografiaService } from '../../../services/geografia/geografia.service';
-import { environment } from '../../../../enviroments/enviroments';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { environment } from '../../../../environments/environment';
 
 declare var toastr: any;
 declare var $: any;

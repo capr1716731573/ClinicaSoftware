@@ -7,8 +7,8 @@ import { SkeletonTableComponent } from '../../../../componentes_reutilizables/sk
 import { AnamnesisService } from '../../../../services/hospitalizacion/anamnesis/anamnesis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

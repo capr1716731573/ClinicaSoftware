@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +13,7 @@ import {
 } from 'rxjs';
 import { GeografiaService } from '../../../services/geografia/geografia.service';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { environment } from '../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

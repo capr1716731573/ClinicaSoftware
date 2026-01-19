@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
     apiUrl: 'http://localhost:3005',
-    nombreApp: 'Mi App Desarrollo',
+    nombreApp: 'ClinicOS',
     filas:10
   };

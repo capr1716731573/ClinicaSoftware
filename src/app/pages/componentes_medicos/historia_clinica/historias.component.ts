@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
@@ -8,6 +7,7 @@ import { Router } from '@angular/router';
 import { HistoriaClinicaService } from '../../../services/historia_clinica/historia_clinica.service';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 import { LoginService } from '../../../services/login.service';
+import { environment } from '../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

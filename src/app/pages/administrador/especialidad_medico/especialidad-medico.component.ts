@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { EspecialidadMedicoService } from '../../../services/especilidades_medicos/especialidad_medico.service';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { CabeceraDetalleService } from '../../../services/cabecera_detalle/cabecera-detalle.service';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { environment } from '../../../../environments/environment';
 
 declare var toastr: any;
 declare var $: any;

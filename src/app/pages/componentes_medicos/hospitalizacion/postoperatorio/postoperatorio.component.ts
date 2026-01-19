@@ -8,8 +8,8 @@ import { ProtocoloOperatorio } from './postoperatorio.interface';
 import { PosOperatorioService } from '../../../../services/hospitalizacion/posoperatorio/posoperatorio.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

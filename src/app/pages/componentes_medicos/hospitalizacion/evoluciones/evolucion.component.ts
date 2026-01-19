@@ -3,7 +3,6 @@ import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { format } from '@formkit/tempo';
 import { MenuHospitalizacionComponent } from '../../../../componentes_reutilizables/menu_izq/menu.component';
-import { environment } from '../../../../../enviroments/enviroments';
 import { FormsModule } from '@angular/forms';
 import { EvolucionService } from '../../../../services/hospitalizacion/evolucion/evolucion.service';
 import Swal from 'sweetalert2';
@@ -12,6 +11,7 @@ import { LoginService } from '../../../../services/login.service';
 import { CabeceraDetalleService } from '../../../../services/cabecera_detalle/cabecera-detalle.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

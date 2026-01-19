@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { environment } from '../../../../enviroments/enviroments';
 import { LoginService } from '../../../services/login.service';
 import { TriageService } from '../../../services/emergencia/triage.service';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
 import { EmergenciaTriage } from './formulario008.interface';
+import { environment } from '../../../../environments/environment';
 
 declare var toastr: any;
 declare var $: any;

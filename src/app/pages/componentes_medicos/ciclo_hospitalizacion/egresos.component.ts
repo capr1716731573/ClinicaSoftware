@@ -10,8 +10,8 @@ import { InecEspecialidadesService } from '../../../services/hospitalizacion/ine
 import { CieService } from '../../../services/cie/cie.service';
 import { Subject } from 'rxjs';
 import { SkeletonTableComponent } from '../../../componentes_reutilizables/skeleton/skeleton-table.component';
-import { environment } from '../../../../enviroments/enviroments';
 import { CicloHospitalizacion } from './censoareas.component';
+import { environment } from '../../../../environments/environment';
 
 declare var toastr: any;
 declare var $: any;

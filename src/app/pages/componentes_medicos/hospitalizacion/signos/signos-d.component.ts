@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { SignosVitalesD } from './signos.interface';
 import { SignosService } from '../../../../services/hospitalizacion/signos/signos.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { SkeletonTableComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-table.component';
 import { SkeletonCrudComponent } from '../../../../componentes_reutilizables/skeleton/skeleton-crud.component';
+import { environment } from '../../../../../environments/environment';
 
 declare var toastr: any;
 declare var $: any;

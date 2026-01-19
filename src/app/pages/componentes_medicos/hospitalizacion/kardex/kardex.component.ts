@@ -9,8 +9,8 @@ import { KardexService } from '../../../../services/hospitalizacion/kardex/karde
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
 import { KardexCab } from './kardex.interface';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../../environments/environment';
 declare var toastr: any;
 declare var $: any;
 

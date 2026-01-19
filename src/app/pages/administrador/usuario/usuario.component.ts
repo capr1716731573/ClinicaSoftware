@@ -345,7 +345,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit {
   }
 
   verImagenFirmaSello(tipo: string): string {
-    const noImage = './assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
+    const noImage = 'assets/images/no_image.jpg'; // 👈 pon aquí tu imagen por defecto
 
     if (tipo === 'f') {
       if (

@@ -8,7 +8,7 @@ import { SkeletonTableComponent } from '../../../../componentes_reutilizables/sk
 import { AnexosService } from '../../../../services/hospitalizacion/anexos/anexos.services';
 import { LoginService } from '../../../../services/login.service';
 import { HistoriaClinicaService } from '../../../../services/historia_clinica/historia_clinica.service';
-import { environment } from '../../../../../enviroments/enviroments';
+import { environment } from '../../../../../environments/environment';
 declare const $: any;
 
 interface AnexoRow {

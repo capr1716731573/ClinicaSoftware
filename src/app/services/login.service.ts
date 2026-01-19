@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
-import { environment } from '../../enviroments/enviroments';
+
 import { catchError, map } from 'rxjs';
 import { of } from 'rxjs';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

@@ -8,7 +8,6 @@ import { SkeletonCrudComponent } from '../../../../componentes_reutilizables/ske
 import { EpicrisisService } from '../../../../services/hospitalizacion/epicrisis/epicrisis.service';
 import { CasasSaludService } from '../../../../services/casas_salud/casas_salud.service';
 import { LoginService } from '../../../../services/login.service';
-import { environment } from '../../../../../enviroments/enviroments';
 import Swal from 'sweetalert2';
 import {
   Epicrisis,
